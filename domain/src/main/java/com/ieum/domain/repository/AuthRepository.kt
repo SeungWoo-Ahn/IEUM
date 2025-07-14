@@ -1,9 +1,13 @@
 package com.ieum.domain.repository
 
-import com.ieum.domain.model.auth.JoinRequest
+import com.ieum.domain.model.auth.OAuthRequest
+import com.ieum.domain.model.auth.OAuthUser
+import com.ieum.domain.model.auth.Token
 
 interface AuthRepository {
-    suspend fun login(email: String)
+    suspend fun login(oAuthRequest: OAuthRequest): Token
 
-    suspend fun join(joinRequest: JoinRequest)
+    suspend fun getOAuthUser(): OAuthUser
+
+    suspend fun refreshToken(): String
 }
