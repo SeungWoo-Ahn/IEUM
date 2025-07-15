@@ -3,7 +3,7 @@ package com.ieum.data.network.model.user
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class RegisterRequest(
+data class RegisterRequestBody(
     val userType: String,
     val nickname: String,
     val diagnoses: List<DiagnoseDto>,
