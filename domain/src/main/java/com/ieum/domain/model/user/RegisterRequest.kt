@@ -5,6 +5,6 @@ data class RegisterRequest(
     val nickName: String,
     val diagnoses: List<Diagnose>,
     val ageGroup: AgeGroup?,
-    val residenceArea: String,
-    val hospitalArea: String,
+    val residenceArea: String?,
+    val hospitalArea: String?,
 )
