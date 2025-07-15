@@ -8,7 +8,7 @@ import com.ieum.domain.model.auth.OAuthRequest
 import com.ieum.domain.model.auth.OAuthUser
 import com.ieum.domain.model.auth.Token
 
-internal object OAuthProviderMapper : KeyAble<OAuthProvider> {
+internal object OAuthProviderMapper : KeyAble<String, OAuthProvider> {
     private const val KAKAO_KEY = "kakao"
 
     override fun toKey(value: OAuthProvider): String {

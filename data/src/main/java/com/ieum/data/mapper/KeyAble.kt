@@ -1,7 +1,7 @@
 package com.ieum.data.mapper
 
-internal interface KeyAble<T> {
-    fun toKey(value: T): String
+internal interface KeyAble<K, V> {
+    fun toKey(value: V): K
 
-    fun fromKey(key: String): T
+    fun fromKey(key: K): V
 }
