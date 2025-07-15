@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="next">다음</string>
+    <string name="skip">건너뛰기</string>
+    <string name="selected_n_completed">개 선택완료</string>
+</resources>
