@@ -43,8 +43,7 @@ dependencies {
     ksp(libs.hilt.compiler)
 
     // ktor
-    implementation(libs.ktor.core)
-    implementation(libs.ktor.cio)
+    implementation(libs.bundles.ktor)
 
     // kotlinx-serialization
     implementation(libs.kotlinx.serialization)

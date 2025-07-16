@@ -37,7 +37,21 @@ hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-com
 javax-inject = { group = "javax.inject", name = "javax.inject", version.ref = "javaxInjext" }
 ktor-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
 ktor-cio = { group = "io.ktor", name = "ktor-client-cio", version.ref = "ktor" }
+ktor-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
+ktor-auth = { group = "io.ktor", name = "ktor-client-auth", version.ref = "ktor" }
+ktor-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor" }
 kotlinx-serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
+
+[bundles]
+ktor = [
+    "ktor-core",
+    "ktor-cio",
+    "ktor-content-negotiation",
+    "ktor-serialization-kotlinx-json",
+    "ktor-auth",
+    "ktor-logging",
+]
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
