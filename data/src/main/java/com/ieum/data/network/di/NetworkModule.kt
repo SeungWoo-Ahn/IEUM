@@ -1,12 +1,20 @@
 package com.ieum.data.network.di
 
+import com.ieum.data.network.model.base.ErrorResponse
+import com.ieum.domain.exception.NetworkException
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
+import io.ktor.client.call.NoTransformationFoundException
+import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
+import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.HttpResponseValidator
 import io.ktor.client.plugins.HttpTimeout
+import io.ktor.client.plugins.ResponseException
+import io.ktor.client.plugins.ServerResponseException
 import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.plugins.auth.providers.bearer
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -51,9 +59,29 @@ internal object NetworkModule {
     @NetworkSource(IEUMNetwork.Default)
     fun providesDefaultClient(): HttpClient =
         createKtorClient().config {
+            expectSuccess = true
             defaultRequest {
                 url("") // TODO: BASE_URL 넣기
                 header(HttpHeaders.ContentType, ContentType.Application.Json)
+            }
+            HttpResponseValidator {
+                handleResponseExceptionWithRequest { exception, _ ->
+                    if (exception !is ResponseException) {
+                        return@handleResponseExceptionWithRequest
+                    }
+                    try {
+                        val errorResponse = exception.response.body<ErrorResponse>()
+                        when (exception) {
+                            is ClientRequestException -> throw NetworkException.ClientSide(errorResponse.message)
+                            is ServerResponseException -> throw NetworkException.ServerSide(errorResponse.message)
+                            else -> throw NetworkException.Unknown(errorResponse.message)
+                        }
+                    } catch (e: NoTransformationFoundException) {
+                        throw NetworkException.Unknown("error response 직렬화 실패: ${e.message}")
+                    } catch (e: Exception) {
+                        throw NetworkException.Unknown("알 수 없는 예외 발생: ${e.message}")
+                    }
+                }
             }
             install(Auth) {
                 bearer {
