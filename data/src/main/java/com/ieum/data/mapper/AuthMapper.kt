@@ -3,8 +3,10 @@ package com.ieum.data.mapper
 import com.ieum.data.network.model.auth.OAuthRequestBody
 import com.ieum.data.network.model.auth.OAuthResponse
 import com.ieum.data.network.model.auth.OAuthUserDto
+import com.ieum.data.network.model.auth.RefreshTokenResponse
 import com.ieum.domain.model.auth.OAuthProvider
 import com.ieum.domain.model.auth.OAuthRequest
+import com.ieum.domain.model.auth.OAuthResult
 import com.ieum.domain.model.auth.OAuthUser
 import com.ieum.domain.model.auth.Token
 
@@ -41,11 +43,21 @@ fun OAuthUserDto.toDomain(): OAuthUser =
         isRegistered = isRegistered,
     )
 
-fun OAuthResponse.toDomain(): Token =
+fun OAuthResponse.toDomain(): OAuthResult =
+    OAuthResult(
+        token = Token(
+            accessToken = accessToken,
+            refreshToken = refreshToken,
+            expiresIn = expiresIn,
+            tokenType = tokenType,
+        ),
+        oAuthUser = user.toDomain()
+    )
+
+fun RefreshTokenResponse.toDomain(refreshToken: String): Token =
     Token(
         accessToken = accessToken,
         refreshToken = refreshToken,
-        tokenType = tokenType,
         expiresIn = expiresIn,
-        user = user.toDomain()
+        tokenType = tokenType,
     )

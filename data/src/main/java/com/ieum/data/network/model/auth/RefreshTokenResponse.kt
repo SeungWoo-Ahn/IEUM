@@ -4,5 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class RefreshTokenResponse(
-    val refreshToken: String,
+    val accessToken: String,
+    val expiresIn: Int,
+    val tokenType: String,
 )
