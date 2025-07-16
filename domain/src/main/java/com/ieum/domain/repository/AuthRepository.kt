@@ -8,6 +8,4 @@ interface AuthRepository {
     suspend fun login(oAuthRequest: OAuthRequest): OAuthResult
 
     suspend fun getOAuthUser(): OAuthUser
-
-    suspend fun refreshToken(): String
 }
