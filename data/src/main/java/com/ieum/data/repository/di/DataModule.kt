@@ -8,10 +8,11 @@ import com.ieum.domain.repository.AuthRepository
 import com.ieum.domain.repository.UserRepository
 import dagger.Binds
 import dagger.Module
-import javax.inject.Singleton
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
 @Module
-@Singleton
+@InstallIn(SingletonComponent::class)
 internal interface DataModule {
     @Binds
     fun bindsAddressRepository(
