@@ -15,17 +15,11 @@ import dagger.hilt.components.SingletonComponent
 @InstallIn(SingletonComponent::class)
 internal interface DataModule {
     @Binds
-    fun bindsAddressRepository(
-        addressRepository: AddressRepositoryImpl,
-    ) : AddressRepository
+    fun bindsAddressRepository(addressRepository: AddressRepositoryImpl): AddressRepository
 
     @Binds
-    fun bindsAuthRepository(
-        authRepository: AuthRepositoryImpl,
-    ): AuthRepository
+    fun bindsAuthRepository(authRepository: AuthRepositoryImpl): AuthRepository
 
     @Binds
-    fun bindsUserRepository(
-        userRepository: UserRepositoryImpl,
-    ) : UserRepository
+    fun bindsUserRepository(userRepository: UserRepositoryImpl): UserRepository
 }
