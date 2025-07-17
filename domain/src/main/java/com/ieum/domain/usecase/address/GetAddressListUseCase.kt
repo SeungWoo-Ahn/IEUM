@@ -7,7 +7,7 @@ import javax.inject.Inject
 class GetAddressListUseCase @Inject constructor(
     private val addressRepository: AddressRepository,
 ) {
-    suspend operator fun invoke(code: String): Result<List<Address>> = runCatching {
+    suspend operator fun invoke(code: String? = null): Result<List<Address>> = runCatching {
         val accessToken = addressRepository.getAccessToken()
         addressRepository.getAddressList(accessToken, code)
     }

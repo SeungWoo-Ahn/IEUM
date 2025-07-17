@@ -22,7 +22,7 @@ class AddressRepositoryImpl(
                     addressDataCache.setAccessToken(it)
                 }
 
-    override suspend fun getAddressList(accessToken: String, code: String): List<Address> =
+    override suspend fun getAddressList(accessToken: String, code: String?): List<Address> =
         addressDataSource
             .getAddressList(accessToken, code)
             .map(AddressDto::toDomain)

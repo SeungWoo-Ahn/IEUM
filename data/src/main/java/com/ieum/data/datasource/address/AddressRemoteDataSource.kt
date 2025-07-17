@@ -26,11 +26,11 @@ class AddressRemoteDataSource @Inject constructor(
             .body<BaseResponse<SGISToken>>()
             .result
 
-    override suspend fun getAddressList(accessToken: String, code: String): List<AddressDto> =
+    override suspend fun getAddressList(accessToken: String, code: String?): List<AddressDto> =
         ktorClient
             .get("addr/stage.json") {
                 parameter("accessToken", accessToken)
-                parameter("code", code)
+                code?.let { parameter("cd", code) }
             }
             .body<BaseResponse<List<AddressDto>>>()
             .result
