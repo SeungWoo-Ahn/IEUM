@@ -2,7 +2,7 @@ package com.ieum.domain.model.user
 
 sealed interface Diagnose
 
-interface CancerDiagnose : Diagnose {
+sealed interface CancerDiagnose : Diagnose {
     val cancerStage: CancerStage?
 }
 

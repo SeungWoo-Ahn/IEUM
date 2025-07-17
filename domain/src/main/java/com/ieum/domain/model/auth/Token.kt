@@ -5,5 +5,4 @@ data class Token(
     val refreshToken: String,
     val tokenType: String,
     val expiresIn: Int,
-    val user: OAuthUser,
 )
