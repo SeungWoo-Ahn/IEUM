@@ -1,6 +1,7 @@
 package com.ieum.data.network.di
 
 import com.ieum.data.network.model.base.ErrorResponse
+import com.ieum.data.network.util.TokenManager
 import com.ieum.domain.exception.NetworkException
 import dagger.Module
 import dagger.Provides
@@ -16,6 +17,7 @@ import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.ResponseException
 import io.ktor.client.plugins.ServerResponseException
 import io.ktor.client.plugins.auth.Auth
+import io.ktor.client.plugins.auth.providers.BearerTokens
 import io.ktor.client.plugins.auth.providers.bearer
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
@@ -57,7 +59,9 @@ internal object NetworkModule {
     @Provides
     @Singleton
     @NetworkSource(IEUMNetwork.Default)
-    fun providesDefaultClient(): HttpClient =
+    fun providesDefaultClient(
+        tokenManager: TokenManager,
+    ): HttpClient =
         createKtorClient().config {
             expectSuccess = true
             defaultRequest {
@@ -86,12 +90,18 @@ internal object NetworkModule {
             install(Auth) {
                 bearer {
                     loadTokens {
-                        null // TODO: 저장된 토큰 넣기
+                        tokenManager
+                            .getSavedToken()
+                            ?.let { token ->
+                                BearerTokens(token.accessToken, token.refreshToken)
+                            }
                     }
                     refreshTokens {
-                        oldTokens?.let {
-                            null // TODO: refreshToken 로직
-                        }
+                        tokenManager
+                            .refreshToken(oldTokens?.refreshToken, client)
+                            ?.let { token ->
+                                BearerTokens(token.accessToken, token.refreshToken)
+                            }
                     }
                     sendWithoutRequest { request ->
                         // TODO: Authorization 필요 없는 api 제외
