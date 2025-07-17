@@ -15,9 +15,11 @@ hilt = "2.56.2"
 hiltNavigation = "1.2.0"
 ksp = "2.1.21-2.0.1"
 javaxInjext = "1"
-ktor = "3.2.0"
+ktor = "3.2.2"
 navgiation = "2.9.0"
 datastore-proto = "1.1.7"
+protobuf = "4.29.2"
+protobufPlugin = "0.9.4"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -44,6 +46,8 @@ ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serializatio
 ktor-auth = { group = "io.ktor", name = "ktor-client-auth", version.ref = "ktor" }
 ktor-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor" }
 kotlinx-serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
+protobuf-kotlin-lite = { group = "com.google.protobuf", name = "protobuf-kotlin-lite", version.ref = "protobuf" }
+protobuf-protoc = { group = "com.google.protobuf", name = "protoc", version.ref = "protobuf" }
 
 [bundles]
 ktor = [
@@ -53,6 +57,10 @@ ktor = [
     "ktor-serialization-kotlinx-json",
     "ktor-auth",
     "ktor-logging",
+]
+datastore = [
+    "androidx-datastore-proto",
+    "protobuf-kotlin-lite",
 ]
 
 [plugins]
@@ -64,4 +72,5 @@ android-library = { id = "com.android.library", version.ref = "agp" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+protobuf = { id = "com.google.protobuf", version.ref = "protobufPlugin" }
 
