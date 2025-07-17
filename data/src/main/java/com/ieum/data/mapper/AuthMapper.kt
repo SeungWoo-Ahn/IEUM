@@ -1,5 +1,6 @@
 package com.ieum.data.mapper
 
+import com.ieum.data.TokenEntity
 import com.ieum.data.network.model.auth.OAuthRequestBody
 import com.ieum.data.network.model.auth.OAuthResponse
 import com.ieum.data.network.model.auth.OAuthUserDto
@@ -61,3 +62,26 @@ fun RefreshTokenResponse.toDomain(refreshToken: String): Token =
         expiresIn = expiresIn,
         tokenType = tokenType,
     )
+
+fun TokenEntity.toDomain(): Token? =
+    if (accessToken.isBlank() || refreshToken.isBlank()) {
+        null
+    } else {
+        Token(
+            accessToken = accessToken,
+            refreshToken = refreshToken,
+            tokenType = tokenType,
+            expiresIn = expiresIn,
+        )
+    }
+
+fun Token.toEntity(): TokenEntity =
+    TokenEntity
+        .newBuilder()
+        .apply {
+            accessToken = this@toEntity.accessToken
+            refreshToken = this@toEntity.refreshToken
+            tokenType = this@toEntity.tokenType
+            expiresIn = this@toEntity.expiresIn
+        }
+        .build()
