@@ -47,4 +47,7 @@ dependencies {
 
     // kotlinx-serialization
     implementation(libs.kotlinx.serialization)
+
+    // datastore
+    implementation(libs.androidx.datastore.proto)
 }
