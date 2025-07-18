@@ -64,4 +64,7 @@ dependencies {
 
     // kotlinx-serialization
     implementation(libs.kotlinx.serialization)
+
+    // oAuth
+    implementation(libs.kakao.user)
 }
