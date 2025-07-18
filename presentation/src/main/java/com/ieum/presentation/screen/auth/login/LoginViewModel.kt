@@ -1,5 +1,6 @@
 package com.ieum.presentation.screen.auth.login
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -19,18 +20,22 @@ class LoginViewModel @Inject constructor(
         private set
 
     fun onLogin(strategy: LoginStrategy) {
-        uiState = LoginUiState.Loading
-        strategy.proceed()
-            .onSuccess { oAuthRequest ->
-                executeLogin(oAuthRequest)
-            }
-            .onFailure {
-                // OAuth 로그인 실패
-            }
-        uiState = LoginUiState.Idle
+        viewModelScope.launch {
+            uiState = LoginUiState.Loading
+            strategy.proceed()
+                .onSuccess { oAuthRequest ->
+                    Log.i(javaClass.name, oAuthRequest.toString())
+                    /*executeLogin(oAuthRequest)*/
+                }
+                .onFailure {
+                    // OAuth 로그인 실패
+                    Log.e(javaClass.name, "OAuth login failed", it)
+                }
+            uiState = LoginUiState.Idle
+        }
     }
 
-    private fun executeLogin(oAuthRequest: OAuthRequest) {
+    private suspend fun executeLogin(oAuthRequest: OAuthRequest) {
         viewModelScope.launch {
             loginUseCase(oAuthRequest)
                 .onSuccess { isRegistered ->
