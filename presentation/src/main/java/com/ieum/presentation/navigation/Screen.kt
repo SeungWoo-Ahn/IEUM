@@ -1,9 +1,11 @@
 package com.ieum.presentation.navigation
 
-sealed interface LoginScreen {
-    data object Login : LoginScreen
+sealed interface AuthScreen {
+    data object Login : AuthScreen
 
-    data object Register : LoginScreen
+    data object Register : AuthScreen
+
+    data object Welcome : AuthScreen
 }
 
 sealed interface MainScreen {

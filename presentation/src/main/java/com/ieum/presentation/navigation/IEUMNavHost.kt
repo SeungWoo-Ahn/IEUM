@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import com.ieum.presentation.screen.IEUMAppState
+import com.ieum.presentation.screen.auth.nestedAuthGraph
 
 @Composable
 fun IEUMNavHost(
@@ -13,8 +14,8 @@ fun IEUMNavHost(
     NavHost(
         modifier = modifier,
         navController = appState.navController,
-        startDestination = ScreenGraph.Login
+        startDestination = ScreenGraph.Auth
     ) {
-
+        nestedAuthGraph(appState)
     }
 }
