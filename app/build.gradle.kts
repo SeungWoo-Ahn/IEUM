@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -16,6 +18,11 @@ android {
         versionCode = 1
         versionName = "1.0"
 
+        val properties = Properties().apply {
+            load(project.rootProject.file("local.properties").inputStream())
+        }
+        buildConfigField("String", "KAKAO_NATIVE_KEY", properties.getProperty("KAKAO_NATIVE_KEY"))
+        manifestPlaceholders["KAKAO_REDIRECT_URI"] = properties.getProperty("KAKAO_REDIRECT_URI")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -29,11 +36,14 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "1.8"
+    }
+    buildFeatures {
+        buildConfig = true
     }
 }
 
@@ -44,4 +54,7 @@ dependencies {
     // hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
+
+    // oAuth
+    implementation(libs.kakao.user)
 }
