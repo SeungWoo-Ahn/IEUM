@@ -18,11 +18,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ieum.design_system.button.BlackButton
+import com.ieum.design_system.button.NextButton
 import com.ieum.design_system.button.WhiteButton
 import com.ieum.design_system.selector.ISingleSelectorState
+import com.ieum.design_system.spacer.IEUMSpacer
 import com.ieum.design_system.textfield.IMaxLengthTextFieldState
+import com.ieum.design_system.textfield.MaxLengthTextField
 import com.ieum.domain.model.user.AgeGroup
 import com.ieum.domain.model.user.UserType
+import com.ieum.presentation.R
 import com.ieum.presentation.mapper.toDescription
 
 @Composable
@@ -74,7 +78,11 @@ private fun RegisterScreen(
                 userTypeState = userTypeState,
                 onNextStep = onNextStep
             )
-            RegisterStage.TypeNickname -> {}
+            RegisterStage.TypeNickname -> TypeNickname(
+                nextEnabled = nextEnabled,
+                nickNameState = nickNameState,
+                onNextStep = onNextStep
+            )
             RegisterStage.SelectAgeGroup -> {}
             RegisterStage.TypeInterest -> {}
         }
@@ -133,5 +141,31 @@ private fun SelectUserType(
                )
            }
        }
+    }
+}
+
+@Composable
+private fun TypeNickname(
+    modifier: Modifier = Modifier,
+    nextEnabled: Boolean,
+    nickNameState: IMaxLengthTextFieldState,
+    onNextStep: () -> Unit,
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(all = 24.dp)
+    ) {
+        MaxLengthTextField(
+            state = nickNameState,
+            placeHolder = stringResource(R.string.placeholder_type_nickname)
+        )
+        IEUMSpacer(
+            modifier = Modifier.weight(1f)
+        )
+        NextButton(
+            enabled = nextEnabled,
+            onClick = onNextStep,
+        )
     }
 }

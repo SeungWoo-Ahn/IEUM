@@ -10,4 +10,6 @@
 
     <string name="description_user_type_patient">환자 본인입니다</string>
     <string name="description_user_type_caregiver">가족 또는 보호자입니다</string>
+
+    <string name="placeholder_type_nickname">아름다운하마0192</string>
 </resources>

@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ieum.design_system.selector.SingleSelectorState
-import com.ieum.design_system.textfield.MaxLengthTextField
+import com.ieum.design_system.textfield.MaxLengthTextFieldState
 import com.ieum.domain.model.user.AgeGroup
 import com.ieum.domain.model.user.RegisterRequest
 import com.ieum.domain.model.user.UserType
@@ -25,12 +25,12 @@ class RegisterViewModel @Inject constructor(
         private set
 
     val userTypeState = SingleSelectorState(itemList = UserType.entries)
-    val nickNameState = MaxLengthTextField(maxLength = 20)
+    val nickNameState = MaxLengthTextFieldState(maxLength = 20)
     // diagnose
     val ageGroupState = SingleSelectorState(itemList = AgeGroup.entries)
     // residence
     // hospital
-    val interestState = MaxLengthTextField(maxLength = 50)
+    val interestState = MaxLengthTextFieldState(maxLength = 50)
 
     fun onPrevStep() {
         if (currentStage == RegisterStage.entries.first()) {

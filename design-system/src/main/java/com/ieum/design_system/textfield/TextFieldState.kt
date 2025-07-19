@@ -36,7 +36,7 @@ class TextFieldState : ITextFieldState {
     }
 }
 
-class MaxLengthTextField(
+class MaxLengthTextFieldState(
     override val maxLength: Int
 ) : IMaxLengthTextFieldState {
     private var _typedText by mutableStateOf("")

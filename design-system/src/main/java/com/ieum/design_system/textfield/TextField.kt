@@ -87,7 +87,7 @@ fun IEUMTextField(
 
 @Preview
 @Composable
-fun IEUMTextFieldPreview() {
+internal fun IEUMTextFieldPreview() {
     val state = TextFieldState()
     IEUMTextField(
         state = state,
@@ -122,7 +122,8 @@ fun MaxLengthTextField(
             verticalAlignment = Alignment.Bottom,
         ) {
             Text(
-                text = "${state.typedText.length}"
+                text = "${state.typedText.length}",
+                color = Color.Green
             )
             Text(
                 text = "/${state.maxLength}"
@@ -133,8 +134,8 @@ fun MaxLengthTextField(
 
 @Preview
 @Composable
-fun MaxLengthTextFieldPreview() {
-    val state = MaxLengthTextField(
+internal fun MaxLengthTextFieldPreview() {
+    val state = MaxLengthTextFieldState(
         maxLength = 10
     )
     MaxLengthTextField(
