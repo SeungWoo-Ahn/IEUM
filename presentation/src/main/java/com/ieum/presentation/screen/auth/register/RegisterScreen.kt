@@ -1,17 +1,24 @@
 package com.ieum.presentation.screen.auth.register
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -19,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ieum.design_system.button.BlackButton
 import com.ieum.design_system.button.NextButton
+import com.ieum.design_system.button.SkipOrNextButton
 import com.ieum.design_system.button.WhiteButton
 import com.ieum.design_system.selector.ISingleSelectorState
 import com.ieum.design_system.spacer.IEUMSpacer
@@ -83,7 +91,11 @@ private fun RegisterScreen(
                 nickNameState = nickNameState,
                 onNextStep = onNextStep
             )
-            RegisterStage.SelectAgeGroup -> {}
+            RegisterStage.SelectAgeGroup -> SelectAgeGroup(
+                nextEnabled = nextEnabled,
+                ageGroupState = ageGroupState,
+                onNextStep = onNextStep,
+            )
             RegisterStage.TypeInterest -> {}
         }
     }
@@ -166,6 +178,60 @@ private fun TypeNickname(
         NextButton(
             enabled = nextEnabled,
             onClick = onNextStep,
+        )
+    }
+}
+
+@Composable
+private fun SelectAgeGroup(
+    modifier: Modifier = Modifier,
+    nextEnabled: Boolean,
+    ageGroupState: ISingleSelectorState<AgeGroup>,
+    onNextStep: () -> Unit,
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(all = 24.dp)
+    ) {
+        ageGroupState.itemList.forEach { ageGroup ->
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(72.dp)
+                    .background(
+                        color = if (ageGroupState.isSelected(ageGroup)) {
+                            Color.Black
+                        } else {
+                            Color.White
+                        },
+                        shape = RoundedCornerShape(16.dp)
+                    )
+                    .clickable(
+                        interactionSource = MutableInteractionSource(),
+                        indication = null,
+                        onClick = { ageGroupState.selectItem(ageGroup) }
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = stringResource(ageGroup.toDescription()),
+                    color = if (ageGroupState.isSelected(ageGroup)) {
+                        Color.White
+                    } else {
+                        Color.Black
+                    }
+                )
+            }
+            IEUMSpacer(size = 12)
+        }
+        IEUMSpacer(
+            modifier = Modifier.weight(1f)
+        )
+        SkipOrNextButton(
+            enabled = nextEnabled,
+            onSkip = onNextStep,
+            onNext = onNextStep,
         )
     }
 }
