@@ -96,7 +96,11 @@ private fun RegisterScreen(
                 ageGroupState = ageGroupState,
                 onNextStep = onNextStep,
             )
-            RegisterStage.TypeInterest -> {}
+            RegisterStage.TypeInterest -> TypeInterest(
+                nextEnabled = nextEnabled,
+                interestState = interestState,
+                onNextStep = onNextStep,
+            )
         }
     }
 }
@@ -225,6 +229,33 @@ private fun SelectAgeGroup(
             }
             IEUMSpacer(size = 12)
         }
+        IEUMSpacer(
+            modifier = Modifier.weight(1f)
+        )
+        SkipOrNextButton(
+            enabled = nextEnabled,
+            onSkip = onNextStep,
+            onNext = onNextStep,
+        )
+    }
+}
+
+@Composable
+fun TypeInterest(
+    modifier: Modifier = Modifier,
+    nextEnabled: Boolean,
+    interestState: IMaxLengthTextFieldState,
+    onNextStep: () -> Unit,
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(all = 24.dp)
+    ) {
+        MaxLengthTextField(
+            state = interestState,
+            placeHolder = stringResource(R.string.placeholder_type_interest)
+        )
         IEUMSpacer(
             modifier = Modifier.weight(1f)
         )
