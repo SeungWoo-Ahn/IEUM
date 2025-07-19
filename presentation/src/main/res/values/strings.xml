@@ -7,4 +7,7 @@
     <string name="guide_select_residence">거주하고 계신 지역을\n알려주세요</string>
     <string name="guide_select_hospital">치료받고 있는 병원의\n지역을 알려주세요</string>
     <string name="guide_type_interest">요즘 가장 관심이 가는\n주제가 무엇인가요?</string>
+
+    <string name="description_user_type_patient">환자 본인입니다</string>
+    <string name="description_user_type_caregiver">가족 또는 보호자입니다</string>
 </resources>

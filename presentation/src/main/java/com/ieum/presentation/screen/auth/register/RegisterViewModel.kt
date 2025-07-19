@@ -19,8 +19,7 @@ import javax.inject.Inject
 class RegisterViewModel @Inject constructor(
     private val registerUseCase: RegisterUseCase,
 ) : ViewModel() {
-    var uiState by mutableStateOf<RegisterUiState>(RegisterUiState.Idle)
-        private set
+    private var uiState by mutableStateOf<RegisterUiState>(RegisterUiState.Idle)
 
     var currentStage by mutableStateOf(RegisterStage.SelectUserType)
         private set
@@ -45,7 +44,7 @@ class RegisterViewModel @Inject constructor(
     fun onNextStep() {
         if (currentStage == RegisterStage.entries.last()) {
             // 회원 가입 로직 실행
-            register()
+//            register()
         } else {
             val nextIdx = RegisterStage.entries.indexOf(currentStage) + 1
             currentStage = RegisterStage.entries[nextIdx]

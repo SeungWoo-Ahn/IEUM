@@ -169,7 +169,7 @@ fun SelectedCountButton(
 
 @Preview
 @Composable
-fun WhiteButtonPreview() {
+internal fun WhiteButtonPreview() {
     WhiteButton(
         text = "회원 가입",
         onClick = {}
@@ -178,7 +178,7 @@ fun WhiteButtonPreview() {
 
 @Preview
 @Composable
-fun BlackButtonPreview() {
+internal fun BlackButtonPreview() {
     BlackButton(
         text = "회원 가입",
         onClick = {}
@@ -187,7 +187,7 @@ fun BlackButtonPreview() {
 
 @Preview
 @Composable
-fun SkipOrNextButtonPreview() {
+internal fun SkipOrNextButtonPreview() {
     var enabled by remember { mutableStateOf(false) }
     SkipOrNextButton(
         enabled = enabled,
@@ -198,7 +198,7 @@ fun SkipOrNextButtonPreview() {
 
 @Preview
 @Composable
-fun SelectedCountButtonPreview() {
+internal fun SelectedCountButtonPreview() {
     var enabled by remember { mutableStateOf(true) }
     SelectedCountButton(
         enabled = enabled,
