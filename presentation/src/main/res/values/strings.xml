@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="guide_select_user_type">당신의\n현재 상황을 알려주세요</string>
+    <string name="guide_type_nickname">사용하실 닉네임을\n입력해주세요</string>
+    <string name="guide_select_diagnose">진단명을 1개 이상\n선택해 주세요</string>
+    <string name="guide_select_age_group">연령대가/n어떻게 되시나요?</string>
+    <string name="guide_select_residence">거주하고 계신 지역을\n알려주세요</string>
+    <string name="guide_select_hospital">치료받고 있는 병원의\n지역을 알려주세요</string>
+    <string name="guide_type_interest">요즘 가장 관심이 가는\n주제가 무엇인가요?</string>
+</resources>
