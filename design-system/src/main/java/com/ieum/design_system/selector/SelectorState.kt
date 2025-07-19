@@ -10,6 +10,8 @@ interface ISelectorState<T> {
     fun selectItem(item: T)
 
     fun isSelected(item: T): Boolean
+
+    fun validate(): Boolean
 }
 
 interface ISingleSelectorState<T> : ISelectorState<T> {
@@ -38,6 +40,10 @@ class SingleSelectorState<T>(
     override fun isSelected(item: T): Boolean {
         return item == selectedItem
     }
+
+    override fun validate(): Boolean {
+        return selectedItem != null
+    }
 }
 
 class MultipleSelectorState<T>(
@@ -57,5 +63,9 @@ class MultipleSelectorState<T>(
 
     override fun isSelected(item: T): Boolean {
         return item in selectedItemList
+    }
+
+    override fun validate(): Boolean {
+        return selectedItemList.isNotEmpty()
     }
 }
