@@ -14,14 +14,20 @@ class AddressRepositoryImpl @Inject constructor(
     private val addressDataSource: AddressDataSource,
     private val addressDataCache: AddressDataCache,
 ) : AddressRepository {
-    override suspend fun getAccessToken(): String =
-        addressDataCache.getAccessToken() ?:
-            addressDataSource
-                .getSGISToken()
-                .accessToken
-                .also {
-                    addressDataCache.setAccessToken(it)
-                }
+    override suspend fun getAccessToken(localFirst: Boolean): String =
+        if (localFirst) {
+            addressDataCache.getAccessToken() ?: getRemoteAccessToken()
+        } else {
+            getRemoteAccessToken()
+        }
+
+    private suspend fun getRemoteAccessToken(): String =
+        addressDataSource
+            .getSGISToken()
+            .accessToken
+            .also {
+                addressDataCache.setAccessToken(it)
+            }
 
     override suspend fun getAddressList(accessToken: String, code: String?): List<Address> =
         addressDataSource

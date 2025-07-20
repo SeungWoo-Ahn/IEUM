@@ -1,8 +1,10 @@
 package com.ieum.data.network.di
 
 import com.ieum.data.network.model.base.ErrorResponse
+import com.ieum.data.network.model.base.SGISErrorResponse
 import com.ieum.data.network.util.TokenManager
 import com.ieum.domain.exception.NetworkException
+import com.ieum.domain.exception.SGISException
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -123,6 +125,18 @@ internal object NetworkModule {
             defaultRequest {
                 url("https://sgisapi.kostat.go.kr/OpenAPI3/")
                 header(HttpHeaders.ContentType, ContentType.Application.Json)
+            }
+            HttpResponseValidator {
+                validateResponse { response ->
+                    val errorResponse = response.body<SGISErrorResponse>()
+                    if (errorResponse.code != 0) {
+                        if (errorResponse.code == -401) {
+                            throw SGISException.UnAuthorized(errorResponse.message)
+                        } else {
+                            throw SGISException.Unknown(errorResponse.message)
+                        }
+                    }
+                }
             }
         }
 }
