@@ -68,4 +68,7 @@ dependencies {
 
     // datastore
     implementation(libs.bundles.datastore)
+
+    // timber
+    implementation(libs.timber)
 }

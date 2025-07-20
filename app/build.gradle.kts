@@ -57,4 +57,7 @@ dependencies {
 
     // oAuth
     implementation(libs.kakao.user)
+
+    // timber
+    implementation(libs.timber)
 }
