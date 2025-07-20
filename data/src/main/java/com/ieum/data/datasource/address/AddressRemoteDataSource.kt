@@ -1,5 +1,6 @@
 package com.ieum.data.datasource.address
 
+import com.ieum.data.BuildConfig
 import com.ieum.data.network.di.IEUMNetwork
 import com.ieum.data.network.di.NetworkSource
 import com.ieum.data.network.model.address.AddressDto
@@ -20,8 +21,8 @@ class AddressRemoteDataSource @Inject constructor(
     override suspend fun getSGISToken(): SGISToken =
         ktorClient
             .get("auth/authentication.json") {
-                parameter("consumer_key", "")
-                parameter("consumer_secret", "") // TODO: 인증키 넣기
+                parameter("consumer_key", BuildConfig.SGIS_CONSUMER_KEY)
+                parameter("consumer_secret", BuildConfig.SGIS_CONSUMER_SECRET)
             }
             .body<BaseResponse<SGISToken>>()
             .result

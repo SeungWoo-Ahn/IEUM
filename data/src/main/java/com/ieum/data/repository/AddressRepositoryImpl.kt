@@ -6,10 +6,11 @@ import com.ieum.data.mapper.toDomain
 import com.ieum.data.network.model.address.AddressDto
 import com.ieum.domain.model.address.Address
 import com.ieum.domain.repository.AddressRepository
+import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class AddressRepositoryImpl(
+class AddressRepositoryImpl @Inject constructor(
     private val addressDataSource: AddressDataSource,
     private val addressDataCache: AddressDataCache,
 ) : AddressRepository {
