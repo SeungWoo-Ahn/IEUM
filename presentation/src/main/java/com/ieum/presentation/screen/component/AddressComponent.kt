@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import com.ieum.design_system.selector.CitySelector
 import com.ieum.design_system.selector.ProvinceSelector
@@ -18,6 +19,9 @@ fun AddressComponent(
 ) {
     when (val uiState = state.uiState) {
         AddressUiState.Loading -> {
+            LaunchedEffect(Unit) {
+                state.getCityList()
+            }
             // TODO: 로딩 컴포넌트
         }
         AddressUiState.Error -> {

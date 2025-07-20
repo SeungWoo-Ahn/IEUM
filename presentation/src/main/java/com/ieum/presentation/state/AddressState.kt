@@ -28,10 +28,6 @@ class AddressState(
     var uiState by mutableStateOf<AddressUiState>(AddressUiState.Loading)
         private set
 
-    init {
-        getCityList()
-    }
-
     fun getCityList() {
         coroutineScope.launch {
             getAddressListUseCase()
