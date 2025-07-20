@@ -8,7 +8,7 @@ enum class RegisterStage(@StringRes val guide: Int) {
     TypeNickname(guide = R.string.guide_type_nickname),
 /*    SelectDiagnose(guide = R.string.guide_select_diagnose),*/
     SelectAgeGroup(guide = R.string.guide_select_age_group),
-/*    SelectResidence(guide = R.string.guide_select_residence),
-    SelectHospital(guide = R.string.guide_select_hospital),*/
+    SelectResidence(guide = R.string.guide_select_residence),
+    SelectHospital(guide = R.string.guide_select_hospital),
     TypeInterest(guide = R.string.guide_type_interest),
 }

@@ -36,6 +36,8 @@ import com.ieum.domain.model.user.AgeGroup
 import com.ieum.domain.model.user.UserType
 import com.ieum.presentation.R
 import com.ieum.presentation.mapper.toDescription
+import com.ieum.presentation.screen.component.AddressComponent
+import com.ieum.presentation.state.AddressState
 
 @Composable
 fun RegisterRoute(
@@ -53,6 +55,8 @@ fun RegisterRoute(
         userTypeState = viewModel.userTypeState,
         nickNameState = viewModel.nickNameState,
         ageGroupState = viewModel.ageGroupState,
+        residenceState = viewModel.residenceState,
+        hospitalState = viewModel.hospitalState,
         interestState = viewModel.interestState,
         onPrevStep = viewModel::onPrevStep,
         onNextStep = viewModel::onNextStep,
@@ -69,6 +73,8 @@ private fun RegisterScreen(
     userTypeState: ISingleSelectorState<UserType>,
     nickNameState: IMaxLengthTextFieldState,
     ageGroupState: ISingleSelectorState<AgeGroup>,
+    residenceState: AddressState,
+    hospitalState: AddressState,
     interestState: IMaxLengthTextFieldState,
     onPrevStep: () -> Unit,
     onNextStep: () -> Unit,
@@ -95,6 +101,12 @@ private fun RegisterScreen(
                 nextEnabled = nextEnabled,
                 ageGroupState = ageGroupState,
                 onNextStep = onNextStep,
+            )
+            RegisterStage.SelectResidence -> AddressComponent(
+                state = residenceState
+            )
+            RegisterStage.SelectHospital -> AddressComponent(
+                state = hospitalState
             )
             RegisterStage.TypeInterest -> TypeInterest(
                 nextEnabled = nextEnabled,

@@ -10,13 +10,16 @@ import com.ieum.design_system.textfield.MaxLengthTextFieldState
 import com.ieum.domain.model.user.AgeGroup
 import com.ieum.domain.model.user.RegisterRequest
 import com.ieum.domain.model.user.UserType
+import com.ieum.domain.usecase.address.GetAddressListUseCase
 import com.ieum.domain.usecase.user.RegisterUseCase
+import com.ieum.presentation.state.AddressState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
+    getAddressListUseCase: GetAddressListUseCase,
     private val registerUseCase: RegisterUseCase,
 ) : ViewModel() {
     private var uiState by mutableStateOf<RegisterUiState>(RegisterUiState.Idle)
@@ -28,8 +31,14 @@ class RegisterViewModel @Inject constructor(
     val nickNameState = MaxLengthTextFieldState(maxLength = 20)
     // diagnose
     val ageGroupState = SingleSelectorState(itemList = AgeGroup.entries)
-    // residence
-    // hospital
+    val residenceState = AddressState(
+        getAddressListUseCase = getAddressListUseCase,
+        coroutineScope = viewModelScope,
+    )
+    val hospitalState = AddressState(
+        getAddressListUseCase = getAddressListUseCase,
+        coroutineScope = viewModelScope,
+    )
     val interestState = MaxLengthTextFieldState(maxLength = 50)
 
     fun onPrevStep() {
@@ -56,6 +65,8 @@ class RegisterViewModel @Inject constructor(
             RegisterStage.SelectUserType -> true
             RegisterStage.TypeNickname -> nickNameState.validate()
             RegisterStage.SelectAgeGroup -> ageGroupState.validate()
+            RegisterStage.SelectResidence -> residenceState.validate()
+            RegisterStage.SelectHospital -> hospitalState.validate()
             RegisterStage.TypeInterest -> interestState.validate() && uiState != RegisterUiState.Loading
         }
 
@@ -67,8 +78,8 @@ class RegisterViewModel @Inject constructor(
                 nickName = nickNameState.getTrimmedText(),
                 diagnoses = listOf(),
                 ageGroup = ageGroupState.selectedItem,
-                residenceArea = null,
-                hospitalArea = null,
+                residenceArea = residenceState.getSelectedProvince()?.fullName,
+                hospitalArea = hospitalState.getSelectedProvince()?.fullName,
             )
             registerUseCase(registerRequest)
                 .onSuccess {
