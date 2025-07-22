@@ -103,10 +103,14 @@ private fun RegisterScreen(
                 onNextStep = onNextStep,
             )
             RegisterStage.SelectResidence -> AddressComponent(
-                state = residenceState
+                nextEnabled = nextEnabled,
+                state = residenceState,
+                onNextStep = onNextStep,
             )
             RegisterStage.SelectHospital -> AddressComponent(
-                state = hospitalState
+                nextEnabled = nextEnabled,
+                state = hospitalState,
+                onNextStep = onNextStep,
             )
             RegisterStage.TypeInterest -> TypeInterest(
                 nextEnabled = nextEnabled,

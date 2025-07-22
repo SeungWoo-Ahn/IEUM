@@ -1,5 +1,6 @@
 package com.ieum.presentation.state
 
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -28,6 +29,9 @@ class AddressState(
     var uiState by mutableStateOf<AddressUiState>(AddressUiState.Loading)
         private set
 
+    val cityListScrollState = LazyListState()
+    val provinceListScrollState = LazyListState()
+
     fun getCityList() {
         coroutineScope.launch {
             getAddressListUseCase()
@@ -40,14 +44,16 @@ class AddressState(
         }
     }
 
-    fun selectCity(city: Address, state: AddressUiState.Success) {
+    fun selectCity(city: Address) {
+        val state = uiState as? AddressUiState.Success ?: return
         if (city != state.selectedCity) {
             coroutineScope.launch {
                 getAddressListUseCase(city.code)
                     .onSuccess { provinceList ->
                         uiState = state.copy(
                             selectedCity = city,
-                            provinceList = provinceList
+                            provinceList = provinceList,
+                            selectedProvince = null,
                         )
                     }
 
@@ -55,7 +61,8 @@ class AddressState(
         }
     }
 
-    fun selectProvince(province: Address, state: AddressUiState.Success) {
+    fun selectProvince(province: Address) {
+        val state = uiState as? AddressUiState.Success ?: return
         if (province != state.selectedProvince) {
             uiState = state.copy(selectedProvince = province)
         }
