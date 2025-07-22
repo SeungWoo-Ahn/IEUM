@@ -150,7 +150,6 @@ fun NextButton(
 fun SkipOrNextButton(
     modifier: Modifier = Modifier,
     enabled: Boolean,
-    onSkip: () -> Unit,
     onNext: () -> Unit,
 ) {
     Row(
@@ -160,7 +159,7 @@ fun SkipOrNextButton(
         if (enabled.not()) {
             SkipButton(
                 modifier = Modifier.weight(1f),
-                onClick = onSkip
+                onClick = onNext
             )
         }
         NextButton(
@@ -174,10 +173,9 @@ fun SkipOrNextButton(
 @Preview
 @Composable
 internal fun SkipOrNextButtonPreview() {
-    var enabled by remember { mutableStateOf(false) }
+    var enabled by remember { mutableStateOf(true) }
     SkipOrNextButton(
         enabled = enabled,
-        onSkip = { enabled = true },
         onNext = { enabled = false },
     )
 }

@@ -246,7 +246,6 @@ private fun SelectAgeGroup(
         )
         SkipOrNextButton(
             enabled = nextEnabled,
-            onSkip = onNextStep,
             onNext = onNextStep,
         )
     }
@@ -273,7 +272,6 @@ fun TypeInterest(
         )
         SkipOrNextButton(
             enabled = nextEnabled,
-            onSkip = onNextStep,
             onNext = onNextStep,
         )
     }
