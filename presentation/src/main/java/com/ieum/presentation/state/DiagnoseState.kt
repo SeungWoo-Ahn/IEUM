@@ -14,7 +14,10 @@ import com.ieum.presentation.model.user.CancerDiagnoseUiModel
 import com.ieum.presentation.model.user.DiagnoseKey
 
 sealed interface CancerStageSheetUiState {
-    data class Show(val callback: (CancerStage?) -> Unit) : CancerStageSheetUiState
+    data class Show(
+        val key: CancerDiagnoseKey,
+        val callback: (CancerStage?) -> Unit
+    ) : CancerStageSheetUiState
 
     data object Dismiss : CancerStageSheetUiState
 }
@@ -25,9 +28,9 @@ class CancerStageSheetState {
 
     val cancerStageState = SingleSelectorState(itemList = CancerStage.entries + listOf(null))
 
-    fun show(cancerStage: CancerStage?, callback: (CancerStage?) -> Unit) {
-        cancerStageState.selectItem(cancerStage)
-        uiState = CancerStageSheetUiState.Show(callback)
+    fun show(diagnose: CancerDiagnoseUiModel, callback: (CancerStage?) -> Unit) {
+        cancerStageState.selectItem(diagnose.stage)
+        uiState = CancerStageSheetUiState.Show(diagnose.key, callback)
     }
 
     fun dismiss() {
@@ -46,14 +49,14 @@ class CancerDiagnoseState {
     fun onDiagnose(diagnose: CancerDiagnoseUiModel) {
         val callback: (CancerStage?) -> Unit = { stage ->
             diagnoseList = diagnoseList.map {
-                if (it == diagnose) {
+                if (it.key == diagnose.key) {
                     it.copy(stage = stage)
                 } else {
                     it
                 }
             }
         }
-        cancerStageSheetState.show(diagnose.stage, callback)
+        cancerStageSheetState.show(diagnose, callback)
     }
 
     fun isSelected(diagnose: CancerDiagnoseUiModel): Boolean {
@@ -78,7 +81,7 @@ class DiagnoseState {
     val cancerDiagnoseState = CancerDiagnoseState()
 
     fun getSelectedCnt(): Int =
-        commonDiagnoseState.selectedItemList.size + cancerDiagnoseState.getSelectedCnt()
+        cancerDiagnoseState.getSelectedCnt() + commonDiagnoseState.selectedItemList.size
 
     fun validate(): Boolean {
         return getSelectedCnt() > 0

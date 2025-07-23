@@ -40,10 +40,12 @@ import com.ieum.presentation.screen.component.AddressComponent
 import com.ieum.presentation.screen.component.DiagnoseComponent
 import com.ieum.presentation.state.AddressState
 import com.ieum.presentation.state.DiagnoseState
+import kotlinx.coroutines.CoroutineScope
 
 @Composable
 fun RegisterRoute(
     modifier: Modifier = Modifier,
+    scope: CoroutineScope,
     moveWelcome: () -> Unit,
     onBack: () -> Unit,
     viewModel: RegisterViewModel = hiltViewModel(),
@@ -52,6 +54,7 @@ fun RegisterRoute(
 
     RegisterScreen(
         modifier = modifier,
+        scope = scope,
         nextEnabled = nextEnabled,
         currentStage = viewModel.currentStage,
         userTypeState = viewModel.userTypeState,
@@ -71,6 +74,7 @@ fun RegisterRoute(
 @Composable
 private fun RegisterScreen(
     modifier: Modifier,
+    scope: CoroutineScope,
     nextEnabled: Boolean,
     currentStage: RegisterStage,
     userTypeState: ISingleSelectorState<UserType>,
@@ -101,6 +105,7 @@ private fun RegisterScreen(
                 onNextStep = onNextStep
             )
             RegisterStage.SelectDiagnose -> DiagnoseComponent(
+                scope = scope,
                 nextEnabled = nextEnabled,
                 diagnoseState = diagnoseState,
                 onNextStep = onNextStep,

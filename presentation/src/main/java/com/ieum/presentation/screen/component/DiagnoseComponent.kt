@@ -24,10 +24,12 @@ import com.ieum.presentation.model.user.CancerDiagnoseUiModel
 import com.ieum.presentation.model.user.DiagnoseKey
 import com.ieum.presentation.state.CancerDiagnoseState
 import com.ieum.presentation.state.DiagnoseState
+import kotlinx.coroutines.CoroutineScope
 
 @Composable
 fun DiagnoseComponent(
     modifier: Modifier = Modifier,
+    scope: CoroutineScope,
     nextEnabled: Boolean,
     diagnoseState: DiagnoseState,
     onNextStep: () -> Unit,
@@ -51,6 +53,7 @@ fun DiagnoseComponent(
         )
     }
     CancerStageComponent(
+        scope = scope,
         sheetState = diagnoseState.cancerDiagnoseState.cancerStageSheetState,
     )
 }
@@ -129,7 +132,7 @@ private fun DiagnoseSelectArea(
         state.itemList.forEach { diagnose ->
             DiagnoseSelector(
                 isSelected = state.isSelected(diagnose),
-                diagnose = diagnose,
+                name = stringResource(diagnose.displayName),
                 onClick = { state.selectItem(diagnose) }
             )
             IEUMSpacer(size = 16)
@@ -141,7 +144,7 @@ private fun DiagnoseSelectArea(
 private fun DiagnoseSelector(
     modifier: Modifier = Modifier,
     isSelected: Boolean,
-    diagnose: DiagnoseKey,
+    name: String,
     onClick: () -> Unit,
 ) {
     Box(
@@ -160,7 +163,7 @@ private fun DiagnoseSelector(
         contentAlignment = Alignment.Center,
     ) {
         Text(
-            text = stringResource(diagnose.displayName),
+            text = name,
             color = if (isSelected) {
                 Color.White
             } else {

@@ -22,6 +22,7 @@ fun NavGraphBuilder.nestedAuthGraph(appState: IEUMAppState) {
         }
         composable<AuthScreen.Register> {
             RegisterRoute(
+                scope = appState.coroutineScope,
                 moveWelcome = navController::navigateToWelcomeScreen,
                 onBack = navController::popBackStack,
             )

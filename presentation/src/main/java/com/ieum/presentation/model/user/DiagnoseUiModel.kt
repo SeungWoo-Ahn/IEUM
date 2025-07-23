@@ -17,14 +17,4 @@ enum class CancerDiagnoseKey(@StringRes val displayName: Int) {
 data class CancerDiagnoseUiModel(
     val key: CancerDiagnoseKey,
     val stage: CancerStage? = null
-) {
-    override fun equals(other: Any?): Boolean {
-        if (other == null) return false
-        if (other !is CancerDiagnoseUiModel) return false
-        return key == other.key
-    }
-
-    override fun hashCode(): Int {
-        return key.hashCode()
-    }
-}
+)
