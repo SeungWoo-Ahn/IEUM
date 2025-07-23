@@ -37,6 +37,10 @@ class SingleSelectorState<T>(
         }
     }
 
+    fun setItem(item: T) {
+        _selectedItem = item
+    }
+
     override fun isSelected(item: T): Boolean {
         return item == selectedItem
     }

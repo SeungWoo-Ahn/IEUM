@@ -29,7 +29,7 @@ class CancerStageSheetState {
     val cancerStageState = SingleSelectorState(itemList = CancerStage.entries + listOf(null))
 
     fun show(diagnose: CancerDiagnoseUiModel, callback: (CancerStage?) -> Unit) {
-        cancerStageState.selectItem(diagnose.stage)
+        cancerStageState.setItem(diagnose.stage)
         uiState = CancerStageSheetUiState.Show(diagnose.key, callback)
     }
 
