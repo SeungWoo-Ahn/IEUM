@@ -13,6 +13,7 @@ import com.ieum.domain.model.user.UserType
 import com.ieum.domain.usecase.address.GetAddressListUseCase
 import com.ieum.domain.usecase.user.RegisterUseCase
 import com.ieum.presentation.state.AddressState
+import com.ieum.presentation.state.DiagnoseState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -29,7 +30,7 @@ class RegisterViewModel @Inject constructor(
 
     val userTypeState = SingleSelectorState(itemList = UserType.entries)
     val nickNameState = MaxLengthTextFieldState(maxLength = 20)
-    // diagnose
+    val diagnoseState = DiagnoseState()
     val ageGroupState = SingleSelectorState(itemList = AgeGroup.entries)
     val residenceState = AddressState(
         getAddressListUseCase = getAddressListUseCase,
@@ -64,6 +65,7 @@ class RegisterViewModel @Inject constructor(
         when (currentStage) {
             RegisterStage.SelectUserType -> true
             RegisterStage.TypeNickname -> nickNameState.validate()
+            RegisterStage.SelectDiagnose -> diagnoseState.validate()
             RegisterStage.SelectAgeGroup -> ageGroupState.validate()
             RegisterStage.SelectResidence -> residenceState.validate()
             RegisterStage.SelectHospital -> hospitalState.validate()
@@ -76,7 +78,7 @@ class RegisterViewModel @Inject constructor(
             val registerRequest = RegisterRequest(
                 userType = userTypeState.selectedItem!!,
                 nickName = nickNameState.getTrimmedText(),
-                diagnoses = listOf(),
+                diagnoses = diagnoseState.getSelectedDiagnoseList(),
                 ageGroup = ageGroupState.selectedItem,
                 residenceArea = residenceState.getSelectedProvince()?.fullName,
                 hospitalArea = hospitalState.getSelectedProvince()?.fullName,

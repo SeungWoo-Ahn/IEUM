@@ -37,7 +37,9 @@ import com.ieum.domain.model.user.UserType
 import com.ieum.presentation.R
 import com.ieum.presentation.mapper.toDescription
 import com.ieum.presentation.screen.component.AddressComponent
+import com.ieum.presentation.screen.component.DiagnoseComponent
 import com.ieum.presentation.state.AddressState
+import com.ieum.presentation.state.DiagnoseState
 
 @Composable
 fun RegisterRoute(
@@ -54,6 +56,7 @@ fun RegisterRoute(
         currentStage = viewModel.currentStage,
         userTypeState = viewModel.userTypeState,
         nickNameState = viewModel.nickNameState,
+        diagnoseState = viewModel.diagnoseState,
         ageGroupState = viewModel.ageGroupState,
         residenceState = viewModel.residenceState,
         hospitalState = viewModel.hospitalState,
@@ -72,6 +75,7 @@ private fun RegisterScreen(
     currentStage: RegisterStage,
     userTypeState: ISingleSelectorState<UserType>,
     nickNameState: IMaxLengthTextFieldState,
+    diagnoseState: DiagnoseState,
     ageGroupState: ISingleSelectorState<AgeGroup>,
     residenceState: AddressState,
     hospitalState: AddressState,
@@ -86,7 +90,6 @@ private fun RegisterScreen(
         // AppBar 영역
         // Guide 영역
         RegisterGuide(guide = stringResource(currentStage.guide))
-        // 각 Stage 영역
         when (currentStage) {
             RegisterStage.SelectUserType -> SelectUserType(
                 userTypeState = userTypeState,
@@ -96,6 +99,11 @@ private fun RegisterScreen(
                 nextEnabled = nextEnabled,
                 nickNameState = nickNameState,
                 onNextStep = onNextStep
+            )
+            RegisterStage.SelectDiagnose -> DiagnoseComponent(
+                nextEnabled = nextEnabled,
+                diagnoseState = diagnoseState,
+                onNextStep = onNextStep,
             )
             RegisterStage.SelectAgeGroup -> SelectAgeGroup(
                 nextEnabled = nextEnabled,

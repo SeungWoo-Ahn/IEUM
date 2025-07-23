@@ -56,11 +56,15 @@ class CancerDiagnoseState {
         cancerStageSheetState.show(diagnose.stage, callback)
     }
 
-    fun validate(): Boolean {
-        return diagnoseList.any { it.stage != null }
+    fun isSelected(diagnose: CancerDiagnoseUiModel): Boolean {
+        return diagnose.stage != null
     }
 
-    fun getDiagnoseList(): List<CancerDiagnose> =
+    fun getSelectedCnt(): Int {
+        return diagnoseList.count { it.stage != null }
+    }
+
+    fun getSelectedDiagnoseList(): List<CancerDiagnose> =
         diagnoseList.mapNotNull { uiModel ->
             uiModel.stage?.let { stage ->
                 uiModel.key.toDomain(stage)
@@ -70,14 +74,17 @@ class CancerDiagnoseState {
 }
 
 class DiagnoseState {
-    val diagnoseState = MultipleSelectorState(itemList = DiagnoseKey.entries)
+    val commonDiagnoseState = MultipleSelectorState(itemList = DiagnoseKey.entries)
     val cancerDiagnoseState = CancerDiagnoseState()
 
+    fun getSelectedCnt(): Int =
+        commonDiagnoseState.selectedItemList.size + cancerDiagnoseState.getSelectedCnt()
+
     fun validate(): Boolean {
-        return diagnoseState.validate() || cancerDiagnoseState.validate()
+        return getSelectedCnt() > 0
     }
 
-    fun getDiagnoseList(): List<Diagnose> =
-        cancerDiagnoseState.getDiagnoseList() +
-                diagnoseState.selectedItemList.map(DiagnoseKey::toDomain)
+    fun getSelectedDiagnoseList(): List<Diagnose> =
+        cancerDiagnoseState.getSelectedDiagnoseList() +
+                commonDiagnoseState.selectedItemList.map(DiagnoseKey::toDomain)
 }
