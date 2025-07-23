@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -45,6 +46,15 @@ fun RegisterRoute(
     viewModel: RegisterViewModel = hiltViewModel(),
 ) {
     val nextEnabled by remember { derivedStateOf { viewModel.nextEnabled() } }
+
+    LaunchedEffect(Unit) {
+        viewModel.event.collect { event ->
+            when (event) {
+                RegisterEvent.MoveWelcome -> moveWelcome()
+                RegisterEvent.MoveBack -> onBack()
+            }
+        }
+    }
 
     RegisterScreen(
         modifier = modifier,

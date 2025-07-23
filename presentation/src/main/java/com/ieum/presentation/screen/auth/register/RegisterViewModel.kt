@@ -15,7 +15,11 @@ import com.ieum.domain.usecase.user.RegisterUseCase
 import com.ieum.presentation.state.AddressState
 import com.ieum.presentation.state.DiagnoseState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,6 +28,9 @@ class RegisterViewModel @Inject constructor(
     private val registerUseCase: RegisterUseCase,
 ) : ViewModel() {
     private var uiState by mutableStateOf<RegisterUiState>(RegisterUiState.Idle)
+
+    private val _event = MutableSharedFlow<RegisterEvent>()
+    val event: SharedFlow<RegisterEvent> = _event.asSharedFlow()
 
     var currentStage by mutableStateOf(RegisterStage.SelectUserType)
         private set
@@ -44,7 +51,9 @@ class RegisterViewModel @Inject constructor(
 
     fun onPrevStep() {
         if (currentStage == RegisterStage.entries.first()) {
-            // 뒤로 돌아가기
+            viewModelScope.launch {
+                _event.emit(RegisterEvent.MoveBack)
+            }
         } else {
             val prevIdx = RegisterStage.entries.indexOf(currentStage) - 1
             currentStage = RegisterStage.entries[prevIdx]
@@ -53,8 +62,7 @@ class RegisterViewModel @Inject constructor(
 
     fun onNextStep() {
         if (currentStage == RegisterStage.entries.last()) {
-            // 회원 가입 로직 실행
-//            register()
+            register()
         } else {
             val nextIdx = RegisterStage.entries.indexOf(currentStage) + 1
             currentStage = RegisterStage.entries[nextIdx]
@@ -83,14 +91,16 @@ class RegisterViewModel @Inject constructor(
                 residenceArea = residenceState.getSelectedProvince()?.fullName,
                 hospitalArea = hospitalState.getSelectedProvince()?.fullName,
             )
-            registerUseCase(registerRequest)
+            Timber.i(registerRequest.toString())
+            _event.emit(RegisterEvent.MoveWelcome)
+/*            registerUseCase(registerRequest)
                 .onSuccess {
-                    // welcome screen 이동
+                    _event.emit(RegisterEvent.MoveWelcome)
                 }
                 .onFailure {
                     // 회원 가입 실패
                     uiState = RegisterUiState.Idle
-                }
+                }*/
         }
     }
 }
