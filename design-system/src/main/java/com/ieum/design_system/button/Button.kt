@@ -57,32 +57,6 @@ fun IEUMButton(
 }
 
 @Composable
-fun WhiteButton(
-    modifier: Modifier = Modifier,
-    text: String,
-    onClick: () -> Unit,
-) {
-    IEUMButton(
-        modifier = modifier,
-        text = text,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = Color.White,
-            contentColor = Color.Black,
-        ),
-        onClick = onClick
-    )
-}
-
-@Preview
-@Composable
-internal fun WhiteButtonPreview() {
-    WhiteButton(
-        text = "회원 가입",
-        onClick = {}
-    )
-}
-
-@Composable
 fun BlackButton(
     modifier: Modifier = Modifier,
     text: String,
