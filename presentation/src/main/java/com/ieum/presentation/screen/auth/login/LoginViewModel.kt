@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -29,10 +30,12 @@ class LoginViewModel @Inject constructor(
             uiState = LoginUiState.Loading
             strategy.proceed()
                 .onSuccess { oAuthRequest ->
+                    Timber.i(oAuthRequest.toString())
                     _event.emit(LoginEvent.MoveRegister) // TODO: login 연결 이후 제거
                     /*login(oAuthRequest)*/
                 }
-                .onFailure {
+                .onFailure { t ->
+                    Timber.e(t)
                     // OAuth 로그인 실패
                 }
             uiState = LoginUiState.Idle
