@@ -23,6 +23,7 @@ import com.ieum.design_system.button.SelectedCountButton
 import com.ieum.design_system.button.SkipOrNextButton
 import com.ieum.design_system.selector.ISingleSelectorState
 import com.ieum.design_system.textfield.IMaxLengthTextFieldState
+import com.ieum.design_system.topbar.TopBarForBack
 import com.ieum.domain.model.user.AgeGroup
 import com.ieum.domain.model.user.UserType
 import com.ieum.presentation.screen.component.AddressComponent
@@ -83,7 +84,7 @@ private fun RegisterScreen(
         modifier = modifier
             .fillMaxSize()
     ) {
-        // TODO: RegisterAppBarArea
+        TopBarForBack(onBack = onPrevStep)
         RegisterGuideArea(guide = stringResource(currentStage.guide))
         Box(
             modifier = Modifier.weight(1f)
@@ -120,7 +121,7 @@ private fun RegisterGuideArea(
         modifier = modifier
             .fillMaxWidth()
             .padding(
-                top = 60.dp,
+                top = 12.dp,
                 bottom = 48.dp,
                 start = 24.dp,
                 end = 24.dp,
