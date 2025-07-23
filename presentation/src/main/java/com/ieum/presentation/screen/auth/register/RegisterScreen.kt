@@ -1,16 +1,11 @@
 package com.ieum.presentation.screen.auth.register
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -18,26 +13,24 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.ieum.design_system.button.BlackButton
 import com.ieum.design_system.button.NextButton
+import com.ieum.design_system.button.SelectedCountButton
 import com.ieum.design_system.button.SkipOrNextButton
-import com.ieum.design_system.button.WhiteButton
 import com.ieum.design_system.selector.ISingleSelectorState
-import com.ieum.design_system.spacer.IEUMSpacer
 import com.ieum.design_system.textfield.IMaxLengthTextFieldState
-import com.ieum.design_system.textfield.MaxLengthTextField
 import com.ieum.domain.model.user.AgeGroup
 import com.ieum.domain.model.user.UserType
-import com.ieum.presentation.R
-import com.ieum.presentation.mapper.toDescription
 import com.ieum.presentation.screen.component.AddressComponent
 import com.ieum.presentation.screen.component.DiagnoseComponent
+import com.ieum.presentation.screen.component.SelectAgeGroup
+import com.ieum.presentation.screen.component.SelectUserType
+import com.ieum.presentation.screen.component.TypeInterest
+import com.ieum.presentation.screen.component.TypeNickname
 import com.ieum.presentation.state.AddressState
 import com.ieum.presentation.state.DiagnoseState
 import kotlinx.coroutines.CoroutineScope
@@ -67,7 +60,6 @@ fun RegisterRoute(
         onPrevStep = viewModel::onPrevStep,
         onNextStep = viewModel::onNextStep,
     )
-
     BackHandler(onBack = viewModel::onPrevStep)
 }
 
@@ -91,43 +83,28 @@ private fun RegisterScreen(
         modifier = modifier
             .fillMaxSize()
     ) {
-        // AppBar 영역
-        // Guide 영역
-        RegisterGuide(guide = stringResource(currentStage.guide))
-        when (currentStage) {
-            RegisterStage.SelectUserType -> SelectUserType(
-                userTypeState = userTypeState,
-                onNextStep = onNextStep
-            )
-            RegisterStage.TypeNickname -> TypeNickname(
-                nextEnabled = nextEnabled,
-                nickNameState = nickNameState,
-                onNextStep = onNextStep
-            )
-            RegisterStage.SelectDiagnose -> DiagnoseComponent(
+        // TODO: RegisterAppBarArea
+        RegisterGuideArea(guide = stringResource(currentStage.guide))
+        Box(
+            modifier = Modifier.weight(1f)
+        ) {
+            RegisterStageScreenArea(
                 scope = scope,
-                nextEnabled = nextEnabled,
+                currentStage = currentStage,
+                userTypeState = userTypeState,
+                nickNameState = nickNameState,
                 diagnoseState = diagnoseState,
-                onNextStep = onNextStep,
-            )
-            RegisterStage.SelectAgeGroup -> SelectAgeGroup(
-                nextEnabled = nextEnabled,
                 ageGroupState = ageGroupState,
-                onNextStep = onNextStep,
-            )
-            RegisterStage.SelectResidence -> AddressComponent(
-                nextEnabled = nextEnabled,
-                state = residenceState,
-                onNextStep = onNextStep,
-            )
-            RegisterStage.SelectHospital -> AddressComponent(
-                nextEnabled = nextEnabled,
-                state = hospitalState,
-                onNextStep = onNextStep,
-            )
-            RegisterStage.TypeInterest -> TypeInterest(
-                nextEnabled = nextEnabled,
+                residenceState = residenceState,
+                hospitalState = hospitalState,
                 interestState = interestState,
+                onNextStep = onNextStep,
+            )
+            RegisterButtonArea(
+                modifier = Modifier.align(Alignment.BottomCenter),
+                currentStage = currentStage,
+                nextEnabled = nextEnabled,
+                selectedDiagnoseCnt = diagnoseState.getSelectedCnt(),
                 onNextStep = onNextStep,
             )
         }
@@ -135,7 +112,7 @@ private fun RegisterScreen(
 }
 
 @Composable
-private fun RegisterGuide(
+private fun RegisterGuideArea(
     modifier: Modifier = Modifier,
     guide: String
 ) {
@@ -143,10 +120,10 @@ private fun RegisterGuide(
         modifier = modifier
             .fillMaxWidth()
             .padding(
+                top = 60.dp,
+                bottom = 48.dp,
                 start = 24.dp,
                 end = 24.dp,
-                top = 60.dp,
-                bottom = 48.dp
             )
     ) {
         Text(
@@ -158,138 +135,63 @@ private fun RegisterGuide(
 }
 
 @Composable
-private fun SelectUserType(
-    modifier: Modifier = Modifier,
+private fun RegisterStageScreenArea(
+    scope: CoroutineScope,
+    currentStage: RegisterStage,
     userTypeState: ISingleSelectorState<UserType>,
-    onNextStep: () -> Unit,
-) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 24.dp)
-    ) {
-       userTypeState.itemList.forEach { userType ->
-           when (userType) {
-               UserType.PATIENT -> WhiteButton(
-                   text = stringResource(userType.toDescription()),
-                   onClick = {
-                       userTypeState.selectItem(userType)
-                       onNextStep()
-                   }
-               )
-               UserType.CAREGIVER -> BlackButton(
-                   text = stringResource(userType.toDescription()),
-                   onClick = {
-                       userTypeState.selectItem(userType)
-                       onNextStep()
-                   }
-               )
-           }
-       }
-    }
-}
-
-@Composable
-private fun TypeNickname(
-    modifier: Modifier = Modifier,
-    nextEnabled: Boolean,
     nickNameState: IMaxLengthTextFieldState,
-    onNextStep: () -> Unit,
-) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(all = 24.dp)
-    ) {
-        MaxLengthTextField(
-            state = nickNameState,
-            placeHolder = stringResource(R.string.placeholder_type_nickname)
-        )
-        IEUMSpacer(
-            modifier = Modifier.weight(1f)
-        )
-        NextButton(
-            enabled = nextEnabled,
-            onClick = onNextStep,
-        )
-    }
-}
-
-@Composable
-private fun SelectAgeGroup(
-    modifier: Modifier = Modifier,
-    nextEnabled: Boolean,
+    diagnoseState: DiagnoseState,
     ageGroupState: ISingleSelectorState<AgeGroup>,
-    onNextStep: () -> Unit,
-) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(all = 24.dp)
-    ) {
-        ageGroupState.itemList.forEach { ageGroup ->
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(72.dp)
-                    .background(
-                        color = if (ageGroupState.isSelected(ageGroup)) {
-                            Color.Black
-                        } else {
-                            Color.White
-                        },
-                        shape = RoundedCornerShape(16.dp)
-                    )
-                    .clickable(
-                        interactionSource = MutableInteractionSource(),
-                        indication = null,
-                        onClick = { ageGroupState.selectItem(ageGroup) }
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = stringResource(ageGroup.toDescription()),
-                    color = if (ageGroupState.isSelected(ageGroup)) {
-                        Color.White
-                    } else {
-                        Color.Black
-                    }
-                )
-            }
-            IEUMSpacer(size = 12)
-        }
-        IEUMSpacer(
-            modifier = Modifier.weight(1f)
-        )
-        SkipOrNextButton(
-            enabled = nextEnabled,
-            onNext = onNextStep,
-        )
-    }
-}
-
-@Composable
-fun TypeInterest(
-    modifier: Modifier = Modifier,
-    nextEnabled: Boolean,
+    residenceState: AddressState,
+    hospitalState: AddressState,
     interestState: IMaxLengthTextFieldState,
     onNextStep: () -> Unit,
 ) {
-    Column(
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                horizontal = if (currentStage.needFullScreen()) 0.dp else 24.dp
+            )
+    ) {
+        when (currentStage) {
+            RegisterStage.SelectUserType -> SelectUserType(state = userTypeState, onClick = onNextStep)
+            RegisterStage.TypeNickname -> TypeNickname(state = nickNameState)
+            RegisterStage.SelectDiagnose -> DiagnoseComponent(scope = scope, state = diagnoseState)
+            RegisterStage.SelectAgeGroup -> SelectAgeGroup(state = ageGroupState)
+            RegisterStage.SelectResidence -> AddressComponent(state = residenceState)
+            RegisterStage.SelectHospital -> AddressComponent(state = hospitalState)
+            RegisterStage.TypeInterest -> TypeInterest(state = interestState)
+        }
+    }
+}
+
+@Composable
+private fun RegisterButtonArea(
+    modifier: Modifier = Modifier,
+    currentStage: RegisterStage,
+    nextEnabled: Boolean,
+    selectedDiagnoseCnt: Int,
+    onNextStep: () -> Unit,
+) {
+    Box(
         modifier = modifier
             .fillMaxWidth()
-            .padding(all = 24.dp)
+            .padding(
+                horizontal = 24.dp,
+                vertical = 16.dp,
+            ),
+        contentAlignment = Alignment.Center
     ) {
-        MaxLengthTextField(
-            state = interestState,
-            placeHolder = stringResource(R.string.placeholder_type_interest)
-        )
-        IEUMSpacer(
-            modifier = Modifier.weight(1f)
-        )
-        SkipOrNextButton(
-            enabled = nextEnabled,
-            onNext = onNextStep,
-        )
+        when (currentStage) {
+            RegisterStage.SelectUserType -> {/*없음*/}
+            RegisterStage.TypeNickname -> NextButton(enabled = nextEnabled, onClick = onNextStep)
+            RegisterStage.SelectDiagnose -> SelectedCountButton(
+                enabled = nextEnabled,
+                selectedCount = selectedDiagnoseCnt,
+                onClick = onNextStep
+            )
+            else -> SkipOrNextButton(enabled = nextEnabled, onNext = onNextStep)
+        }
     }
 }

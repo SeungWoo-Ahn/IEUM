@@ -1,54 +1,25 @@
 package com.ieum.presentation.screen.component
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.ieum.design_system.button.SkipOrNextButton
-import com.ieum.design_system.selector.CitySelector
-import com.ieum.design_system.selector.ProvinceSelector
 import com.ieum.design_system.spacer.IEUMSpacer
 import com.ieum.presentation.state.AddressState
 import com.ieum.presentation.state.AddressUiState
 
 @Composable
 fun AddressComponent(
-    modifier: Modifier = Modifier,
-    nextEnabled: Boolean,
-    state: AddressState,
-    onNextStep: () -> Unit,
-) {
-    Box(
-        modifier = modifier.fillMaxSize()
-    ) {
-        AddressList(state = state)
-        Box(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth()
-                .padding(
-                    horizontal = 16.dp,
-                    vertical = 24.dp
-                )
-        ) {
-            SkipOrNextButton(
-                enabled = nextEnabled,
-                onNext = onNextStep,
-            )
-        }
-    }
-}
-
-@Composable
-private fun AddressList(
     modifier: Modifier = Modifier,
     state: AddressState,
 ) {
@@ -104,5 +75,59 @@ private fun AddressList(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun CitySelector(
+    modifier: Modifier = Modifier,
+    isSelected: Boolean,
+    name: String,
+    onClick: () -> Unit,
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(
+                color = if (isSelected) {
+                    Color.Gray
+                } else {
+                    Color.LightGray
+                }
+            )
+            .clickable(onClick = onClick)
+            .padding(all = 24.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = name,
+        )
+    }
+}
+
+@Composable
+private fun ProvinceSelector(
+    modifier: Modifier = Modifier,
+    isSelected: Boolean,
+    name: String,
+    onClick: () -> Unit,
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(
+                color = if (isSelected) {
+                    Color.Gray
+                } else {
+                    Color.LightGray
+                }
+            )
+            .clickable(onClick = onClick)
+            .padding(all = 24.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = name,
+        )
     }
 }
