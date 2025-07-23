@@ -1,15 +1,15 @@
 package com.ieum.domain.model.user
 
-sealed interface Diagnose
+sealed interface Diagnose {
+    data object LiverTransplant : Diagnose
 
-sealed interface CancerDiagnose : Diagnose {
-    val cancerStage: CancerStage?
+    data object Others : Diagnose
 }
 
-data class RentalCancer(override val cancerStage: CancerStage?) : CancerDiagnose
+sealed interface CancerDiagnose : Diagnose {
+    val cancerStage: CancerStage
 
-data class ColonCancer(override val cancerStage: CancerStage?) : CancerDiagnose
+    data class RentalCancer(override val cancerStage: CancerStage) : CancerDiagnose
 
-data object LiverTransplant : Diagnose
-
-data object Others : Diagnose
+    data class ColonCancer(override val cancerStage: CancerStage) : CancerDiagnose
+}
