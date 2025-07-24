@@ -57,23 +57,6 @@ fun IEUMButton(
 }
 
 @Composable
-fun WhiteButton(
-    modifier: Modifier = Modifier,
-    text: String,
-    onClick: () -> Unit,
-) {
-    IEUMButton(
-        modifier = modifier,
-        text = text,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = Color.White,
-            contentColor = Color.Black,
-        ),
-        onClick = onClick
-    )
-}
-
-@Composable
 fun BlackButton(
     modifier: Modifier = Modifier,
     text: String,
@@ -92,11 +75,55 @@ fun BlackButton(
     )
 }
 
+@Preview
+@Composable
+internal fun BlackButtonPreview() {
+    BlackButton(
+        text = "회원 가입",
+        onClick = {}
+    )
+}
+
+@Composable
+fun SkipButton(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+) {
+    IEUMButton(
+        modifier = modifier.fillMaxWidth(),
+        text = stringResource(R.string.skip),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color.Gray,
+            contentColor = Color.Black,
+        ),
+        onClick = onClick
+    )
+}
+
+@Composable
+fun NextButton(
+    modifier: Modifier = Modifier,
+    enabled: Boolean,
+    onClick: () -> Unit,
+) {
+    IEUMButton(
+        modifier = modifier.fillMaxWidth(),
+        text = stringResource(R.string.next),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color.Green,
+            contentColor = Color.Black,
+            disabledContainerColor = Color.Green,
+            disabledContentColor = Color.Black,
+        ),
+        enabled = enabled,
+        onClick = onClick,
+    )
+}
+
 @Composable
 fun SkipOrNextButton(
     modifier: Modifier = Modifier,
     enabled: Boolean,
-    onSkip: () -> Unit,
     onNext: () -> Unit,
 ) {
     Row(
@@ -104,29 +131,27 @@ fun SkipOrNextButton(
         horizontalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         if (enabled.not()) {
-            IEUMButton(
+            SkipButton(
                 modifier = Modifier.weight(1f),
-                text = stringResource(R.string.skip),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Gray,
-                    contentColor = Color.Black,
-                ),
-                onClick = onSkip
+                onClick = onNext
             )
         }
-        IEUMButton(
+        NextButton(
             modifier = Modifier.weight(1f),
-            text = stringResource(R.string.next),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color.Green,
-                contentColor = Color.Black,
-                disabledContainerColor = Color.Green,
-                disabledContentColor = Color.Black,
-            ),
             enabled = enabled,
-            onClick = onNext,
+            onClick = onNext
         )
     }
+}
+
+@Preview
+@Composable
+internal fun SkipOrNextButtonPreview() {
+    var enabled by remember { mutableStateOf(true) }
+    SkipOrNextButton(
+        enabled = enabled,
+        onNext = { enabled = false },
+    )
 }
 
 @Composable
@@ -169,36 +194,7 @@ fun SelectedCountButton(
 
 @Preview
 @Composable
-fun WhiteButtonPreview() {
-    WhiteButton(
-        text = "회원 가입",
-        onClick = {}
-    )
-}
-
-@Preview
-@Composable
-fun BlackButtonPreview() {
-    BlackButton(
-        text = "회원 가입",
-        onClick = {}
-    )
-}
-
-@Preview
-@Composable
-fun SkipOrNextButtonPreview() {
-    var enabled by remember { mutableStateOf(false) }
-    SkipOrNextButton(
-        enabled = enabled,
-        onSkip = { enabled = true },
-        onNext = { enabled = false },
-    )
-}
-
-@Preview
-@Composable
-fun SelectedCountButtonPreview() {
+internal fun SelectedCountButtonPreview() {
     var enabled by remember { mutableStateOf(true) }
     SelectedCountButton(
         enabled = enabled,

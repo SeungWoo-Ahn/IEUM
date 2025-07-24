@@ -5,3 +5,8 @@ sealed class NetworkException(override val message: String) : IllegalStateExcept
     class ServerSide(message: String) : NetworkException(message)
     class Unknown(message: String) : NetworkException(message)
 }
+
+sealed class SGISException(override val message: String) : IllegalStateException(message) {
+    class UnAuthorized(message: String) : SGISException(message)
+    class Unknown(message: String) : SGISException(message)
+}

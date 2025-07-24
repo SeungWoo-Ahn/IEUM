@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="catch_phrase">암을 함께 겪는 이들의 하루,\n서로의 이야기가\n서로의 힘이 됩니다.</string>
+    <string name="login_with_kakao">카카오톡으로 계속하기</string>
+
+    <string name="guide_select_user_type">당신의\n현재 상황을 알려주세요</string>
+    <string name="guide_type_nickname">사용하실 닉네임을\n입력해주세요</string>
+    <string name="guide_select_diagnose">진단명을 1개 이상\n선택해 주세요</string>
+    <string name="guide_select_cancer_stage">선택하신 %s의 병기를\n알려주세요</string>
+    <string name="guide_select_age_group">연령대가\n어떻게 되시나요?</string>
+    <string name="guide_select_residence">거주하고 계신 지역을\n알려주세요</string>
+    <string name="guide_select_hospital">치료받고 있는 병원의\n지역을 알려주세요</string>
+    <string name="guide_type_interest">요즘 가장 관심이 가는\n주제가 무엇인가요?</string>
+
+    <string name="description_user_type_patient">환자 본인입니다</string>
+    <string name="description_user_type_caregiver">가족 또는 보호자입니다</string>
+
+    <string name="placeholder_type_nickname">아름다운하마0192</string>
+    <string name="placeholder_type_interest">자유롭게 입력해 주세요</string>
+
+    <string name="rental_cancer">대장암</string>
+    <string name="colon_cancer">직장암</string>
+    <string name="liver_transplant">간이식</string>
+    <string name="others">기타</string>
+
+    <string name="cancer_stage_1">1기</string>
+    <string name="cancer_stage_2">2기</string>
+    <string name="cancer_stage_3">3기</string>
+    <string name="cancer_stage_4">4기</string>
+    <string name="cancer_stage_unknown">모르겠어요</string>
+
+    <string name="description_under_30">30대 이하</string>
+    <string name="description_40s">40대</string>
+    <string name="description_50s">50대</string>
+    <string name="description_60s">60대</string>
+    <string name="description_over_70">70대 이상</string>
+
+    <string name="register_done">회원가입이 완료되었어요!</string>
+    <string name="welcome_phrase">당신의 기록은 누군가의 공감이 되고,\n다른 이의 하루는 당신에게 힘이 될 거에요.\n이제, 서로의 이야기를 나눠볼까요?</string>
+    <string name="start">시작하기</string>
+</resources>

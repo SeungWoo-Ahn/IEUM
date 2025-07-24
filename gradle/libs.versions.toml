@@ -21,6 +21,8 @@ navgiation = "2.9.0"
 datastore-proto = "1.1.7"
 protobuf = "4.29.2"
 protobufPlugin = "0.9.4"
+kakao = "2.21.4"
+timber = "5.0.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -50,6 +52,8 @@ kotlinx-serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-seria
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
 protobuf-kotlin-lite = { group = "com.google.protobuf", name = "protobuf-kotlin-lite", version.ref = "protobuf" }
 protobuf-protoc = { group = "com.google.protobuf", name = "protoc", version.ref = "protobuf" }
+kakao-user = { group = "com.kakao.sdk", name = "v2-user", version.ref = "kakao" }
+timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 
 [bundles]
 ktor = [

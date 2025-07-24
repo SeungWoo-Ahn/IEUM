@@ -4,13 +4,10 @@ import com.ieum.data.network.model.user.DiagnoseDto
 import com.ieum.data.network.model.user.RegisterRequestBody
 import com.ieum.data.network.model.user.UserDto
 import com.ieum.domain.model.user.AgeGroup
+import com.ieum.domain.model.user.CancerDiagnose
 import com.ieum.domain.model.user.CancerStage
-import com.ieum.domain.model.user.ColonCancer
 import com.ieum.domain.model.user.Diagnose
-import com.ieum.domain.model.user.LiverTransplant
-import com.ieum.domain.model.user.Others
 import com.ieum.domain.model.user.RegisterRequest
-import com.ieum.domain.model.user.RentalCancer
 import com.ieum.domain.model.user.User
 import com.ieum.domain.model.user.UserType
 
@@ -68,19 +65,19 @@ internal object DiagnoseMapper : KeyAble<DiagnoseDto, Diagnose> {
 
     override fun toKey(value: Diagnose): DiagnoseDto {
         return when (value) {
-            is RentalCancer -> DiagnoseDto(
+            is CancerDiagnose.RentalCancer -> DiagnoseDto(
                 name = RENTAL_CANCER_KEY,
-                cancerStage = value.cancerStage?.let { CancerStageMapper.toKey(it) }
+                cancerStage = CancerStageMapper.toKey(value.cancerStage)
             )
-            is ColonCancer -> DiagnoseDto(
+            is CancerDiagnose.ColonCancer -> DiagnoseDto(
                 name = COLON_CANCER_KEY,
-                cancerStage = value.cancerStage?.let { CancerStageMapper.toKey(it) }
+                cancerStage = CancerStageMapper.toKey(value.cancerStage)
             )
-            LiverTransplant -> DiagnoseDto(
+            Diagnose.LiverTransplant -> DiagnoseDto(
                 name = LIVER_TRANSPLANT_KEY,
                 cancerStage = null
             )
-            Others -> DiagnoseDto(
+            Diagnose.Others -> DiagnoseDto(
                 name = OTHERS_KEY,
                 cancerStage = null
             )
@@ -89,14 +86,16 @@ internal object DiagnoseMapper : KeyAble<DiagnoseDto, Diagnose> {
 
     override fun fromKey(key: DiagnoseDto): Diagnose {
         return when (key.name) {
-            RENTAL_CANCER_KEY -> RentalCancer(
+            RENTAL_CANCER_KEY -> CancerDiagnose.RentalCancer(
                 cancerStage = key.cancerStage?.let { CancerStageMapper.fromKey(it) }
+                    ?: throw IllegalArgumentException("RentalCancer stage is null")
             )
-            COLON_CANCER_KEY -> ColonCancer(
+            COLON_CANCER_KEY -> CancerDiagnose.ColonCancer(
                 cancerStage = key.cancerStage?.let { CancerStageMapper.fromKey(it) }
+                    ?: throw IllegalArgumentException("ColonCancer stage is null")
             )
-            LIVER_TRANSPLANT_KEY -> LiverTransplant
-            OTHERS_KEY -> Others
+            LIVER_TRANSPLANT_KEY -> Diagnose.LiverTransplant
+            OTHERS_KEY -> Diagnose.Others
             else -> throw IllegalArgumentException("Invalid Diagnose key: ${key.name}")
         }
     }
