@@ -4,10 +4,13 @@ import com.ieum.domain.model.user.AgeGroup
 import com.ieum.domain.model.user.CancerDiagnose
 import com.ieum.domain.model.user.CancerStage
 import com.ieum.domain.model.user.Diagnose
+import com.ieum.domain.model.user.DiagnoseKey
 import com.ieum.domain.model.user.UserType
 import com.ieum.presentation.R
-import com.ieum.presentation.model.user.CancerDiagnoseKey
-import com.ieum.presentation.model.user.DiagnoseKey
+import com.ieum.presentation.model.user.CancerDiagnoseUiKey
+import com.ieum.presentation.model.user.CancerDiagnoseUiModel
+import com.ieum.presentation.model.user.DiagnoseUiKey
+import com.ieum.presentation.model.user.DiagnoseUiKeys
 
 fun UserType.toDescription(): Int =
     when (this) {
@@ -33,14 +36,33 @@ fun CancerStage?.toDescription(): Int =
         else -> R.string.cancer_stage_unknown
     }
 
-fun DiagnoseKey.toDomain(): Diagnose =
+fun DiagnoseUiKey.toDomain(): Diagnose =
     when (this) {
-        DiagnoseKey.LIVER_TRANSPLANT -> Diagnose.LiverTransplant
-        DiagnoseKey.OTHERS -> Diagnose.Others
+        DiagnoseUiKey.LIVER_TRANSPLANT -> Diagnose.LiverTransplant
+        DiagnoseUiKey.OTHERS -> Diagnose.Others
     }
 
-fun CancerDiagnoseKey.toDomain(stage: CancerStage): CancerDiagnose =
+fun CancerDiagnoseUiModel.toDomain(): CancerDiagnose? =
+    stage?.let {
+        when (key) {
+            CancerDiagnoseUiKey.RENTAL_CANCER -> CancerDiagnose.RentalCancer(it)
+            CancerDiagnoseUiKey.COLON_CANCER -> CancerDiagnose.ColonCancer(it)
+        }
+    }
+
+
+fun DiagnoseUiKeys.toDomainKey(): DiagnoseKey =
     when (this) {
-        CancerDiagnoseKey.RENTAL_CANCER -> CancerDiagnose.RentalCancer(stage)
-        CancerDiagnoseKey.COLON_CANCER -> CancerDiagnose.ColonCancer(stage)
+        CancerDiagnoseUiKey.RENTAL_CANCER -> DiagnoseKey.RENTAL_CANCER
+        CancerDiagnoseUiKey.COLON_CANCER -> DiagnoseKey.COLON_CANCER
+        DiagnoseUiKey.LIVER_TRANSPLANT -> DiagnoseKey.LIVER_TRANSPLANT
+        DiagnoseUiKey.OTHERS -> DiagnoseKey.OTHERS
+    }
+
+fun DiagnoseKey.toUiKey(): DiagnoseUiKeys =
+    when (this) {
+        DiagnoseKey.RENTAL_CANCER -> CancerDiagnoseUiKey.RENTAL_CANCER
+        DiagnoseKey.COLON_CANCER -> CancerDiagnoseUiKey.COLON_CANCER
+        DiagnoseKey.LIVER_TRANSPLANT -> DiagnoseUiKey.LIVER_TRANSPLANT
+        DiagnoseKey.OTHERS -> DiagnoseUiKey.OTHERS
     }
