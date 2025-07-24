@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.ieum.design_system.progressbar.IEUMLoadingComponent
 import com.ieum.design_system.spacer.IEUMSpacer
 import com.ieum.presentation.state.AddressState
 import com.ieum.presentation.state.AddressUiState
@@ -28,11 +29,14 @@ fun AddressComponent(
             LaunchedEffect(Unit) {
                 state.getCityList()
             }
-            // TODO: 로딩 컴포넌트
+            IEUMLoadingComponent(
+                modifier = Modifier.padding(bottom = 120.dp)
+            )
         }
-        AddressUiState.Error -> {
-            // TODO: 재시도 컴포넌트
-        }
+        AddressUiState.Error -> ErrorComponent(
+            modifier = Modifier.padding(bottom = 120.dp),
+            onRetry = state::getCityList
+        )
         is AddressUiState.Success -> {
             Row(
                 modifier = modifier.fillMaxWidth()
