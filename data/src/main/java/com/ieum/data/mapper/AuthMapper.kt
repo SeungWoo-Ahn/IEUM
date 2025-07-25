@@ -1,6 +1,7 @@
 package com.ieum.data.mapper
 
 import com.ieum.data.TokenEntity
+import com.ieum.data.network.model.auth.OAuthProviderDto
 import com.ieum.data.network.model.auth.OAuthRequestBody
 import com.ieum.data.network.model.auth.OAuthResponse
 import com.ieum.data.network.model.auth.OAuthUserDto
@@ -11,33 +12,26 @@ import com.ieum.domain.model.auth.OAuthResult
 import com.ieum.domain.model.auth.OAuthUser
 import com.ieum.domain.model.auth.Token
 
-internal object OAuthProviderMapper : KeyAble<String, OAuthProvider> {
-    private const val KAKAO_KEY = "kakao"
-
-    override fun toKey(value: OAuthProvider): String {
-        return when (value) {
-            OAuthProvider.KAKAO -> KAKAO_KEY
-        }
+internal fun OAuthProvider.toDto(): OAuthProviderDto =
+    when (this) {
+        OAuthProvider.KAKAO -> OAuthProviderDto.KAKAO
     }
 
-    override fun fromKey(key: String): OAuthProvider {
-        return when (key) {
-            KAKAO_KEY -> OAuthProvider.KAKAO
-            else -> throw IllegalArgumentException("Invalid OAuthProvider key: $key")
-        }
+internal fun OAuthProviderDto.toDomain(): OAuthProvider =
+    when (this) {
+        OAuthProviderDto.KAKAO -> OAuthProvider.KAKAO
     }
-}
 
 fun OAuthRequest.asBody(): OAuthRequestBody =
     OAuthRequestBody(
-        provider = OAuthProviderMapper.toKey(provider),
+        provider = provider.toDto().key,
         authorizationCode = code,
     )
 
 fun OAuthUserDto.toDomain(): OAuthUser =
     OAuthUser(
         oauthId = oauthId,
-        provider = OAuthProviderMapper.fromKey(provider),
+        provider = OAuthProviderDto.fromKey(provider).toDomain(),
         email = email,
         name = name,
         profileImage = profileImage,
