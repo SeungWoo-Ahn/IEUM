@@ -4,18 +4,20 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ieum.design_system.button.BlackButton
+import com.ieum.design_system.icon.IEUMIcon
+import com.ieum.design_system.image.LoginBackGroundImage
 import com.ieum.design_system.spacer.IEUMSpacer
+import com.ieum.design_system.theme.screenPadding
 import com.ieum.presentation.R
 
 @Composable
@@ -33,6 +35,7 @@ fun LoginRoute(
             }
         }
     }
+
     LoginScreen(
         modifier = modifier,
         buttonEnabled = viewModel.uiState != LoginUiState.Loading,
@@ -51,16 +54,22 @@ private fun LoginScreen(
         modifier = modifier
             .fillMaxSize()
     ) {
+        LoginBackGroundImage()
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(all = 24.dp)
+                .padding(
+                    top = 60.dp,
+                    bottom = 16.dp,
+                    start = screenPadding,
+                    end = screenPadding,
+                )
         ) {
+            IEUMIcon()
             IEUMSpacer(size = 18)
             Text(
                 text = stringResource(R.string.catch_phrase),
-                fontSize = 28.sp,
-                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.headlineLarge,
             )
             IEUMSpacer(modifier = Modifier.weight(1f))
             BlackButton(

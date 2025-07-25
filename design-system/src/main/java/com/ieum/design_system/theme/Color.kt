@@ -20,4 +20,5 @@ val Lime500 = Color(0xFF7CCF00)
 
 val Slate100 = Color(0xFFF1F5F9)
 val Slate300 = Color(0xFFCAD5E2)
-val State900 = Color(0xFF0F172B)
+val Slate900 = Color(0xFF0F172B)
+val Slate950 = Color(0xFF020618)
