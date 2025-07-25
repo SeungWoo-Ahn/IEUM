@@ -22,6 +22,7 @@ internal val IEUMTypography = Typography(
         fontSize = 28.sp,
         lineHeight = 28.sp * 1.3f,
         letterSpacing = (-0.02).em,
+        color = Gray950,
     ),
     headlineSmall = TextStyle(
         fontFamily = Pretendard,
@@ -29,24 +30,28 @@ internal val IEUMTypography = Typography(
         fontSize = 17.sp,
         lineHeight = 17.sp * 1.3f,
         letterSpacing = (-0.02).em,
+        color = Gray950,
     ),
     titleLarge = TextStyle(
         fontFamily = Pretendard,
         fontWeight = FontWeight.SemiBold,
         fontSize = 20.sp,
         letterSpacing = (-0.01).em,
+        color = Gray950,
     ),
     titleMedium = TextStyle(
         fontFamily = Pretendard,
         fontWeight = FontWeight.SemiBold,
         fontSize = 17.sp,
         letterSpacing = (-0.01).em,
+        color = Gray950,
     ),
     titleSmall = TextStyle(
         fontFamily = Pretendard,
         fontWeight = FontWeight.SemiBold,
         fontSize = 15.sp,
         letterSpacing = (-0.01).em,
+        color = Gray950,
     ),
     bodyMedium = TextStyle(
         fontFamily = Pretendard,
@@ -54,6 +59,7 @@ internal val IEUMTypography = Typography(
         fontSize = 17.sp,
         lineHeight = 17.sp * 1.4f,
         letterSpacing = (-0.01).em,
+        color = Gray950,
     ),
     bodySmall = TextStyle(
         fontFamily = Pretendard,
@@ -61,10 +67,12 @@ internal val IEUMTypography = Typography(
         fontSize = 15.sp,
         lineHeight = 15.sp * 1.4f,
         letterSpacing = (-0.01).em,
+        color = Gray950,
     ),
     labelMedium = TextStyle(
         fontFamily = Pretendard,
         fontWeight = FontWeight.Medium,
         fontSize = 15.sp,
+        color = Gray950,
     )
 )
