@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -15,15 +16,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ieum.design_system.button.NextButton
 import com.ieum.design_system.button.SelectedCountButton
 import com.ieum.design_system.button.SkipOrNextButton
 import com.ieum.design_system.selector.ISingleSelectorState
 import com.ieum.design_system.textfield.IMaxLengthTextFieldState
+import com.ieum.design_system.theme.screenPadding
 import com.ieum.design_system.topbar.TopBarForBack
 import com.ieum.domain.model.user.AgeGroup
 import com.ieum.domain.model.user.UserType
@@ -132,15 +132,13 @@ private fun RegisterGuideArea(
             .fillMaxWidth()
             .padding(
                 top = 12.dp,
-                bottom = 48.dp,
-                start = 24.dp,
-                end = 24.dp,
+                start = screenPadding,
+                end = screenPadding,
             )
     ) {
         Text(
             text = guide,
-            fontSize = 28.sp,
-            fontWeight = FontWeight.Bold
+            style = MaterialTheme.typography.headlineLarge,
         )
     }
 }
@@ -166,7 +164,11 @@ private fun RegisterStageScreenArea(
             )
     ) {
         when (currentStage) {
-            RegisterStage.SelectUserType -> SelectUserType(state = userTypeState, onClick = onNextStep)
+            RegisterStage.SelectUserType -> SelectUserType(
+                modifier = Modifier.padding(top = 48.dp),
+                state = userTypeState,
+                onClick = onNextStep
+            )
             RegisterStage.TypeNickname -> TypeNickname(state = nickNameState)
             RegisterStage.SelectDiagnose -> DiagnoseComponent(scope = scope, state = diagnoseState)
             RegisterStage.SelectAgeGroup -> SelectAgeGroup(state = ageGroupState)

@@ -22,7 +22,7 @@ fun TopBarForBack(
         modifier = modifier
             .fillMaxWidth()
             .height(topBarHeight)
-            .padding(horizontal = 20.dp)
+            .padding(horizontal = 8.dp)
     ) {
         IconButton(
             modifier = Modifier.align(Alignment.CenterStart),
