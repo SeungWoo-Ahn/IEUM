@@ -1,15 +1,32 @@
 package com.ieum.domain.model.user
 
-sealed interface Diagnose {
-    data object LiverTransplant : Diagnose
+enum class DiagnoseKey {
+    RENTAL_CANCER,
+    COLON_CANCER,
+    LIVER_TRANSPLANT,
+    OTHERS,
+}
 
-    data object Others : Diagnose
+sealed interface Diagnose {
+    val key: DiagnoseKey
+
+    data object LiverTransplant : Diagnose {
+        override val key: DiagnoseKey get() = DiagnoseKey.LIVER_TRANSPLANT
+    }
+
+    data object Others : Diagnose {
+        override val key: DiagnoseKey get() = DiagnoseKey.OTHERS
+    }
 }
 
 sealed interface CancerDiagnose : Diagnose {
     val cancerStage: CancerStage
 
-    data class RentalCancer(override val cancerStage: CancerStage) : CancerDiagnose
+    data class ColonCancer(override val cancerStage: CancerStage) : CancerDiagnose {
+        override val key: DiagnoseKey get() = DiagnoseKey.COLON_CANCER
+    }
 
-    data class ColonCancer(override val cancerStage: CancerStage) : CancerDiagnose
+    data class RentalCancer(override val cancerStage: CancerStage) : CancerDiagnose {
+        override val key: DiagnoseKey get() = DiagnoseKey.RENTAL_CANCER
+    }
 }

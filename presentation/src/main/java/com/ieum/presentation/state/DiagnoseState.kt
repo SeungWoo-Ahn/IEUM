@@ -9,13 +9,13 @@ import com.ieum.domain.model.user.CancerDiagnose
 import com.ieum.domain.model.user.CancerStage
 import com.ieum.domain.model.user.Diagnose
 import com.ieum.presentation.mapper.toDomain
-import com.ieum.presentation.model.user.CancerDiagnoseKey
+import com.ieum.presentation.model.user.CancerDiagnoseUiKey
 import com.ieum.presentation.model.user.CancerDiagnoseUiModel
-import com.ieum.presentation.model.user.DiagnoseKey
+import com.ieum.presentation.model.user.DiagnoseUiKey
 
 sealed interface CancerStageSheetUiState {
     data class Show(
-        val key: CancerDiagnoseKey,
+        val key: CancerDiagnoseUiKey,
         val callback: (CancerStage?) -> Unit
     ) : CancerStageSheetUiState
 
@@ -40,7 +40,7 @@ class CancerStageSheetState {
 
 class CancerDiagnoseState {
     var diagnoseList by mutableStateOf(
-        CancerDiagnoseKey.entries.map { CancerDiagnoseUiModel(key = it) }
+        CancerDiagnoseUiKey.entries.map { CancerDiagnoseUiModel(key = it) }
     )
         private set
 
@@ -48,11 +48,11 @@ class CancerDiagnoseState {
 
     fun onDiagnose(diagnose: CancerDiagnoseUiModel) {
         val callback: (CancerStage?) -> Unit = { stage ->
-            diagnoseList = diagnoseList.map {
-                if (it.key == diagnose.key) {
-                    it.copy(stage = stage)
+            diagnoseList = diagnoseList.map { item ->
+                if (item.key == diagnose.key) {
+                    item.copy(stage = stage)
                 } else {
-                    it
+                    item
                 }
             }
         }
@@ -68,16 +68,12 @@ class CancerDiagnoseState {
     }
 
     fun getSelectedDiagnoseList(): List<CancerDiagnose> =
-        diagnoseList.mapNotNull { uiModel ->
-            uiModel.stage?.let { stage ->
-                uiModel.key.toDomain(stage)
-            }
-        }
+        diagnoseList.mapNotNull(CancerDiagnoseUiModel::toDomain)
 
 }
 
 class DiagnoseState {
-    val commonDiagnoseState = MultipleSelectorState(itemList = DiagnoseKey.entries)
+    val commonDiagnoseState = MultipleSelectorState(itemList = DiagnoseUiKey.entries)
     val cancerDiagnoseState = CancerDiagnoseState()
 
     fun getSelectedCnt(): Int =
@@ -89,5 +85,5 @@ class DiagnoseState {
 
     fun getSelectedDiagnoseList(): List<Diagnose> =
         cancerDiagnoseState.getSelectedDiagnoseList() +
-                commonDiagnoseState.selectedItemList.map(DiagnoseKey::toDomain)
+                commonDiagnoseState.selectedItemList.map(DiagnoseUiKey::toDomain)
 }

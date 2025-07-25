@@ -1,141 +1,108 @@
 package com.ieum.data.mapper
 
+import com.ieum.data.network.model.auth.OAuthProviderDto
+import com.ieum.data.network.model.user.AgeGroupDto
+import com.ieum.data.network.model.user.CancerStageDto
 import com.ieum.data.network.model.user.DiagnoseDto
+import com.ieum.data.network.model.user.DiagnoseDtoKey
 import com.ieum.data.network.model.user.RegisterRequestBody
 import com.ieum.data.network.model.user.UserDto
+import com.ieum.data.network.model.user.UserTypeDto
 import com.ieum.domain.model.user.AgeGroup
 import com.ieum.domain.model.user.CancerDiagnose
 import com.ieum.domain.model.user.CancerStage
 import com.ieum.domain.model.user.Diagnose
+import com.ieum.domain.model.user.DiagnoseKey
 import com.ieum.domain.model.user.RegisterRequest
 import com.ieum.domain.model.user.User
 import com.ieum.domain.model.user.UserType
 
-internal object UserTypeMapper : KeyAble<String, UserType> {
-    private const val PATIENT_KEY = "patient"
-    private const val CAREGIVER_KEY = "caregiver"
-
-    override fun toKey(value: UserType): String {
-        return when (value) {
-            UserType.PATIENT -> PATIENT_KEY
-            UserType.CAREGIVER -> CAREGIVER_KEY
-        }
+internal fun UserType.toDto(): UserTypeDto =
+    when (this) {
+        UserType.PATIENT -> UserTypeDto.PATIENT
+        UserType.CAREGIVER -> UserTypeDto.CAREGIVER
     }
 
-    override fun fromKey(key: String): UserType {
-        return when (key) {
-            PATIENT_KEY -> UserType.PATIENT
-            CAREGIVER_KEY -> UserType.CAREGIVER
-            else -> throw IllegalArgumentException("Invalid UserType key: $key")
-        }
-    }
-}
-
-internal object CancerStageMapper : KeyAble<String, CancerStage> {
-    private const val STAGE_1_KEY = "stage1"
-    private const val STAGE_2_KEY = "stage2"
-    private const val STAGE_3_KEY = "stage3"
-    private const val STAGE_4_KEY = "stage4"
-
-    override fun toKey(value: CancerStage): String {
-        return when (value) {
-            CancerStage.STAGE_1 -> STAGE_1_KEY
-            CancerStage.STAGE_2 -> STAGE_2_KEY
-            CancerStage.STAGE_3 -> STAGE_3_KEY
-            CancerStage.STAGE_4 -> STAGE_4_KEY
-        }
+internal fun UserTypeDto.toDomain(): UserType =
+    when (this) {
+        UserTypeDto.PATIENT -> UserType.PATIENT
+        UserTypeDto.CAREGIVER -> UserType.CAREGIVER
     }
 
-    override fun fromKey(key: String): CancerStage {
-        return when (key) {
-            STAGE_1_KEY -> CancerStage.STAGE_1
-            STAGE_2_KEY -> CancerStage.STAGE_2
-            STAGE_3_KEY -> CancerStage.STAGE_3
-            STAGE_4_KEY -> CancerStage.STAGE_4
-            else -> throw IllegalArgumentException("Invalid CancerStage key: $key")
-        }
-    }
-}
-
-internal object DiagnoseMapper : KeyAble<DiagnoseDto, Diagnose> {
-    private const val RENTAL_CANCER_KEY = "rental_cancer"
-    private const val COLON_CANCER_KEY = "colon_cancer"
-    private const val LIVER_TRANSPLANT_KEY = "liver_transplant"
-    private const val OTHERS_KEY = "others"
-
-    override fun toKey(value: Diagnose): DiagnoseDto {
-        return when (value) {
-            is CancerDiagnose.RentalCancer -> DiagnoseDto(
-                name = RENTAL_CANCER_KEY,
-                cancerStage = CancerStageMapper.toKey(value.cancerStage)
-            )
-            is CancerDiagnose.ColonCancer -> DiagnoseDto(
-                name = COLON_CANCER_KEY,
-                cancerStage = CancerStageMapper.toKey(value.cancerStage)
-            )
-            Diagnose.LiverTransplant -> DiagnoseDto(
-                name = LIVER_TRANSPLANT_KEY,
-                cancerStage = null
-            )
-            Diagnose.Others -> DiagnoseDto(
-                name = OTHERS_KEY,
-                cancerStage = null
-            )
-        }
+internal fun AgeGroup.toDto(): AgeGroupDto =
+    when (this) {
+        AgeGroup.UNDER_THIRTY -> AgeGroupDto.UNDER_THIRTY
+        AgeGroup.FORTIES -> AgeGroupDto.FORTIES
+        AgeGroup.FIFTIES -> AgeGroupDto.FIFTIES
+        AgeGroup.SIXTIES -> AgeGroupDto.SIXTIES
+        AgeGroup.OVER_SEVENTY -> AgeGroupDto.OVER_SEVENTY
     }
 
-    override fun fromKey(key: DiagnoseDto): Diagnose {
-        return when (key.name) {
-            RENTAL_CANCER_KEY -> CancerDiagnose.RentalCancer(
-                cancerStage = key.cancerStage?.let { CancerStageMapper.fromKey(it) }
-                    ?: throw IllegalArgumentException("RentalCancer stage is null")
-            )
-            COLON_CANCER_KEY -> CancerDiagnose.ColonCancer(
-                cancerStage = key.cancerStage?.let { CancerStageMapper.fromKey(it) }
-                    ?: throw IllegalArgumentException("ColonCancer stage is null")
-            )
-            LIVER_TRANSPLANT_KEY -> Diagnose.LiverTransplant
-            OTHERS_KEY -> Diagnose.Others
-            else -> throw IllegalArgumentException("Invalid Diagnose key: ${key.name}")
-        }
-    }
-}
-
-internal object AgeGroupMapper : KeyAble<String, AgeGroup> {
-    private const val UNDER_THIRTY_KEY = "under30"
-    private const val FORTIES_KEY = "40s"
-    private const val FIFTIES_KEY = "50s"
-    private const val SIXTIES_KEY = "60s"
-    private const val OVER_SEVENTY_KEY = "over70"
-
-    override fun toKey(value: AgeGroup): String {
-        return when (value) {
-            AgeGroup.UNDER_THIRTY -> UNDER_THIRTY_KEY
-            AgeGroup.FORTIES -> FORTIES_KEY
-            AgeGroup.FIFTIES -> FIFTIES_KEY
-            AgeGroup.SIXTIES -> SIXTIES_KEY
-            AgeGroup.OVER_SEVENTY -> OVER_SEVENTY_KEY
-        }
+internal fun AgeGroupDto.toDomain(): AgeGroup =
+    when (this) {
+        AgeGroupDto.UNDER_THIRTY -> AgeGroup.UNDER_THIRTY
+        AgeGroupDto.FORTIES -> AgeGroup.FORTIES
+        AgeGroupDto.FIFTIES -> AgeGroup.FIFTIES
+        AgeGroupDto.SIXTIES -> AgeGroup.SIXTIES
+        AgeGroupDto.OVER_SEVENTY -> AgeGroup.OVER_SEVENTY
     }
 
-    override fun fromKey(key: String): AgeGroup {
-        return when (key) {
-            UNDER_THIRTY_KEY -> AgeGroup.UNDER_THIRTY
-            FORTIES_KEY -> AgeGroup.FORTIES
-            FIFTIES_KEY -> AgeGroup.FIFTIES
-            SIXTIES_KEY -> AgeGroup.SIXTIES
-            OVER_SEVENTY_KEY -> AgeGroup.OVER_SEVENTY
-            else -> throw IllegalArgumentException("Invalid AgeGroup key: $key")
-        }
+internal fun CancerStage.toDto(): CancerStageDto =
+    when (this) {
+        CancerStage.STAGE_1 -> CancerStageDto.STAGE_1
+        CancerStage.STAGE_2 -> CancerStageDto.STAGE_2
+        CancerStage.STAGE_3 -> CancerStageDto.STAGE_3
+        CancerStage.STAGE_4 -> CancerStageDto.STAGE_4
     }
-}
+
+internal fun CancerStageDto.toDomain(): CancerStage =
+    when (this) {
+        CancerStageDto.STAGE_1 -> CancerStage.STAGE_1
+        CancerStageDto.STAGE_2 -> CancerStage.STAGE_2
+        CancerStageDto.STAGE_3 -> CancerStage.STAGE_3
+        CancerStageDto.STAGE_4 -> CancerStage.STAGE_4
+    }
+
+internal fun DiagnoseKey.toDto(): DiagnoseDtoKey =
+    when (this) {
+        DiagnoseKey.RENTAL_CANCER -> DiagnoseDtoKey.RENTAL_CANCER
+        DiagnoseKey.COLON_CANCER -> DiagnoseDtoKey.COLON_CANCER
+        DiagnoseKey.LIVER_TRANSPLANT -> DiagnoseDtoKey.LIVER_TRANSPLANT
+        DiagnoseKey.OTHERS -> DiagnoseDtoKey.OTHERS
+    }
+
+internal fun Diagnose.toDto(): DiagnoseDto =
+    when (this) {
+        is CancerDiagnose -> DiagnoseDto(
+            name = key.toDto().key,
+            cancerStage = cancerStage.toDto().key,
+        )
+        else -> DiagnoseDto(
+            name = key.toDto().key,
+            cancerStage = null,
+        )
+    }
+
+internal fun DiagnoseDto.toDomain(): Diagnose =
+    when (DiagnoseDtoKey.fromKey(name)) {
+        DiagnoseDtoKey.RENTAL_CANCER -> CancerDiagnose.RentalCancer(
+            cancerStage = cancerStage?.let { CancerStageDto.fromKey(it).toDomain() }
+                ?: throw IllegalArgumentException("RentalCancer cancerStage is null"),
+        )
+        DiagnoseDtoKey.COLON_CANCER -> CancerDiagnose.ColonCancer(
+            cancerStage = cancerStage?.let { CancerStageDto.fromKey(it).toDomain() }
+                ?: throw IllegalArgumentException("ColonCancer cancerStage is null"),
+        )
+        DiagnoseDtoKey.LIVER_TRANSPLANT -> Diagnose.LiverTransplant
+        DiagnoseDtoKey.OTHERS -> Diagnose.Others
+    }
 
 fun RegisterRequest.asBody(): RegisterRequestBody =
     RegisterRequestBody(
-        userType = UserTypeMapper.toKey(userType),
+        userType = userType.toDto().key,
         nickname = nickName,
-        diagnoses = diagnoses.map(DiagnoseMapper::toKey),
-        ageGroup = ageGroup?.let { AgeGroupMapper.toKey(it) },
+        diagnoses = diagnoses.map(Diagnose::toDto),
+        ageGroup = ageGroup?.toDto()?.key,
         residenceArea = residenceArea,
         hospitalArea = hospitalArea,
     )
@@ -143,12 +110,12 @@ fun RegisterRequest.asBody(): RegisterRequestBody =
 fun UserDto.toDomain(): User =
     User(
         id = userId,
-        oAuthProvider = OAuthProviderMapper.fromKey(oauthProvider),
+        oAuthProvider = OAuthProviderDto.fromKey(oauthProvider).toDomain(),
         email = email,
-        userType = UserTypeMapper.fromKey(userType),
+        userType = UserTypeDto.fromKey(userType).toDomain(),
         nickName = nickname,
-        diagnoses = diagnoses.map(DiagnoseMapper::fromKey),
-        ageGroup = ageGroup?.let { AgeGroupMapper.fromKey(it) },
+        diagnoses = diagnoses.map(DiagnoseDto::toDomain),
+        ageGroup = ageGroup?.let { AgeGroupDto.fromKey(it).toDomain() },
         residenceArea = residenceArea,
         hospitalArea = hospitalArea,
     )
