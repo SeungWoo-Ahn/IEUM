@@ -180,8 +180,14 @@ private fun RegisterStageScreenArea(
                 modifier = Modifier.padding(top = 48.dp),
                 state = ageGroupState,
             )
-            RegisterStage.SelectResidence -> AddressComponent(state = residenceState)
-            RegisterStage.SelectHospital -> AddressComponent(state = hospitalState)
+            RegisterStage.SelectResidence -> AddressComponent(
+                modifier = Modifier.padding(top = 48.dp),
+                state = residenceState,
+            )
+            RegisterStage.SelectHospital -> AddressComponent(
+                modifier = Modifier.padding(top = 48.dp),
+                state = hospitalState
+            )
             RegisterStage.TypeInterest -> TypeInterest(state = interestState)
         }
     }
