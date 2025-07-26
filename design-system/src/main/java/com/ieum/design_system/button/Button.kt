@@ -24,6 +24,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ieum.design_system.R
+import com.ieum.design_system.theme.Gray100
+import com.ieum.design_system.theme.Gray200
+import com.ieum.design_system.theme.Gray300
+import com.ieum.design_system.theme.Gray950
+import com.ieum.design_system.theme.Lime400
+import com.ieum.design_system.theme.Lime500
 import com.ieum.design_system.theme.Slate900
 import com.ieum.design_system.theme.Slate950
 import com.ieum.design_system.theme.White
@@ -50,7 +56,7 @@ fun IEUMButton(
         Text(
             text = text,
             style = MaterialTheme.typography.titleLarge,
-            color = colors.contentColor,
+            color = if (enabled) colors.contentColor else colors.disabledContentColor,
         )
     }
 }
@@ -115,12 +121,16 @@ fun NextButton(
         modifier = modifier.fillMaxWidth(),
         text = stringResource(R.string.next),
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color.Green,
-            contentColor = Color.Black,
-            disabledContainerColor = Color.Green,
-            disabledContentColor = Color.Black,
+            containerColor = Lime400,
+            contentColor = Gray950,
+            disabledContainerColor = Gray100,
+            disabledContentColor = Gray300,
         ),
         enabled = enabled,
+        border = BorderStroke(
+            width = 1.dp,
+            color = if (enabled) Lime500 else Gray200
+        ),
         onClick = onClick,
     )
 }

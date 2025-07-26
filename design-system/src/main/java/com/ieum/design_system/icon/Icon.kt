@@ -36,6 +36,7 @@ fun InfoCircleIcon() {
     Icon(
         modifier = Modifier.size(20.dp),
         painter = painterResource(R.drawable.ic_info_circle),
+        tint = Color.Unspecified,
         contentDescription = "ic-info-circle",
     )
 }

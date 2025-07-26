@@ -22,6 +22,7 @@ import com.ieum.design_system.button.NextButton
 import com.ieum.design_system.button.SelectedCountButton
 import com.ieum.design_system.button.SkipOrNextButton
 import com.ieum.design_system.selector.ISingleSelectorState
+import com.ieum.design_system.spacer.IEUMSpacer
 import com.ieum.design_system.textfield.IMaxLengthTextFieldState
 import com.ieum.design_system.theme.screenPadding
 import com.ieum.design_system.topbar.TopBarForBack
@@ -95,6 +96,7 @@ private fun RegisterScreen(
             .fillMaxSize()
     ) {
         TopBarForBack(onBack = onPrevStep)
+        IEUMSpacer(size = 12)
         RegisterGuideArea(guide = stringResource(currentStage.guide))
         Box(
             modifier = Modifier.weight(1f)
@@ -130,11 +132,7 @@ private fun RegisterGuideArea(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .padding(
-                top = 12.dp,
-                start = screenPadding,
-                end = screenPadding,
-            )
+            .padding(horizontal = screenPadding)
     ) {
         Text(
             text = guide,
@@ -167,9 +165,12 @@ private fun RegisterStageScreenArea(
             RegisterStage.SelectUserType -> SelectUserType(
                 modifier = Modifier.padding(top = 48.dp),
                 state = userTypeState,
-                onClick = onNextStep
+                onClick = onNextStep,
             )
-            RegisterStage.TypeNickname -> TypeNickname(state = nickNameState)
+            RegisterStage.TypeNickname -> TypeNickname(
+                modifier = Modifier.padding(top = 16.dp),
+                state = nickNameState,
+            )
             RegisterStage.SelectDiagnose -> DiagnoseComponent(scope = scope, state = diagnoseState)
             RegisterStage.SelectAgeGroup -> SelectAgeGroup(state = ageGroupState)
             RegisterStage.SelectResidence -> AddressComponent(state = residenceState)
