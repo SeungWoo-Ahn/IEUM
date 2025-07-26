@@ -45,10 +45,15 @@ fun TypeNickname(
 
 @Composable
 fun TypeInterest(
+    modifier: Modifier = Modifier,
     state: IMaxLengthTextFieldState,
 ) {
-    MaxLengthTextField(
-        state = state,
-        placeHolder = stringResource(R.string.placeholder_type_interest)
-    )
+    Column(
+        modifier = modifier.fillMaxWidth()
+    ) {
+        MaxLengthTextField(
+            state = state,
+            placeHolder = stringResource(R.string.placeholder_type_interest)
+        )
+    }
 }

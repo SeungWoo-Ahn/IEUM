@@ -18,7 +18,7 @@
     <string name="info_nickname">닉네임 변경은 한 달에 한 번 가능합니다.</string>
 
     <string name="placeholder_type_nickname">아름다운하마0192</string>
-    <string name="placeholder_type_interest">자유롭게 입력해 주세요</string>
+    <string name="placeholder_type_interest">자유롭게 입력해주세요</string>
 
     <string name="rental_cancer">대장암</string>
     <string name="colon_cancer">직장암</string>

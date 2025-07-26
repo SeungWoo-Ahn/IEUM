@@ -188,7 +188,10 @@ private fun RegisterStageScreenArea(
                 modifier = Modifier.padding(top = 48.dp),
                 state = hospitalState
             )
-            RegisterStage.TypeInterest -> TypeInterest(state = interestState)
+            RegisterStage.TypeInterest -> TypeInterest(
+                modifier = Modifier.padding(top = 48.dp),
+                state = interestState,
+            )
         }
     }
 }
