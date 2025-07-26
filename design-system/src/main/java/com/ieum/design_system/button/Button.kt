@@ -60,7 +60,7 @@ fun IEUMButton(
 }
 
 @Composable
-fun BlackButton(
+fun DarkButton(
     modifier: Modifier = Modifier,
     text: String,
     enabled: Boolean = true,

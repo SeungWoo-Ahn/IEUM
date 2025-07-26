@@ -13,7 +13,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.ieum.design_system.button.BlackButton
+import com.ieum.design_system.button.DarkButton
 import com.ieum.design_system.icon.IEUMIcon
 import com.ieum.design_system.image.LoginBackGroundImage
 import com.ieum.design_system.spacer.IEUMSpacer
@@ -72,7 +72,7 @@ private fun LoginScreen(
                 style = MaterialTheme.typography.headlineLarge,
             )
             IEUMSpacer(modifier = Modifier.weight(1f))
-            BlackButton(
+            DarkButton(
                 text = stringResource(R.string.login_with_kakao),
                 enabled = buttonEnabled,
                 onClick = { onLogin(LoginStrategy.KaKao(context)) }

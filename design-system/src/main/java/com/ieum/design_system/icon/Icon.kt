@@ -46,6 +46,7 @@ fun CheckCircleIcon() {
     Icon(
         modifier = Modifier.size(88.dp),
         painter = painterResource(R.drawable.ic_check_circle),
+        tint = Color.Unspecified,
         contentDescription = "ic-check-circle",
     )
 }
