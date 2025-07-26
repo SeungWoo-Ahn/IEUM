@@ -13,20 +13,16 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ieum.design_system.R
 import com.ieum.design_system.theme.Gray100
 import com.ieum.design_system.theme.Gray200
 import com.ieum.design_system.theme.Gray300
+import com.ieum.design_system.theme.Gray500
 import com.ieum.design_system.theme.Gray950
 import com.ieum.design_system.theme.Lime400
 import com.ieum.design_system.theme.Lime500
@@ -83,15 +79,6 @@ fun BlackButton(
             color = Slate950,
         ),
         onClick = onClick
-    )
-}
-
-@Preview
-@Composable
-internal fun BlackButtonPreview() {
-    BlackButton(
-        text = "회원 가입",
-        onClick = {}
     )
 }
 
@@ -159,16 +146,6 @@ fun SkipOrNextButton(
     }
 }
 
-@Preview
-@Composable
-internal fun SkipOrNextButtonPreview() {
-    var enabled by remember { mutableStateOf(true) }
-    SkipOrNextButton(
-        enabled = enabled,
-        onNext = { enabled = false },
-    )
-}
-
 @Composable
 fun SelectedCountButton(
     modifier: Modifier = Modifier,
@@ -188,32 +165,18 @@ fun SelectedCountButton(
         ) {
             Text(
                 text = "$selectedCount",
-                color = Color.Green
+                style = MaterialTheme.typography.labelMedium,
+                color = Lime500,
             )
             Text(
-                text = stringResource(R.string.selected_n_completed)
+                text = stringResource(R.string.selected_n_completed),
+                style = MaterialTheme.typography.labelMedium,
+                color = Gray500,
             )
         }
-        IEUMButton(
-            text = stringResource(R.string.next),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color.Green,
-                contentColor = Color.Black,
-                disabledContainerColor = Color.Gray
-            ),
+        NextButton(
             enabled = enabled,
-            onClick = onClick
+            onClick = onClick,
         )
     }
-}
-
-@Preview
-@Composable
-internal fun SelectedCountButtonPreview() {
-    var enabled by remember { mutableStateOf(true) }
-    SelectedCountButton(
-        enabled = enabled,
-        selectedCount = 1,
-        onClick = { enabled = false }
-    )
 }

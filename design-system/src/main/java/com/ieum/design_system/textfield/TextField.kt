@@ -22,7 +22,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ieum.design_system.theme.Gray200
 import com.ieum.design_system.theme.Gray300
@@ -91,16 +90,6 @@ fun IEUMTextField(
     }
 }
 
-@Preview
-@Composable
-internal fun IEUMTextFieldPreview() {
-    val state = TextFieldState()
-    IEUMTextField(
-        state = state,
-        placeHolder = "아이디",
-    )
-}
-
 @Composable
 fun MaxLengthTextField(
     modifier: Modifier = Modifier,
@@ -140,17 +129,3 @@ fun MaxLengthTextField(
         }
     }
 }
-
-@Preview
-@Composable
-internal fun MaxLengthTextFieldPreview() {
-    val state = MaxLengthTextFieldState(
-        maxLength = 10
-    )
-    MaxLengthTextField(
-        state = state,
-        placeHolder = "아이디",
-    )
-}
-
-

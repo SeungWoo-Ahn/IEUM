@@ -12,6 +12,7 @@ import com.ieum.design_system.button.IEUMButton
 import com.ieum.design_system.selector.ISingleSelectorState
 import com.ieum.design_system.theme.Slate900
 import com.ieum.design_system.theme.White
+import com.ieum.design_system.util.dropShadow
 import com.ieum.domain.model.user.AgeGroup
 import com.ieum.domain.model.user.UserType
 import com.ieum.presentation.mapper.toDescription
@@ -24,7 +25,7 @@ fun RegisterSelector(
     onClick: () -> Unit,
 ) {
     IEUMButton(
-        modifier = modifier,
+        modifier = modifier.dropShadow(),
         text = name,
         colors = ButtonDefaults.buttonColors(
             containerColor = if (isSelected) Slate900 else White,

@@ -5,16 +5,16 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.ieum.design_system.bottomsheet.IEUMBottomSheet
 import com.ieum.design_system.spacer.IEUMSpacer
+import com.ieum.design_system.theme.screenPadding
 import com.ieum.presentation.R
 import com.ieum.presentation.mapper.toDescription
 import com.ieum.presentation.state.CancerStageSheetState
@@ -39,12 +39,11 @@ internal fun CancerStageComponent(
             Column(
                 modifier = modifier
                     .fillMaxWidth()
-                    .padding(all = 24.dp)
+                    .padding(all = screenPadding)
             ) {
                 Text(
                     text = stringResource(R.string.guide_select_cancer_stage, stringResource(uiState.key.displayName)),
-                    fontSize = 28.sp,
-                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.headlineLarge,
                 )
                 IEUMSpacer(size = 32)
                 Column(
