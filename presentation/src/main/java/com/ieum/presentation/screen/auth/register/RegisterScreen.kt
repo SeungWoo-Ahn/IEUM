@@ -176,7 +176,10 @@ private fun RegisterStageScreenArea(
                 scope = scope,
                 state = diagnoseState,
             )
-            RegisterStage.SelectAgeGroup -> SelectAgeGroup(state = ageGroupState)
+            RegisterStage.SelectAgeGroup -> SelectAgeGroup(
+                modifier = Modifier.padding(top = 48.dp),
+                state = ageGroupState,
+            )
             RegisterStage.SelectResidence -> AddressComponent(state = residenceState)
             RegisterStage.SelectHospital -> AddressComponent(state = hospitalState)
             RegisterStage.TypeInterest -> TypeInterest(state = interestState)

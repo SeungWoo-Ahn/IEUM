@@ -15,15 +15,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ieum.design_system.R
 import com.ieum.design_system.theme.Gray100
 import com.ieum.design_system.theme.Gray200
 import com.ieum.design_system.theme.Gray300
+import com.ieum.design_system.theme.Gray50
 import com.ieum.design_system.theme.Gray500
 import com.ieum.design_system.theme.Gray950
+import com.ieum.design_system.theme.Lime100
+import com.ieum.design_system.theme.Lime200
 import com.ieum.design_system.theme.Lime400
 import com.ieum.design_system.theme.Lime500
 import com.ieum.design_system.theme.Slate900
@@ -83,7 +85,7 @@ fun BlackButton(
 }
 
 @Composable
-fun SkipButton(
+internal fun SkipButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {
@@ -91,8 +93,12 @@ fun SkipButton(
         modifier = modifier.fillMaxWidth(),
         text = stringResource(R.string.skip),
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color.Gray,
-            contentColor = Color.Black,
+            containerColor = Gray50,
+            contentColor = Gray950,
+        ),
+        border = BorderStroke(
+            width = 1.dp,
+            color = Gray100,
         ),
         onClick = onClick
     )
@@ -123,6 +129,30 @@ fun NextButton(
 }
 
 @Composable
+internal fun LightNextButton(
+    modifier: Modifier = Modifier,
+    enabled: Boolean,
+    onClick: () -> Unit,
+) {
+    IEUMButton(
+        modifier = modifier.fillMaxWidth(),
+        text = stringResource(R.string.next),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Lime100,
+            contentColor = Gray950,
+            disabledContainerColor = Lime100,
+            disabledContentColor = Gray950,
+        ),
+        enabled = enabled,
+        border = BorderStroke(
+            width = 1.dp,
+            color = Lime200,
+        ),
+        onClick = onClick,
+    )
+}
+
+@Composable
 fun SkipOrNextButton(
     modifier: Modifier = Modifier,
     enabled: Boolean,
@@ -138,7 +168,7 @@ fun SkipOrNextButton(
                 onClick = onNext
             )
         }
-        NextButton(
+        LightNextButton(
             modifier = Modifier.weight(1f),
             enabled = enabled,
             onClick = onNext
