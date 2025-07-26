@@ -6,11 +6,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ieum.design_system.button.IEUMButton
 import com.ieum.design_system.selector.ISingleSelectorState
+import com.ieum.design_system.theme.Slate900
+import com.ieum.design_system.theme.White
+import com.ieum.design_system.util.dropShadow
 import com.ieum.domain.model.user.AgeGroup
 import com.ieum.domain.model.user.UserType
 import com.ieum.presentation.mapper.toDescription
@@ -23,11 +25,11 @@ fun RegisterSelector(
     onClick: () -> Unit,
 ) {
     IEUMButton(
-        modifier = modifier,
+        modifier = modifier.dropShadow(),
         text = name,
         colors = ButtonDefaults.buttonColors(
-            containerColor = if (isSelected) Color.Black else Color.White,
-            contentColor = if (isSelected) Color.White else Color.Black,
+            containerColor = if (isSelected) Slate900 else White,
+            contentColor = if (isSelected) White else Slate900,
         ),
         onClick = onClick
     )

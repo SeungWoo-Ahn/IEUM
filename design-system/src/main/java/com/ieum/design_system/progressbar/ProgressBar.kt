@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.ieum.design_system.theme.Lime400
 
 @Composable
 private fun IEUMProgressBar(
@@ -17,7 +18,7 @@ private fun IEUMProgressBar(
     CircularProgressIndicator(
         modifier = modifier.size(24.dp),
         strokeWidth = 3.dp,
-        color = Color.Green,
+        color = Lime400,
         trackColor = Color.Transparent,
     )
 }

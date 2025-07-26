@@ -8,6 +8,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
 import androidx.compose.runtime.Composable
+import com.ieum.design_system.theme.White
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -19,6 +20,7 @@ fun IEUMBottomSheet(
     ModalBottomSheet(
         sheetState = sheetState,
         onDismissRequest = onDismissRequest,
+        containerColor = White,
         dragHandle = null,
         contentWindowInsets = {
             WindowInsets(

@@ -7,15 +7,22 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.ieum.design_system.progressbar.IEUMLoadingComponent
 import com.ieum.design_system.spacer.IEUMSpacer
+import com.ieum.design_system.theme.Gray200
+import com.ieum.design_system.theme.Gray50
+import com.ieum.design_system.theme.Slate100
+import com.ieum.design_system.theme.Slate300
+import com.ieum.design_system.theme.White
+import com.ieum.design_system.util.topBorder
 import com.ieum.presentation.state.AddressState
 import com.ieum.presentation.state.AddressUiState
 
@@ -39,10 +46,18 @@ fun AddressComponent(
         )
         is AddressUiState.Success -> {
             Row(
-                modifier = modifier.fillMaxWidth()
+                modifier = modifier
+                    .fillMaxWidth()
+                    .background(color = White)
+                    .topBorder(
+                        height = 1f,
+                        color = Gray200,
+                    )
             ) {
                 LazyColumn(
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier
+                        .weight(1f)
+                        .background(color = Gray50),
                     state = state.cityListScrollState,
                 ) {
                     items(
@@ -59,6 +74,10 @@ fun AddressComponent(
                         IEUMSpacer(size = 120)
                     }
                 }
+                VerticalDivider(
+                    thickness = 1.dp,
+                    color = Gray200,
+                )
                 LazyColumn(
                     modifier = Modifier.weight(1.4f),
                     state = state.provinceListScrollState,
@@ -93,11 +112,7 @@ private fun CitySelector(
         modifier = modifier
             .fillMaxWidth()
             .background(
-                color = if (isSelected) {
-                    Color.Gray
-                } else {
-                    Color.LightGray
-                }
+                color = if (isSelected) Slate300 else Gray50,
             )
             .clickable(onClick = onClick)
             .padding(all = 24.dp),
@@ -105,6 +120,7 @@ private fun CitySelector(
     ) {
         Text(
             text = name,
+            style = MaterialTheme.typography.bodyMedium,
         )
     }
 }
@@ -120,11 +136,7 @@ private fun ProvinceSelector(
         modifier = modifier
             .fillMaxWidth()
             .background(
-                color = if (isSelected) {
-                    Color.Gray
-                } else {
-                    Color.LightGray
-                }
+                color = if (isSelected) Slate100 else White,
             )
             .clickable(onClick = onClick)
             .padding(all = 24.dp),
@@ -132,6 +144,7 @@ private fun ProvinceSelector(
     ) {
         Text(
             text = name,
+            style = MaterialTheme.typography.bodyMedium,
         )
     }
 }
