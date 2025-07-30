@@ -40,4 +40,35 @@
     <string name="register_done">회원가입이 완료되었어요!</string>
     <string name="welcome_phrase">당신의 기록은 누군가의 공감이 되고,\n다른 이의 하루는 당신에게 힘이 될 거에요.\n이제, 서로의 이야기를 나눠볼까요?</string>
     <string name="start">시작하기</string>
+    
+    <string name="treatment_records">치료 기록</string>
+    <string name="daily_records">일상 기록</string>
+    
+    <string name="specific_symptoms">특이증상</string>
+    <string name="taking_medicine">복약</string>
+    <string name="dietary_status">식이상태</string>
+    <string name="memo">메모</string>
+    <string name="add_image">사진 추가</string>
+    <string name="share_community">커뮤니티에 공유</string>
+    <string name="complete">완료</string>
+    <string name="incomplete">미완료</string>
+    <string name="post">게시하기</string>
+
+    <string name="guide_treatment_records">내 몸의 하루, 오늘은 어땠나요?</string>
+    <string name="guide_daily_records">자유롭게 이야기를 기록해보세요</string>
+    <string name="guide_specific_symptoms">평소와 다른 증상이 있다면 적어주세요</string>
+    <string name="guide_taking_medicine">복약 상태를 체크해주세요</string>
+    <string name="guide_dietary_status">어떻게 드셨는지 기록해보세요</string>
+    <string name="guide_memo">더 적고 싶은 게 있다면 남겨주세요</string>
+    <string name="guide_add_image">최대 3장까지 가능합니다.</string>
+    <string name="guide_share_community">체크하시면 커뮤니티에 공개됩니다.</string>
+
+    <string name="question_specific_symptoms">어떤 특이증상이 있었나요?</string>
+    <string name="question_taking_medicine">복약 상태는 어떤가요?</string>
+    <string name="question_dietary_status">어떻게 드셨나요?</string>
+    <string name="question_memo">더 남기고 싶은 이야기가 있나요?</string>
+
+    <string name="placeholder_specific_symptoms">특이증상을 적어주세요</string>
+    <string name="placeholder_dietary_status">식사 내용을 적어주세요</string>
+    <string name="placeholder_memo">추가로 남기고 싶은 글을 자유롭게 적어주세요.</string>
 </resources>
