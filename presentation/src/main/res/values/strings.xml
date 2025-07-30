@@ -47,6 +47,9 @@
     <string name="specific_symptoms">특이증상</string>
     <string name="taking_medicine">복약</string>
     <string name="dietary_status">식이상태</string>
+    <string name="eat_well">잘먹음</string>
+    <string name="eat_small_amounts">소량</string>
+    <string name="eat_nothing">못먹음</string>
     <string name="memo">메모</string>
     <string name="add_image">사진 추가</string>
     <string name="share_community">커뮤니티에 공유</string>

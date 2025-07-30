@@ -142,6 +142,36 @@ fun CommunityIcon() {
 }
 
 @Composable
+fun EatWellIcon() {
+    Icon(
+        modifier = Modifier.size(24.dp),
+        painter = painterResource(R.drawable.ic_eat_well),
+        tint = Color.Unspecified,
+        contentDescription = "ic-eat-well",
+    )
+}
+
+@Composable
+fun EatSmallAmountsIcon() {
+    Icon(
+        modifier = Modifier.size(24.dp),
+        painter = painterResource(R.drawable.ic_eat_small_amounts),
+        tint = Color.Unspecified,
+        contentDescription = "ic-eat-small-amounts",
+    )
+}
+
+@Composable
+fun EatNothingIcon() {
+    Icon(
+        modifier = Modifier.size(24.dp),
+        painter = painterResource(R.drawable.ic_eat_nothing),
+        tint = Color.Unspecified,
+        contentDescription = "ic-eat-nothing",
+    )
+}
+
+@Composable
 fun CompleteIcon() {
     Icon(
         modifier = Modifier.size(24.dp),
