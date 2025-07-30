@@ -50,3 +50,113 @@ fun CheckCircleIcon() {
         contentDescription = "ic-check-circle",
     )
 }
+
+@Composable
+fun CloseIcon() {
+    Icon(
+        modifier = Modifier.size(24.dp),
+        painter = painterResource(R.drawable.ic_close),
+        tint = Color.Unspecified,
+        contentDescription = "ic-close",
+    )
+}
+
+@Composable
+fun TreatmentRecordsIcon() {
+    Icon(
+        modifier = Modifier.size(24.dp),
+        painter = painterResource(R.drawable.ic_treatment_records),
+        tint = Color.Unspecified,
+        contentDescription = "ic-treatment-records",
+    )
+}
+
+@Composable
+fun DailyRecordsIcon() {
+    Icon(
+        modifier = Modifier.size(24.dp),
+        painter = painterResource(R.drawable.ic_daily_records),
+        tint = Color.Unspecified,
+        contentDescription = "ic-daily-records",
+    )
+}
+
+@Composable
+fun ThunderIcon() {
+    Icon(
+        modifier = Modifier.size(24.dp),
+        painter = painterResource(R.drawable.ic_thunder),
+        tint = Color.Unspecified,
+        contentDescription = "ic-thunder",
+    )
+}
+
+@Composable
+fun MedicineIcon() {
+    Icon(
+        modifier = Modifier.size(24.dp),
+        painter = painterResource(R.drawable.ic_medicine),
+        tint = Color.Unspecified,
+        contentDescription = "ic-medicine",
+    )
+}
+
+@Composable
+fun MealIcon() {
+    Icon(
+        modifier = Modifier.size(24.dp),
+        painter = painterResource(R.drawable.ic_meal),
+        tint = Color.Unspecified,
+        contentDescription = "ic-meal",
+    )
+}
+
+@Composable
+fun MemoIcon() {
+    Icon(
+        modifier = Modifier.size(24.dp),
+        painter = painterResource(R.drawable.ic_memo),
+        tint = Color.Unspecified,
+        contentDescription = "ic-memo",
+    )
+}
+
+@Composable
+fun ImageIcon() {
+    Icon(
+        modifier = Modifier.size(24.dp),
+        painter = painterResource(R.drawable.ic_image),
+        tint = Color.Unspecified,
+        contentDescription = "ic-image",
+    )
+}
+
+@Composable
+fun CommunityIcon() {
+    Icon(
+        modifier = Modifier.size(24.dp),
+        painter = painterResource(R.drawable.ic_community),
+        tint = Color.Unspecified,
+        contentDescription = "ic-community",
+    )
+}
+
+@Composable
+fun CompleteIcon() {
+    Icon(
+        modifier = Modifier.size(24.dp),
+        painter = painterResource(R.drawable.ic_complete),
+        tint = Color.Unspecified,
+        contentDescription = "ic-complete",
+    )
+}
+
+@Composable
+fun IncompleteIcon() {
+    Icon(
+        modifier = Modifier.size(24.dp),
+        painter = painterResource(R.drawable.ic_incomplete),
+        tint = Color.Unspecified,
+        contentDescription = "ic-incomplete",
+    )
+}
