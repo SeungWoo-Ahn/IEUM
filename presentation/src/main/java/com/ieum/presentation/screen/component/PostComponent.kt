@@ -183,3 +183,32 @@ fun TakingMedicineBox(
         }
     }
 }
+
+@Composable
+fun MemoBox(
+    data: String,
+    onClick: () -> Unit,
+) {
+    PostBox(
+        modifier = Modifier.clickable(onClick = onClick),
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            PostInfo(
+                name = stringResource(R.string.memo),
+                icon = { ThunderIcon() },
+            )
+            if (data.isBlank()) {
+                PlusCircleIcon()
+            }
+        }
+        if (data.isBlank()) {
+            PostGuide(guide = stringResource(R.string.guide_memo))
+        } else {
+            PostSeparator()
+            PostText(text = data)
+        }
+    }
+}
