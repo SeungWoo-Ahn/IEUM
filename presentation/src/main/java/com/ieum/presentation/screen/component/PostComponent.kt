@@ -1,21 +1,28 @@
 package com.ieum.presentation.screen.component
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.ieum.design_system.icon.PlusCircleIcon
+import com.ieum.design_system.icon.ThunderIcon
+import com.ieum.design_system.theme.Slate100
 import com.ieum.design_system.theme.Slate200
 import com.ieum.design_system.theme.Slate500
+import com.ieum.presentation.R
 
 @Composable
 private fun PostBox(
@@ -61,9 +68,62 @@ private fun PostGuide(
     guide: String,
 ) {
     Text(
-        modifier = Modifier.padding(start = 28.dp),
+        modifier = Modifier
+            .padding(
+                top = 2.dp,
+                start = 28.dp
+            ),
         text = guide,
         style = MaterialTheme.typography.bodySmall,
-        color = Slate500
+        color = Slate500,
     )
+}
+
+@Composable
+private fun PostText(
+    text: String,
+) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.bodySmall,
+        color = Slate500,
+    )
+}
+
+@Composable
+private fun PostSeparator() {
+    HorizontalDivider(
+        modifier = Modifier.padding(vertical = 12.dp),
+        thickness = 1.dp,
+        color = Slate100,
+    )
+}
+
+@Composable
+fun SpecificSymptomsBox(
+    data: String,
+    onClick: () -> Unit,
+) {
+    PostBox(
+        modifier = Modifier.clickable(onClick = onClick),
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            PostInfo(
+                name = stringResource(R.string.specific_symptoms),
+                icon = { ThunderIcon() },
+            )
+            if (data.isBlank()) {
+                PlusCircleIcon()
+            }
+        }
+        if (data.isBlank()) {
+            PostGuide(guide = stringResource(R.string.guide_specific_symptoms))
+        } else {
+            PostSeparator()
+            PostText(text = data)
+        }
+    }
 }
