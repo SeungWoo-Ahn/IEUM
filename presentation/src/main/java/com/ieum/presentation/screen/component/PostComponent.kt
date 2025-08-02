@@ -17,11 +17,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.ieum.design_system.icon.CompleteIcon
+import com.ieum.design_system.icon.IncompleteIcon
+import com.ieum.design_system.icon.MedicineIcon
 import com.ieum.design_system.icon.PlusCircleIcon
 import com.ieum.design_system.icon.ThunderIcon
 import com.ieum.design_system.theme.Slate100
 import com.ieum.design_system.theme.Slate200
 import com.ieum.design_system.theme.Slate500
+import com.ieum.design_system.theme.Slate700
 import com.ieum.presentation.R
 
 @Composable
@@ -124,6 +128,58 @@ fun SpecificSymptomsBox(
         } else {
             PostSeparator()
             PostText(text = data)
+        }
+    }
+}
+
+@Composable
+private fun TakingMedicineInfo(data: Boolean) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(2.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        if (data) {
+            CompleteIcon()
+            Text(
+                text = stringResource(R.string.complete),
+                style = MaterialTheme.typography.bodySmall,
+                color = Slate700,
+            )
+        } else {
+            IncompleteIcon()
+            Text(
+                text = stringResource(R.string.incomplete),
+                style = MaterialTheme.typography.bodySmall,
+                color = Slate700,
+            )
+        }
+    }
+}
+
+@Composable
+fun TakingMedicineBox(
+    data: Boolean?,
+    onClick: () -> Unit,
+) {
+    PostBox(
+        modifier = Modifier.clickable(onClick = onClick),
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            PostInfo(
+                name = stringResource(R.string.taking_medicine),
+                icon = { MedicineIcon() },
+            )
+            if (data == null) {
+                PlusCircleIcon()
+            } else {
+                TakingMedicineInfo(data = data)
+            }
+        }
+        if (data == null) {
+            PostGuide(guide = stringResource(R.string.guide_taking_medicine))
         }
     }
 }
