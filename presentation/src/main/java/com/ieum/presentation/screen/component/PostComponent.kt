@@ -21,7 +21,9 @@ import com.ieum.design_system.checkbox.IEUMCheckBox
 import com.ieum.design_system.icon.CommunityIcon
 import com.ieum.design_system.icon.CompleteIcon
 import com.ieum.design_system.icon.IncompleteIcon
+import com.ieum.design_system.icon.MealIcon
 import com.ieum.design_system.icon.MedicineIcon
+import com.ieum.design_system.icon.MemoIcon
 import com.ieum.design_system.icon.PlusCircleIcon
 import com.ieum.design_system.icon.ThunderIcon
 import com.ieum.design_system.theme.Slate100
@@ -29,6 +31,7 @@ import com.ieum.design_system.theme.Slate200
 import com.ieum.design_system.theme.Slate500
 import com.ieum.design_system.theme.Slate700
 import com.ieum.presentation.R
+import com.ieum.presentation.model.post.DietaryStatusUiModel
 
 @Composable
 private fun PostBox(
@@ -187,6 +190,47 @@ fun TakingMedicineBox(
 }
 
 @Composable
+fun DietaryStatusBox(
+    data: DietaryStatusUiModel?,
+    onClick: () -> Unit,
+) {
+    PostBox(
+        modifier = Modifier.clickable(onClick = onClick),
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            PostInfo(
+                name = stringResource(R.string.dietary_status),
+                icon = { MealIcon() }
+            )
+            if (data == null) {
+                PlusCircleIcon()
+            } else {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(2.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    data.info.icon()
+                    Text(
+                        text = stringResource(data.info.description),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Slate700,
+                    )
+                }
+            }
+        }
+        if (data == null) {
+            PostGuide(guide = stringResource(R.string.guide_dietary_status))
+        } else {
+            PostSeparator()
+            PostText(text = data.content)
+        }
+    }
+}
+
+@Composable
 fun MemoBox(
     data: String,
     onClick: () -> Unit,
@@ -200,7 +244,7 @@ fun MemoBox(
         ) {
             PostInfo(
                 name = stringResource(R.string.memo),
-                icon = { ThunderIcon() },
+                icon = { MemoIcon() },
             )
             if (data.isBlank()) {
                 PlusCircleIcon()
