@@ -70,4 +70,7 @@ dependencies {
 
     // timber
     implementation(libs.timber)
+
+    // coil
+    implementation(libs.bundles.coil)
 }
