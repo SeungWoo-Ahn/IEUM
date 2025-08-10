@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ieum.design_system.R
@@ -72,13 +73,13 @@ fun DarkButton(
         colors = ButtonDefaults.buttonColors(
             containerColor = Slate900,
             contentColor = White,
-            disabledContainerColor = Slate900,
+            disabledContainerColor = Color(0xFF023651),
             disabledContentColor = White,
         ),
         enabled = enabled,
         border = BorderStroke(
             width = 1.dp,
-            color = Slate950,
+            color = if (enabled) Slate950 else Color(0xFF01293E),
         ),
         onClick = onClick
     )
