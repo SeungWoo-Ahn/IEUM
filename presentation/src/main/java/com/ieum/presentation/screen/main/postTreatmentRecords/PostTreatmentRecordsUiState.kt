@@ -15,7 +15,7 @@ sealed class PostTreatmentRecordsUiState {
     data class ShowTakingMedicineDialog(
         val data: Boolean?,
         val callback: (Boolean) -> Unit,
-    )
+    ) : PostTreatmentRecordsUiState()
 
     data class ShowDietaryStatusSheet(
         val data: DietaryStatusUiModel?,

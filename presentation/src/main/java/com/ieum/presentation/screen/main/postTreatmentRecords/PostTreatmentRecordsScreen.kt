@@ -1,5 +1,8 @@
 package com.ieum.presentation.screen.main.postTreatmentRecords
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,6 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.ieum.design_system.button.DarkButton
 import com.ieum.design_system.spacer.IEUMSpacer
 import com.ieum.design_system.theme.Slate100
@@ -26,34 +30,65 @@ import com.ieum.presentation.screen.component.MemoBox
 import com.ieum.presentation.screen.component.ShareCommunityBox
 import com.ieum.presentation.screen.component.SpecificSymptomsBox
 import com.ieum.presentation.screen.component.TakingMedicineBox
+import kotlinx.coroutines.CoroutineScope
+
+private const val MAX_IMAGE_COUNT = 3
 
 @Composable
 fun PostTreatmentRecordsRoute(
     modifier: Modifier = Modifier,
+    scope: CoroutineScope,
     onBack: () -> Unit,
+    viewModel: PostTreatmentRecordsViewModel = hiltViewModel(),
 ) {
+    val uiState = viewModel.uiState
+    val uiModel = viewModel.uiModel
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickMultipleVisualMedia(MAX_IMAGE_COUNT),
+        onResult = viewModel::onPhotoPickerResult,
+    )
+
     PostTreatmentRecordsScreen(
         modifier = modifier,
-        isLoading = false,
-        maxImageCount = 3,
-        uiModel = PostTreatmentRecordsUiModel.EMPTY,
-        showSpecificSymptomsSheet = {},
-        showTakingMedicineDialog = {},
-        showDietaryStatusSheet = {},
-        showMemoSheet = {},
-        showAddImageSheet = {},
-        onDeleteImage = {},
-        toggleShareCommunity = {},
-        onPost = {},
+        isLoading = uiState == PostTreatmentRecordsUiState.Loading,
+        uiModel = uiModel,
+        showSpecificSymptomsSheet = viewModel::showSpecificSymptomsSheet,
+        showTakingMedicineDialog = viewModel::showTakingMedicineDialog,
+        showDietaryStatusSheet = viewModel::showDietaryStatusSheet,
+        showMemoSheet = viewModel::showMemoSheet,
+        showAddImageSheet = {
+            if (uiModel.imageList.size < MAX_IMAGE_COUNT) {
+                launcher.launch(
+                    PickVisualMediaRequest(
+                        mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly,
+                        maxItems = MAX_IMAGE_COUNT - uiModel.imageList.size
+                    )
+                )
+            }
+        },
+        onDeleteImage = viewModel::onDeleteImage,
+        toggleShareCommunity = viewModel::toggleShareCommunity,
+        onPost = viewModel::onPost,
         onBack = onBack,
     )
+    if (uiState is PostTreatmentRecordsUiState.ShowSpecificSymptomsSheet) {
+
+    }
+    if (uiState is PostTreatmentRecordsUiState.ShowTakingMedicineDialog) {
+
+    }
+    if (uiState is PostTreatmentRecordsUiState.ShowDietaryStatusSheet) {
+
+    }
+    if (uiState is PostTreatmentRecordsUiState.ShowMemoSheet) {
+
+    }
 }
 
 @Composable
 private fun PostTreatmentRecordsScreen(
     modifier: Modifier,
     isLoading: Boolean,
-    maxImageCount: Int,
     uiModel: PostTreatmentRecordsUiModel,
     showSpecificSymptomsSheet: () -> Unit,
     showTakingMedicineDialog: () -> Unit,
@@ -100,7 +135,7 @@ private fun PostTreatmentRecordsScreen(
                 )
                 AddImageBox(
                     data = uiModel.imageList,
-                    maxImageCount = maxImageCount,
+                    maxImageCount = MAX_IMAGE_COUNT,
                     onDeleteImage = onDeleteImage,
                     onClick = showAddImageSheet,
                 )

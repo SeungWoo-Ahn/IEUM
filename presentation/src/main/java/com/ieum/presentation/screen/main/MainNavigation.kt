@@ -18,6 +18,7 @@ fun NavGraphBuilder.nestedMainGraph(appState: IEUMAppState) {
         }
         composable<MainScreen.PostTreatmentRecords> {
             PostTreatmentRecordsRoute(
+                scope = appState.coroutineScope,
                 onBack = navController::popBackStack,
             )
         }
