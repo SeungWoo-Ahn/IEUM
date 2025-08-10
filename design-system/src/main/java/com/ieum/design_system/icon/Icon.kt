@@ -63,6 +63,16 @@ fun CloseIcon() {
 }
 
 @Composable
+fun CloseCircleIcon() {
+    Icon(
+        modifier = Modifier.size(24.dp),
+        painter = painterResource(R.drawable.ic_close_circle),
+        tint = Color.Unspecified,
+        contentDescription = "ic-close-circle",
+    )
+}
+
+@Composable
 fun TreatmentRecordsIcon() {
     Icon(
         modifier = Modifier.size(24.dp),

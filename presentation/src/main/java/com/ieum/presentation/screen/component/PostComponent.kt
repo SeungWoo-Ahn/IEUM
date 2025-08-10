@@ -3,12 +3,16 @@ package com.ieum.presentation.screen.component
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,18 +22,22 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ieum.design_system.checkbox.IEUMCheckBox
+import com.ieum.design_system.icon.CloseCircleIcon
 import com.ieum.design_system.icon.CommunityIcon
 import com.ieum.design_system.icon.CompleteIcon
+import com.ieum.design_system.icon.ImageIcon
 import com.ieum.design_system.icon.IncompleteIcon
 import com.ieum.design_system.icon.MealIcon
 import com.ieum.design_system.icon.MedicineIcon
 import com.ieum.design_system.icon.MemoIcon
 import com.ieum.design_system.icon.PlusCircleIcon
 import com.ieum.design_system.icon.ThunderIcon
+import com.ieum.design_system.spacer.IEUMSpacer
 import com.ieum.design_system.theme.Slate100
 import com.ieum.design_system.theme.Slate200
 import com.ieum.design_system.theme.Slate500
 import com.ieum.design_system.theme.Slate700
+import com.ieum.domain.model.image.ImageSource
 import com.ieum.presentation.R
 import com.ieum.presentation.model.post.DietaryStatusUiModel
 
@@ -260,6 +268,64 @@ fun MemoBox(
 }
 
 @Composable
+fun AddImageBox(
+    data: List<ImageSource>,
+    onDeleteImage: (ImageSource) -> Unit,
+    onClick: () -> Unit,
+) {
+    PostBox(
+        modifier = Modifier.clickable(onClick = onClick),
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            PostInfo(
+                name = stringResource(R.string.add_image),
+                icon = { ImageIcon() },
+            )
+        }
+        PostGuide(guide = stringResource(R.string.guide_add_image))
+        if (data.isNotEmpty()) {
+            IEUMSpacer(size = 10)
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                data.forEach { source ->
+                    PostImageItem(
+                        source = source,
+                        onDeleteImage = { onDeleteImage(source) }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun PostImageItem(
+    source: ImageSource,
+    onDeleteImage: () -> Unit,
+) {
+    Box(
+        modifier = Modifier.size(95.dp)
+    ) {
+        IEUMNetworkImage(
+            modifier = Modifier
+                .fillMaxSize()
+                .clip(MaterialTheme.shapes.small),
+            source = source
+        )
+        IconButton(
+            modifier = Modifier.align(Alignment.TopEnd),
+            onClick = onDeleteImage
+        ) {
+            CloseCircleIcon()
+        }
+    }
+}
+
+@Composable
 fun ShareCommunityBox(
     data: Boolean,
     onClick: () -> Unit,
@@ -277,7 +343,7 @@ fun ShareCommunityBox(
             )
             IEUMCheckBox(
                 checked = data,
-                onCheckedChange = {/*PostBox 에서*/}
+                onCheckedChange = {/*PostBox 에서 처리*/}
             )
         }
         PostGuide(guide = stringResource(R.string.guide_share_community))
