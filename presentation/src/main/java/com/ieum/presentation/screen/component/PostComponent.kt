@@ -17,6 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.ieum.design_system.checkbox.IEUMCheckBox
+import com.ieum.design_system.icon.CommunityIcon
 import com.ieum.design_system.icon.CompleteIcon
 import com.ieum.design_system.icon.IncompleteIcon
 import com.ieum.design_system.icon.MedicineIcon
@@ -210,5 +212,30 @@ fun MemoBox(
             PostSeparator()
             PostText(text = data)
         }
+    }
+}
+
+@Composable
+fun ShareCommunityBox(
+    data: Boolean,
+    onClick: () -> Unit,
+) {
+    PostBox(
+        modifier = Modifier.clickable(onClick = onClick),
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            PostInfo(
+                name = stringResource(R.string.share_community),
+                icon = { CommunityIcon() },
+            )
+            IEUMCheckBox(
+                checked = data,
+                onCheckedChange = {/*PostBox 에서*/}
+            )
+        }
+        PostGuide(guide = stringResource(R.string.guide_share_community))
     }
 }
