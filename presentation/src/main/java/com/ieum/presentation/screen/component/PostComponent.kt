@@ -1,5 +1,6 @@
 package com.ieum.presentation.screen.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -37,27 +38,30 @@ import com.ieum.design_system.theme.Slate100
 import com.ieum.design_system.theme.Slate200
 import com.ieum.design_system.theme.Slate500
 import com.ieum.design_system.theme.Slate700
+import com.ieum.design_system.theme.White
 import com.ieum.domain.model.image.ImageSource
 import com.ieum.presentation.R
 import com.ieum.presentation.model.post.DietaryStatusUiModel
 
 @Composable
 private fun PostBox(
-    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
     content: @Composable (ColumnScope.() -> Unit),
 ) {
     Column(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth()
             .clip(MaterialTheme.shapes.medium)
+            .background(color = White)
             .border(
                 width = 1.dp,
                 color = Slate200,
                 shape = MaterialTheme.shapes.medium,
             )
+            .clickable(onClick = onClick)
             .padding(
                 horizontal = 18.dp,
-                vertical = 12.dp,
+                vertical = 16.dp,
             ),
         content = content,
     )
@@ -87,7 +91,7 @@ private fun PostGuide(
     Text(
         modifier = Modifier
             .padding(
-                top = 2.dp,
+                top = 4.dp,
                 start = 28.dp
             ),
         text = guide,
@@ -121,10 +125,9 @@ fun SpecificSymptomsBox(
     data: String,
     onClick: () -> Unit,
 ) {
-    PostBox(
-        modifier = Modifier.clickable(onClick = onClick),
-    ) {
+    PostBox(onClick) {
         Row(
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -174,10 +177,9 @@ fun TakingMedicineBox(
     data: Boolean?,
     onClick: () -> Unit,
 ) {
-    PostBox(
-        modifier = Modifier.clickable(onClick = onClick),
-    ) {
+    PostBox(onClick) {
         Row(
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -202,10 +204,9 @@ fun DietaryStatusBox(
     data: DietaryStatusUiModel?,
     onClick: () -> Unit,
 ) {
-    PostBox(
-        modifier = Modifier.clickable(onClick = onClick),
-    ) {
+    PostBox(onClick) {
         Row(
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -243,10 +244,9 @@ fun MemoBox(
     data: String,
     onClick: () -> Unit,
 ) {
-    PostBox(
-        modifier = Modifier.clickable(onClick = onClick),
-    ) {
+    PostBox(onClick) {
         Row(
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -270,13 +270,13 @@ fun MemoBox(
 @Composable
 fun AddImageBox(
     data: List<ImageSource>,
+    maxImageCount: Int,
     onDeleteImage: (ImageSource) -> Unit,
     onClick: () -> Unit,
 ) {
-    PostBox(
-        modifier = Modifier.clickable(onClick = onClick),
-    ) {
+    PostBox(onClick) {
         Row(
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -284,6 +284,7 @@ fun AddImageBox(
                 name = stringResource(R.string.add_image),
                 icon = { ImageIcon() },
             )
+            PlusCircleIcon(enabled = data.size < maxImageCount)
         }
         PostGuide(guide = stringResource(R.string.guide_add_image))
         if (data.isNotEmpty()) {
@@ -330,10 +331,9 @@ fun ShareCommunityBox(
     data: Boolean,
     onClick: () -> Unit,
 ) {
-    PostBox(
-        modifier = Modifier.clickable(onClick = onClick),
-    ) {
+    PostBox(onClick) {
         Row(
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -343,7 +343,7 @@ fun ShareCommunityBox(
             )
             IEUMCheckBox(
                 checked = data,
-                onCheckedChange = {/*PostBox 에서 처리*/}
+                onCheckedChange = { onClick() }
             )
         }
         PostGuide(guide = stringResource(R.string.guide_share_community))

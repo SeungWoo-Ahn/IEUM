@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,6 +41,7 @@ fun TopBarForBack(
 @Composable
 fun TopBarForClose(
     modifier: Modifier = Modifier,
+    title: String,
     onClose: () -> Unit,
 ) {
     Box(
@@ -46,7 +49,7 @@ fun TopBarForClose(
             .fillMaxWidth()
             .height(topBarHeight)
             .background(color = Color.Transparent)
-            .padding(horizontal = 8.dp)
+            .padding(horizontal = 12.dp)
     ) {
         IconButton(
             modifier = Modifier.align(Alignment.CenterStart),
@@ -54,5 +57,10 @@ fun TopBarForClose(
         ) {
             CloseIcon()
         }
+        Text(
+            modifier = Modifier.align(Alignment.Center),
+            text = title,
+            style = MaterialTheme.typography.headlineSmall,
+        )
     }
 }

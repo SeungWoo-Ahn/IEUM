@@ -30,6 +30,8 @@ data class PostTreatmentRecordsUiModel(
     val imageList: List<ImageSource>,
     val shareCommunity: Boolean,
 ) {
+    fun validate(): Boolean = true // TODO: 기분 선택 추가 이후 수정 필요
+
     companion object {
         val EMPTY = PostTreatmentRecordsUiModel(
             specificSymptoms = "",
