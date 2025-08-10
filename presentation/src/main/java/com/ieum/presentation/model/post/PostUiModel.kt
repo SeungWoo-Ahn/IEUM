@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import com.ieum.design_system.icon.EatNothingIcon
 import com.ieum.design_system.icon.EatSmallAmountsIcon
 import com.ieum.design_system.icon.EatWellIcon
+import com.ieum.domain.model.image.ImageSource
 import com.ieum.presentation.R
 
 enum class DietaryStatusInfo(
@@ -20,3 +21,23 @@ data class DietaryStatusUiModel(
     val info: DietaryStatusInfo,
     val content: String,
 )
+
+data class PostTreatmentRecordsUiModel(
+    val specificSymptoms: String,
+    val takingMedicine: Boolean?,
+    val dietaryStatus: DietaryStatusUiModel?,
+    val memo: String,
+    val imageList: List<ImageSource>,
+    val shareCommunity: Boolean,
+) {
+    companion object {
+        val EMPTY = PostTreatmentRecordsUiModel(
+            specificSymptoms = "",
+            takingMedicine = null,
+            dietaryStatus = null,
+            memo = "",
+            imageList = emptyList(),
+            shareCommunity = false,
+        )
+    }
+}
