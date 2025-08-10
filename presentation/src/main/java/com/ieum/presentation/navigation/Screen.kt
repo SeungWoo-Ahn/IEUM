@@ -16,4 +16,7 @@ sealed interface AuthScreen {
 sealed interface MainScreen {
     @Serializable
     data object Home : MainScreen
+
+    @Serializable
+    data class PostTreatmentRecords(val id: String?) : MainScreen
 }
