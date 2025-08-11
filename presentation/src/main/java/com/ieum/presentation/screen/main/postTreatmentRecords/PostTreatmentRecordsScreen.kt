@@ -31,6 +31,7 @@ import com.ieum.presentation.R
 import com.ieum.presentation.model.post.PostTreatmentRecordsUiModel
 import com.ieum.presentation.screen.component.AddImageBox
 import com.ieum.presentation.screen.component.DietaryStatusBox
+import com.ieum.presentation.screen.component.DietaryStatusSheet
 import com.ieum.presentation.screen.component.MemoBox
 import com.ieum.presentation.screen.component.MemoSheet
 import com.ieum.presentation.screen.component.ShareCommunityBox
@@ -93,7 +94,13 @@ fun PostTreatmentRecordsRoute(
 
     }
     if (uiState is PostTreatmentRecordsUiState.ShowDietaryStatusSheet) {
-
+        DietaryStatusSheet(
+            scope = scope,
+            sheetState = sheetState,
+            data = uiModel.dietaryStatus,
+            callback = uiState.callback,
+            onDismissRequest = viewModel::resetUiState,
+        )
     }
     if (uiState is PostTreatmentRecordsUiState.ShowMemoSheet) {
         MemoSheet(
