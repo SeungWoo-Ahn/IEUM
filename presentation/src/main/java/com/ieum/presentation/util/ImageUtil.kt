@@ -32,36 +32,35 @@ class ImageUtil @Inject constructor(
                     }
                 val (suffix, compressFormat) = getSuffixAndCompressFormatByVersion()
                 val tempFile = createTempImageFile(suffix)
+                    .apply { deleteOnExit() }
                 compressBitmapToFile(correctedBitmap, tempFile, compressFormat)
                     .also {
                         downSampledBitmap.recycle()
                         correctedBitmap.recycle()
                     }
-                    .getOrElse { t ->
-                        tempFile.delete()
-                        throw t
-                    }
+                    .getOrThrow()
                 tempFile
             }
         }
 
-    private fun getDownSampledBitmap(uri: Uri, reqWidth: Int, reqHeight: Int): Result<Bitmap> = runCatching {
-        val options = BitmapFactory
-            .Options()
-            .apply {
-                inJustDecodeBounds = true
-                decodeUriToBitmap(uri, this)
-                inSampleSize = calcInSampleSize(reqWidth, reqHeight)
-                inJustDecodeBounds = false
-            }
-        decodeUriToBitmap(uri, options)
-    }
+    private fun getDownSampledBitmap(uri: Uri, reqWidth: Int, reqHeight: Int): Result<Bitmap> =
+        BitmapFactory.Options().run {
+            inJustDecodeBounds = true
+            decodeUriToBitmap(uri, this)
 
-    private fun decodeUriToBitmap(uri: Uri, options: BitmapFactory.Options): Bitmap =
-        context.contentResolver.openInputStream(uri).use { inputStream ->
-            BitmapFactory.decodeStream(inputStream, null, options)
-                ?: throw RuntimeException("bitmap decoding failed")
+            inSampleSize = calcInSampleSize(reqWidth, reqHeight)
+
+            inJustDecodeBounds = false
+            decodeUriToBitmap(uri, this)
         }
+
+    private fun decodeUriToBitmap(uri: Uri, options: BitmapFactory.Options): Result<Bitmap> = runCatching {
+        context.contentResolver.openInputStream(uri)?.use { inputStream ->
+            val bitmap = (BitmapFactory.decodeStream(inputStream, null, options)
+                ?: throw RuntimeException("Bitmap decoding failed"))
+            bitmap
+        } ?: throw RuntimeException("open inputStream failed")
+    }
 
     private fun BitmapFactory.Options.calcInSampleSize(reqWidth: Int, reqHeight: Int): Int {
         val (width, height) = outWidth to outHeight
