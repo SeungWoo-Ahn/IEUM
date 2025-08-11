@@ -14,9 +14,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,6 +44,7 @@ import com.ieum.design_system.theme.White
 import com.ieum.domain.model.image.ImageSource
 import com.ieum.presentation.R
 import com.ieum.presentation.model.post.DietaryStatusUiModel
+import com.ieum.presentation.screen.main.postTreatmentRecords.MAX_IMAGE_COUNT
 
 @Composable
 private fun PostBox(
@@ -286,7 +289,7 @@ fun AddImageBox(
             )
             PlusCircleIcon(enabled = data.size < maxImageCount)
         }
-        PostGuide(guide = stringResource(R.string.guide_add_image))
+        PostGuide(guide = stringResource(R.string.guide_add_image, MAX_IMAGE_COUNT))
         if (data.isNotEmpty()) {
             IEUMSpacer(size = 10)
             Row(
@@ -317,11 +320,15 @@ private fun PostImageItem(
                 .clip(MaterialTheme.shapes.small),
             source = source
         )
-        IconButton(
-            modifier = Modifier.align(Alignment.TopEnd),
-            onClick = onDeleteImage
-        ) {
-            CloseCircleIcon()
+        CompositionLocalProvider(LocalMinimumInteractiveComponentSize provides 0.dp) {
+            IconButton(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .size(24.dp),
+                onClick = onDeleteImage
+            ) {
+                CloseCircleIcon()
+            }
         }
     }
 }

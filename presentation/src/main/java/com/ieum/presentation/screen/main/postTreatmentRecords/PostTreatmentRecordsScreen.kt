@@ -41,7 +41,7 @@ import com.ieum.presentation.screen.component.TakingMedicineBox
 import com.ieum.presentation.screen.component.TakingMedicineDialog
 import kotlinx.coroutines.CoroutineScope
 
-private const val MAX_IMAGE_COUNT = 3
+internal const val MAX_IMAGE_COUNT = 3
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

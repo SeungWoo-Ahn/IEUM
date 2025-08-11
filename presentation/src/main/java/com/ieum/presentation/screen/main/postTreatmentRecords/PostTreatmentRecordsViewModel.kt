@@ -11,12 +11,14 @@ import androidx.navigation.toRoute
 import com.ieum.domain.model.image.ImageSource
 import com.ieum.presentation.model.post.PostTreatmentRecordsUiModel
 import com.ieum.presentation.navigation.MainScreen
+import com.ieum.presentation.util.ImageUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class PostTreatmentRecordsViewModel @Inject constructor(
+    private val imageUtil: ImageUtil,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     private val id = savedStateHandle.toRoute<MainScreen.PostTreatmentRecords>().id
@@ -61,7 +63,16 @@ class PostTreatmentRecordsViewModel @Inject constructor(
 
     fun onPhotoPickerResult(uriList: List<Uri>) {
         viewModelScope.launch {
-
+            val compressedImageList = mutableListOf<ImageSource.Local>()
+            for (uri in uriList) {
+                imageUtil.compressUriToFile(uri, 400, 400)
+                    .onSuccess { file ->
+                        compressedImageList += ImageSource.Local(file)
+                    }
+                if (uiModel.imageList.size + compressedImageList.size == MAX_IMAGE_COUNT)
+                    break
+            }
+            uiModel = uiModel.copy(imageList = uiModel.imageList + compressedImageList)
         }
     }
 

@@ -63,8 +63,8 @@
     <string name="guide_taking_medicine">복약 상태를 체크해주세요</string>
     <string name="guide_dietary_status">어떻게 드셨는지 기록해보세요</string>
     <string name="guide_memo">더 적고 싶은 게 있다면 남겨주세요</string>
-    <string name="guide_add_image">최대 3장까지 가능합니다.</string>
-    <string name="guide_share_community">체크하시면 커뮤니티에 공개됩니다.</string>
+    <string name="guide_add_image">최대 %d장까지 가능합니다</string>
+    <string name="guide_share_community">체크하시면 커뮤니티에 공개됩니다</string>
 
     <string name="question_specific_symptoms">어떤 특이증상이 있었나요?</string>
     <string name="question_taking_medicine">복약 상태는 어떤가요?</string>
