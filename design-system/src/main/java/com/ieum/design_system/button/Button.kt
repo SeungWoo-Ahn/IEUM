@@ -15,6 +15,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ieum.design_system.R
@@ -38,6 +40,7 @@ fun IEUMButton(
     text: String,
     colors: ButtonColors,
     enabled: Boolean = true,
+    roundedCorner: Boolean = true,
     border: BorderStroke? = null,
     onClick: () -> Unit,
 ) {
@@ -47,7 +50,7 @@ fun IEUMButton(
             .height(72.dp),
         colors = colors,
         enabled = enabled,
-        shape = MaterialTheme.shapes.medium,
+        shape = if (roundedCorner) MaterialTheme.shapes.medium else RectangleShape,
         border = border,
         onClick = onClick
     ) {
@@ -64,6 +67,7 @@ fun DarkButton(
     modifier: Modifier = Modifier,
     text: String,
     enabled: Boolean = true,
+    roundedCorner: Boolean = true,
     onClick: () -> Unit,
 ) {
     IEUMButton(
@@ -72,13 +76,14 @@ fun DarkButton(
         colors = ButtonDefaults.buttonColors(
             containerColor = Slate900,
             contentColor = White,
-            disabledContainerColor = Slate900,
+            disabledContainerColor = Color(0xFF023651).copy(alpha = 0.2f),
             disabledContentColor = White,
         ),
         enabled = enabled,
+        roundedCorner = roundedCorner,
         border = BorderStroke(
             width = 1.dp,
-            color = Slate950,
+            color = if (enabled) Slate950 else Color.Transparent,
         ),
         onClick = onClick
     )

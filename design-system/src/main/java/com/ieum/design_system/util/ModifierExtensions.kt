@@ -1,6 +1,8 @@
 package com.ieum.design_system.util
 
 import android.graphics.BlurMaskFilter
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -73,5 +75,13 @@ fun Modifier.topBorder(
         start = Offset(0f, 0f),
         end = Offset(size.width, 0f),
         strokeWidth = height,
+    )
+}
+
+fun Modifier.noRippleClickable(onClick: () -> Unit) = composed {
+    this.clickable(
+        indication = null,
+        interactionSource = remember { MutableInteractionSource() },
+        onClick = onClick,
     )
 }

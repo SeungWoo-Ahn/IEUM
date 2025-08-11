@@ -52,6 +52,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation)
+    implementation(libs.androidx.exifinterface)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -70,4 +71,7 @@ dependencies {
 
     // timber
     implementation(libs.timber)
+
+    // coil
+    implementation(libs.bundles.coil)
 }
