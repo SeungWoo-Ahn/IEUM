@@ -38,6 +38,7 @@ import com.ieum.presentation.screen.component.ShareCommunityBox
 import com.ieum.presentation.screen.component.SpecificSymptomsBox
 import com.ieum.presentation.screen.component.SpecificSymptomsSheet
 import com.ieum.presentation.screen.component.TakingMedicineBox
+import com.ieum.presentation.screen.component.TakingMedicineDialog
 import kotlinx.coroutines.CoroutineScope
 
 private const val MAX_IMAGE_COUNT = 3
@@ -91,7 +92,11 @@ fun PostTreatmentRecordsRoute(
         )
     }
     if (uiState is PostTreatmentRecordsUiState.ShowTakingMedicineDialog) {
-
+        TakingMedicineDialog(
+            data = uiModel.takingMedicine,
+            callback = uiState.callback,
+            onDismissRequest = viewModel::resetUiState,
+        )
     }
     if (uiState is PostTreatmentRecordsUiState.ShowDietaryStatusSheet) {
         DietaryStatusSheet(

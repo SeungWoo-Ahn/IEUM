@@ -37,7 +37,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
-private fun PostSheetQuestion(
+fun PostSheetQuestion(
     question: String,
 ) {
     Text(
