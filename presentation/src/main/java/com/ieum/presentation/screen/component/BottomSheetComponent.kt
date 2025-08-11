@@ -88,3 +88,46 @@ fun SpecificSymptomsSheet(
         }
     }
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MemoSheet(
+    scope: CoroutineScope,
+    sheetState: SheetState,
+    data: String,
+    callback: (String) -> Unit,
+    onDismissRequest: () -> Unit,
+) {
+    val textFieldState = remember { TextFieldState(data) }
+
+    IEUMBottomSheet(
+        sheetState = sheetState,
+        onDismissRequest = onDismissRequest,
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(all = screenPadding),
+            verticalArrangement = Arrangement.spacedBy(24.dp),
+        ) {
+            PostSheetQuestion(
+                question = stringResource(R.string.question_memo),
+            )
+            MultiLineTextField(
+                modifier = Modifier.height(140.dp),
+                state = textFieldState,
+                placeHolder = stringResource(R.string.placeholder_memo),
+            )
+        }
+        PostSheetButton {
+            scope
+                .launch {
+                    callback(textFieldState.getTrimmedText())
+                    sheetState.hide()
+                }
+                .invokeOnCompletion {
+                    onDismissRequest()
+                }
+        }
+    }
+}

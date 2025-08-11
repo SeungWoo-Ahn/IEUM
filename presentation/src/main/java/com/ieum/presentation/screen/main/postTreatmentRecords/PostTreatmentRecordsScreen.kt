@@ -32,6 +32,7 @@ import com.ieum.presentation.model.post.PostTreatmentRecordsUiModel
 import com.ieum.presentation.screen.component.AddImageBox
 import com.ieum.presentation.screen.component.DietaryStatusBox
 import com.ieum.presentation.screen.component.MemoBox
+import com.ieum.presentation.screen.component.MemoSheet
 import com.ieum.presentation.screen.component.ShareCommunityBox
 import com.ieum.presentation.screen.component.SpecificSymptomsBox
 import com.ieum.presentation.screen.component.SpecificSymptomsSheet
@@ -85,7 +86,7 @@ fun PostTreatmentRecordsRoute(
             sheetState = sheetState,
             data = uiModel.specificSymptoms,
             callback = uiState.callback,
-            onDismissRequest = viewModel::resetUiState
+            onDismissRequest = viewModel::resetUiState,
         )
     }
     if (uiState is PostTreatmentRecordsUiState.ShowTakingMedicineDialog) {
@@ -95,7 +96,13 @@ fun PostTreatmentRecordsRoute(
 
     }
     if (uiState is PostTreatmentRecordsUiState.ShowMemoSheet) {
-
+        MemoSheet(
+            scope = scope,
+            sheetState = sheetState,
+            data = uiModel.memo,
+            callback = uiState.callback,
+            onDismissRequest = viewModel::resetUiState,
+        )
     }
 }
 
