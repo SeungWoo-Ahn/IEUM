@@ -5,19 +5,24 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ieum.design_system.button.DarkButton
-import com.ieum.design_system.spacer.IEUMSpacer
 import com.ieum.design_system.theme.Slate100
 import com.ieum.design_system.theme.screenPadding
 import com.ieum.design_system.topbar.TopBarForClose
@@ -29,11 +34,13 @@ import com.ieum.presentation.screen.component.DietaryStatusBox
 import com.ieum.presentation.screen.component.MemoBox
 import com.ieum.presentation.screen.component.ShareCommunityBox
 import com.ieum.presentation.screen.component.SpecificSymptomsBox
+import com.ieum.presentation.screen.component.SpecificSymptomsSheet
 import com.ieum.presentation.screen.component.TakingMedicineBox
 import kotlinx.coroutines.CoroutineScope
 
 private const val MAX_IMAGE_COUNT = 3
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PostTreatmentRecordsRoute(
     modifier: Modifier = Modifier,
@@ -43,6 +50,7 @@ fun PostTreatmentRecordsRoute(
 ) {
     val uiState = viewModel.uiState
     val uiModel = viewModel.uiModel
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickMultipleVisualMedia(MAX_IMAGE_COUNT),
         onResult = viewModel::onPhotoPickerResult,
@@ -72,7 +80,13 @@ fun PostTreatmentRecordsRoute(
         onBack = onBack,
     )
     if (uiState is PostTreatmentRecordsUiState.ShowSpecificSymptomsSheet) {
-
+        SpecificSymptomsSheet(
+            scope = scope,
+            sheetState = sheetState,
+            data = uiModel.specificSymptoms,
+            callback = uiState.callback,
+            onDismissRequest = viewModel::resetUiState
+        )
     }
     if (uiState is PostTreatmentRecordsUiState.ShowTakingMedicineDialog) {
 
@@ -111,10 +125,14 @@ private fun PostTreatmentRecordsScreen(
             title = stringResource(R.string.treatment_records),
             onClose = onBack,
         )
-        Column(
-            modifier = Modifier.padding(all = screenPadding)
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .verticalScroll(state = rememberScrollState())
+                .padding(all = screenPadding)
         ) {
             Column(
+                modifier = Modifier.padding(bottom = 100.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 SpecificSymptomsBox(
@@ -144,8 +162,8 @@ private fun PostTreatmentRecordsScreen(
                     onClick = toggleShareCommunity,
                 )
             }
-            IEUMSpacer(modifier = Modifier.weight(1f))
             DarkButton(
+                modifier = Modifier.align(Alignment.BottomCenter),
                 text = stringResource(R.string.post),
                 enabled = buttonEnabled,
                 onClick = onPost,

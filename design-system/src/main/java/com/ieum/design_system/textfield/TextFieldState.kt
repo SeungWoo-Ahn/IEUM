@@ -18,9 +18,8 @@ interface IMaxLengthTextFieldState : ITextFieldState {
     val maxLength: Int
 }
 
-class TextFieldState : ITextFieldState {
-    private var _typedText by mutableStateOf("")
-
+class TextFieldState(initText: String) : ITextFieldState {
+    private var _typedText by mutableStateOf(initText)
     override val typedText: String get() = _typedText
 
     override fun typeText(text: String) {
@@ -40,7 +39,6 @@ class MaxLengthTextFieldState(
     override val maxLength: Int
 ) : IMaxLengthTextFieldState {
     private var _typedText by mutableStateOf("")
-
     override val typedText: String get() = _typedText
 
     override fun typeText(text: String) {

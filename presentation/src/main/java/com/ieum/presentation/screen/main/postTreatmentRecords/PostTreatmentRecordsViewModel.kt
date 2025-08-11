@@ -7,7 +7,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.toRoute
 import com.ieum.domain.model.image.ImageSource
 import com.ieum.presentation.model.post.PostTreatmentRecordsUiModel
@@ -32,36 +31,32 @@ class PostTreatmentRecordsViewModel @Inject constructor(
         // TODO: id != null (수정) 일 때, 데이터 로드
     }
 
-    fun dismiss() {
+    fun resetUiState() {
         uiState = PostTreatmentRecordsUiState.Idle
     }
 
     fun showSpecificSymptomsSheet() {
-        uiState = PostTreatmentRecordsUiState.ShowSpecificSymptomsSheet(
-            data = uiModel.specificSymptoms,
-            callback = { uiModel = uiModel.copy(specificSymptoms = it) }
-        )
+        uiState = PostTreatmentRecordsUiState.ShowSpecificSymptomsSheet {
+            uiModel = uiModel.copy(specificSymptoms = it)
+        }
     }
 
     fun showTakingMedicineDialog() {
-        uiState = PostTreatmentRecordsUiState.ShowTakingMedicineDialog(
-            data = uiModel.takingMedicine,
-            callback = { uiModel = uiModel.copy(takingMedicine = it) }
-        )
+        uiState = PostTreatmentRecordsUiState.ShowTakingMedicineDialog {
+            uiModel = uiModel.copy(takingMedicine = it)
+        }
     }
 
     fun showDietaryStatusSheet() {
-        uiState = PostTreatmentRecordsUiState.ShowDietaryStatusSheet(
-            data = uiModel.dietaryStatus,
-            callback = { uiModel = uiModel.copy(dietaryStatus = it) }
-        )
+        uiState = PostTreatmentRecordsUiState.ShowDietaryStatusSheet {
+            uiModel = uiModel.copy(dietaryStatus = it)
+        }
     }
 
     fun showMemoSheet() {
-        uiState = PostTreatmentRecordsUiState.ShowMemoSheet(
-            data = uiModel.memo,
-            callback = { uiModel = uiModel.copy(memo = it) }
-        )
+        uiState = PostTreatmentRecordsUiState.ShowMemoSheet {
+            uiModel = uiModel.copy(memo = it)
+        }
     }
 
     fun onPhotoPickerResult(uriList: List<Uri>) {

@@ -24,6 +24,13 @@ internal val IEUMTypography = Typography(
         letterSpacing = (-0.02).em,
         color = Gray950,
     ),
+    headlineMedium = TextStyle(
+        fontFamily = Pretendard,
+        fontWeight = FontWeight.Bold,
+        fontSize = 24.sp,
+        letterSpacing = (-0.01).em,
+        color = Gray950,
+    ),
     headlineSmall = TextStyle(
         fontFamily = Pretendard,
         fontWeight = FontWeight.Bold,

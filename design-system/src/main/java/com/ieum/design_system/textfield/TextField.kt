@@ -5,6 +5,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -20,6 +21,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -34,7 +36,9 @@ fun IEUMTextField(
     modifier: Modifier = Modifier,
     state: ITextFieldState,
     placeHolder: String,
-    maxLines: Int = 1,
+    singleLine: Boolean = true,
+    textStyle: TextStyle = MaterialTheme.typography.titleLarge,
+    innerPadding: PaddingValues = PaddingValues(horizontal = 18.dp, vertical = 24.dp),
     keyboardType: KeyboardType = KeyboardType.Text,
     imeAction: ImeAction = ImeAction.Done,
 ) {
@@ -47,12 +51,12 @@ fun IEUMTextField(
                 isFocused = focusState.isFocused
             },
         value = state.typedText,
-        maxLines = maxLines,
+        singleLine = singleLine,
         keyboardOptions = KeyboardOptions(
             keyboardType = keyboardType,
             imeAction = imeAction,
         ),
-        textStyle = MaterialTheme.typography.titleLarge,
+        textStyle = textStyle,
         onValueChange = state::typeText,
     ) { innerTextField ->
         Box(
@@ -71,16 +75,13 @@ fun IEUMTextField(
                     color = White,
                     shape = MaterialTheme.shapes.medium
                 )
-                .padding(
-                    horizontal = 18.dp,
-                    vertical = 24.dp
-                ),
-            contentAlignment = Alignment.CenterStart,
+                .padding(innerPadding),
+            contentAlignment = Alignment.TopStart,
         ) {
             if (state.typedText.isEmpty()) {
                 Text(
                     text = placeHolder,
-                    style = MaterialTheme.typography.titleLarge,
+                    style = textStyle,
                     color = Gray300,
                 )
             } else {
@@ -95,7 +96,6 @@ fun MaxLengthTextField(
     modifier: Modifier = Modifier,
     state: IMaxLengthTextFieldState,
     placeHolder: String,
-    maxLines: Int = 1,
     keyboardType: KeyboardType = KeyboardType.Text,
     imeAction: ImeAction = ImeAction.Done,
 ) {
@@ -105,7 +105,6 @@ fun MaxLengthTextField(
         IEUMTextField(
             state = state,
             placeHolder = placeHolder,
-            maxLines = maxLines,
             keyboardType = keyboardType,
             imeAction = imeAction,
         )
@@ -128,4 +127,21 @@ fun MaxLengthTextField(
             )
         }
     }
+}
+
+@Composable
+fun MultiLineTextField(
+    modifier: Modifier = Modifier,
+    state: ITextFieldState,
+    placeHolder: String,
+) {
+    IEUMTextField(
+        modifier = modifier,
+        state = state,
+        placeHolder = placeHolder,
+        singleLine = false,
+        textStyle = MaterialTheme.typography.bodySmall,
+        innerPadding = PaddingValues(all = 18.dp),
+        imeAction = ImeAction.Unspecified,
+    )
 }
