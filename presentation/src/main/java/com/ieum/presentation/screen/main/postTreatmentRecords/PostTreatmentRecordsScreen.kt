@@ -70,10 +70,7 @@ fun PostTreatmentRecordsRoute(
         showAddImageSheet = {
             if (uiModel.imageList.size < MAX_IMAGE_COUNT) {
                 launcher.launch(
-                    PickVisualMediaRequest(
-                        mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly,
-                        maxItems = MAX_IMAGE_COUNT - uiModel.imageList.size
-                    )
+                    PickVisualMediaRequest(mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly)
                 )
             }
         },

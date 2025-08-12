@@ -3,6 +3,8 @@ package com.ieum.presentation.screen.component
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -10,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.unit.dp
 import com.ieum.design_system.icon.InfoCircleIcon
 import com.ieum.design_system.spacer.IEUMSpacer
 import com.ieum.design_system.textfield.IMaxLengthTextFieldState
@@ -64,6 +67,11 @@ fun TypeInterest(
 @Composable
 fun TypeTitle(state: ITextFieldState) {
     StylelessTextField(
+        modifier = Modifier
+            .padding(
+                horizontal = 18.dp,
+                vertical = 16.dp,
+            ),
         state = state,
         placeHolder = stringResource(R.string.placeholder_title),
         singleLine = true,
@@ -75,6 +83,9 @@ fun TypeTitle(state: ITextFieldState) {
 @Composable
 fun TypeStory(state: ITextFieldState) {
     StylelessTextField(
+        modifier = Modifier
+            .height(394.dp)
+            .padding(all = 18.dp),
         state = state,
         placeHolder = stringResource(R.string.placeholder_story),
         singleLine = false,

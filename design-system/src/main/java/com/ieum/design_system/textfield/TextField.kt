@@ -11,9 +11,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.selection.LocalTextSelectionColors
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,6 +30,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.ieum.design_system.theme.Gray200
 import com.ieum.design_system.theme.Gray300
+import com.ieum.design_system.theme.Lime100
 import com.ieum.design_system.theme.Lime500
 import com.ieum.design_system.theme.Slate900
 import com.ieum.design_system.theme.White
@@ -43,6 +47,11 @@ private fun TextFieldPlaceHolder(
     )
 }
 
+private val textSelectionColors = TextSelectionColors(
+    handleColor = Lime500,
+    backgroundColor = Lime100,
+)
+
 @Composable
 fun IEUMTextField(
     modifier: Modifier = Modifier,
@@ -56,47 +65,49 @@ fun IEUMTextField(
 ) {
     var isFocused by remember { mutableStateOf(false) }
 
-    BasicTextField(
-        modifier = Modifier
-            .fillMaxWidth()
-            .onFocusChanged { focusState ->
-                isFocused = focusState.isFocused
-            },
-        value = state.typedText,
-        singleLine = singleLine,
-        keyboardOptions = KeyboardOptions(
-            keyboardType = keyboardType,
-            imeAction = imeAction,
-        ),
-        textStyle = textStyle,
-        onValueChange = state::typeText,
-    ) { innerTextField ->
-        Box(
-            modifier = modifier
+    CompositionLocalProvider(LocalTextSelectionColors provides textSelectionColors) {
+        BasicTextField(
+            modifier = Modifier
                 .fillMaxWidth()
-                .border(
-                    width = 1.dp,
-                    color = if (isFocused) {
-                        Slate900
-                    } else {
-                        Gray200
-                    },
-                    shape = MaterialTheme.shapes.medium
-                )
-                .background(
-                    color = White,
-                    shape = MaterialTheme.shapes.medium
-                )
-                .padding(innerPadding),
-            contentAlignment = Alignment.TopStart,
-        ) {
-            if (state.typedText.isEmpty()) {
-                TextFieldPlaceHolder(
-                    text = placeHolder,
-                    textStyle = textStyle,
-                )
-            } else {
-                innerTextField()
+                .onFocusChanged { focusState ->
+                    isFocused = focusState.isFocused
+                },
+            value = state.typedText,
+            singleLine = singleLine,
+            keyboardOptions = KeyboardOptions(
+                keyboardType = keyboardType,
+                imeAction = imeAction,
+            ),
+            textStyle = textStyle,
+            onValueChange = state::typeText,
+        ) { innerTextField ->
+            Box(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .border(
+                        width = 1.dp,
+                        color = if (isFocused) {
+                            Slate900
+                        } else {
+                            Gray200
+                        },
+                        shape = MaterialTheme.shapes.medium
+                    )
+                    .background(
+                        color = White,
+                        shape = MaterialTheme.shapes.medium
+                    )
+                    .padding(innerPadding),
+                contentAlignment = Alignment.TopStart,
+            ) {
+                if (state.typedText.isEmpty()) {
+                    TextFieldPlaceHolder(
+                        text = placeHolder,
+                        textStyle = textStyle,
+                    )
+                } else {
+                    innerTextField()
+                }
             }
         }
     }
@@ -170,28 +181,30 @@ fun StylelessTextField(
     textStyle: TextStyle,
     imeAction: ImeAction,
 ) {
-    BasicTextField(
-        modifier = Modifier.fillMaxWidth(),
-        value = state.typedText,
-        singleLine = singleLine,
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Text,
-            imeAction = imeAction,
-        ),
-        textStyle = textStyle,
-        onValueChange = state::typeText,
-    ) { innerTextField ->
-        Box(
-            modifier = modifier.fillMaxWidth(),
-            contentAlignment = Alignment.TopStart,
-        ) {
-            if (state.typedText.isEmpty()) {
-                TextFieldPlaceHolder(
-                    text = placeHolder,
-                    textStyle = textStyle,
-                )
-            } else {
-                innerTextField()
+    CompositionLocalProvider(LocalTextSelectionColors provides textSelectionColors) {
+        BasicTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = state.typedText,
+            singleLine = singleLine,
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = imeAction,
+            ),
+            textStyle = textStyle,
+            onValueChange = state::typeText,
+        ) { innerTextField ->
+            Box(
+                modifier = modifier.fillMaxWidth(),
+                contentAlignment = Alignment.TopStart,
+            ) {
+                if (state.typedText.isEmpty()) {
+                    TextFieldPlaceHolder(
+                        text = placeHolder,
+                        textStyle = textStyle,
+                    )
+                } else {
+                    innerTextField()
+                }
             }
         }
     }

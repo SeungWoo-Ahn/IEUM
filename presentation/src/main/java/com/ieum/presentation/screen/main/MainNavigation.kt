@@ -7,12 +7,13 @@ import androidx.navigation.navigation
 import com.ieum.presentation.navigation.MainScreen
 import com.ieum.presentation.navigation.ScreenGraph
 import com.ieum.presentation.screen.IEUMAppState
+import com.ieum.presentation.screen.main.postDailyRecords.PostDailyRecordsRoute
 import com.ieum.presentation.screen.main.postTreatmentRecords.PostTreatmentRecordsRoute
 
 fun NavGraphBuilder.nestedMainGraph(appState: IEUMAppState) {
     val navController = appState.navController
 
-    navigation<ScreenGraph.Main>(startDestination = MainScreen.PostTreatmentRecords(null)) {
+    navigation<ScreenGraph.Main>(startDestination = MainScreen.PostDailyRecords(null)) {
         composable<MainScreen.Home> {
 
         }
@@ -23,7 +24,9 @@ fun NavGraphBuilder.nestedMainGraph(appState: IEUMAppState) {
             )
         }
         composable<MainScreen.PostDailyRecords> {
-
+            PostDailyRecordsRoute(
+                onBack = navController::popBackStack,
+            )
         }
     }
 }

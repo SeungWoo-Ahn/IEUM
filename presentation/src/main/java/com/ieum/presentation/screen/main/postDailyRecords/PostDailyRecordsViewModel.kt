@@ -48,7 +48,7 @@ class PostDailyRecordsViewModel @Inject constructor(
                     .onSuccess { file ->
                         compressedImageList += ImageSource.Local(file)
                     }
-                if (imageList.size + compressedImageList.size == 3)
+                if (imageList.size + compressedImageList.size == MAX_IMAGE_COUNT)
                     break
             }
             _imageList.addAll(compressedImageList)
@@ -62,6 +62,8 @@ class PostDailyRecordsViewModel @Inject constructor(
     fun toggleShareCommunity() {
         shareCommunity = shareCommunity.not()
     }
+
+    fun validate() = uiState != PostDailyRecordsUiState.Loading && titleState.validate()
 
     fun onPost() {
         viewModelScope.launch {
