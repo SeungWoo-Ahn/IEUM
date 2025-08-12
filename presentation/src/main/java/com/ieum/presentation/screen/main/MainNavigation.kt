@@ -22,6 +22,9 @@ fun NavGraphBuilder.nestedMainGraph(appState: IEUMAppState) {
                 onBack = navController::popBackStack,
             )
         }
+        composable<MainScreen.PostDailyRecords> {
+
+        }
     }
 }
 
@@ -31,3 +34,6 @@ fun NavController.navigateToMainGraph() = navigate(ScreenGraph.Main) {
 
 fun NavController.navigateToPostTreatmentRecordsScreen(id: String? = null) =
     navigate(MainScreen.PostTreatmentRecords(id))
+
+fun NavController.navigateToPostDailyRecordsScreen(id: String? = null) =
+    navigate(MainScreen.PostDailyRecords(id))
