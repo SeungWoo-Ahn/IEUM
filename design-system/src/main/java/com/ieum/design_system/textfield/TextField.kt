@@ -32,15 +32,27 @@ import com.ieum.design_system.theme.Slate900
 import com.ieum.design_system.theme.White
 
 @Composable
+private fun TextFieldPlaceHolder(
+    text: String,
+    textStyle: TextStyle,
+) {
+    Text(
+        text = text,
+        style = textStyle,
+        color = Gray300,
+    )
+}
+
+@Composable
 fun IEUMTextField(
     modifier: Modifier = Modifier,
     state: ITextFieldState,
     placeHolder: String,
-    singleLine: Boolean = true,
-    textStyle: TextStyle = MaterialTheme.typography.titleLarge,
-    innerPadding: PaddingValues = PaddingValues(horizontal = 18.dp, vertical = 24.dp),
-    keyboardType: KeyboardType = KeyboardType.Text,
-    imeAction: ImeAction = ImeAction.Done,
+    singleLine: Boolean,
+    textStyle: TextStyle,
+    innerPadding: PaddingValues,
+    keyboardType: KeyboardType,
+    imeAction: ImeAction,
 ) {
     var isFocused by remember { mutableStateOf(false) }
 
@@ -79,10 +91,9 @@ fun IEUMTextField(
             contentAlignment = Alignment.TopStart,
         ) {
             if (state.typedText.isEmpty()) {
-                Text(
+                TextFieldPlaceHolder(
                     text = placeHolder,
-                    style = textStyle,
-                    color = Gray300,
+                    textStyle = textStyle,
                 )
             } else {
                 innerTextField()
@@ -105,6 +116,9 @@ fun MaxLengthTextField(
         IEUMTextField(
             state = state,
             placeHolder = placeHolder,
+            singleLine = true,
+            textStyle = MaterialTheme.typography.titleLarge,
+            innerPadding = PaddingValues(horizontal = 18.dp, vertical = 24.dp),
             keyboardType = keyboardType,
             imeAction = imeAction,
         )
@@ -142,6 +156,43 @@ fun MultiLineTextField(
         singleLine = false,
         textStyle = MaterialTheme.typography.bodySmall,
         innerPadding = PaddingValues(all = 18.dp),
+        keyboardType = KeyboardType.Text,
         imeAction = ImeAction.Unspecified,
     )
+}
+
+@Composable
+fun StylelessTextField(
+    modifier: Modifier = Modifier,
+    state: ITextFieldState,
+    placeHolder: String,
+    singleLine: Boolean,
+    textStyle: TextStyle,
+    imeAction: ImeAction,
+) {
+    BasicTextField(
+        modifier = Modifier.fillMaxWidth(),
+        value = state.typedText,
+        singleLine = singleLine,
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Text,
+            imeAction = imeAction,
+        ),
+        textStyle = textStyle,
+        onValueChange = state::typeText,
+    ) { innerTextField ->
+        Box(
+            modifier = modifier.fillMaxWidth(),
+            contentAlignment = Alignment.TopStart,
+        ) {
+            if (state.typedText.isEmpty()) {
+                TextFieldPlaceHolder(
+                    text = placeHolder,
+                    textStyle = textStyle,
+                )
+            } else {
+                innerTextField()
+            }
+        }
+    }
 }
