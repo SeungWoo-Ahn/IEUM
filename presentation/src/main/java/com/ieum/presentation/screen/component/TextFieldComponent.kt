@@ -9,10 +9,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import com.ieum.design_system.icon.InfoCircleIcon
 import com.ieum.design_system.spacer.IEUMSpacer
 import com.ieum.design_system.textfield.IMaxLengthTextFieldState
+import com.ieum.design_system.textfield.ITextFieldState
 import com.ieum.design_system.textfield.MaxLengthTextField
+import com.ieum.design_system.textfield.StylelessTextField
 import com.ieum.design_system.theme.Gray600
 import com.ieum.presentation.R
 
@@ -56,4 +59,26 @@ fun TypeInterest(
             placeHolder = stringResource(R.string.placeholder_type_interest)
         )
     }
+}
+
+@Composable
+fun TypeTitle(state: ITextFieldState) {
+    StylelessTextField(
+        state = state,
+        placeHolder = stringResource(R.string.placeholder_title),
+        singleLine = true,
+        textStyle = MaterialTheme.typography.bodyMedium,
+        imeAction = ImeAction.Next,
+    )
+}
+
+@Composable
+fun TypeStory(state: ITextFieldState) {
+    StylelessTextField(
+        state = state,
+        placeHolder = stringResource(R.string.placeholder_story),
+        singleLine = false,
+        textStyle = MaterialTheme.typography.bodySmall,
+        imeAction = ImeAction.Unspecified,
+    )
 }
