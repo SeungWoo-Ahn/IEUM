@@ -6,5 +6,4 @@ import kotlinx.serialization.Serializable
 data class OAuthRequestBody(
     val provider: String,
     val authorizationCode: String,
-    val redirectUri: String? = null,
 )
