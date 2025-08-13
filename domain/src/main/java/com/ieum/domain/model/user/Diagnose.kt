@@ -7,6 +7,13 @@ enum class Diagnosis(override val key: String) : KeyAble<String> {
     COLON_CANCER("colon_cancer"),
     LIVER_TRANSPLANT("liver_transplant"),
     OTHERS("others");
+
+    companion object {
+        private val map = entries.associateBy(Diagnosis::key)
+
+        fun fromKey(key: String): Diagnosis = map[key]
+            ?: throw IllegalArgumentException("Invalid Diagnosis key: $key")
+    }
 }
 
 sealed interface Diagnose {

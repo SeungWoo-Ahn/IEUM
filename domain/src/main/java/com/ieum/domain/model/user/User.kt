@@ -3,7 +3,7 @@ package com.ieum.domain.model.user
 import com.ieum.domain.model.auth.OAuthProvider
 
 data class User(
-    val id: String,
+    val id: Int,
     val oAuthProvider: OAuthProvider,
     val email: String,
     val userType: UserType,
