@@ -4,7 +4,7 @@ import com.ieum.domain.model.user.AgeGroup
 import com.ieum.domain.model.user.CancerDiagnose
 import com.ieum.domain.model.user.CancerStage
 import com.ieum.domain.model.user.Diagnose
-import com.ieum.domain.model.user.DiagnoseKey
+import com.ieum.domain.model.user.Diagnosis
 import com.ieum.domain.model.user.UserType
 import com.ieum.presentation.R
 import com.ieum.presentation.model.user.CancerDiagnoseUiKey
@@ -51,18 +51,18 @@ fun CancerDiagnoseUiModel.toDomain(): CancerDiagnose? =
     }
 
 
-fun DiagnoseUiKeys.toDomainKey(): DiagnoseKey =
+fun DiagnoseUiKeys.toDomainKey(): Diagnosis =
     when (this) {
-        CancerDiagnoseUiKey.RENTAL_CANCER -> DiagnoseKey.RENTAL_CANCER
-        CancerDiagnoseUiKey.COLON_CANCER -> DiagnoseKey.COLON_CANCER
-        DiagnoseUiKey.LIVER_TRANSPLANT -> DiagnoseKey.LIVER_TRANSPLANT
-        DiagnoseUiKey.OTHERS -> DiagnoseKey.OTHERS
+        CancerDiagnoseUiKey.RENTAL_CANCER -> Diagnosis.RENTAL_CANCER
+        CancerDiagnoseUiKey.COLON_CANCER -> Diagnosis.COLON_CANCER
+        DiagnoseUiKey.LIVER_TRANSPLANT -> Diagnosis.LIVER_TRANSPLANT
+        DiagnoseUiKey.OTHERS -> Diagnosis.OTHERS
     }
 
-fun DiagnoseKey.toUiKey(): DiagnoseUiKeys =
+fun Diagnosis.toUiKey(): DiagnoseUiKeys =
     when (this) {
-        DiagnoseKey.RENTAL_CANCER -> CancerDiagnoseUiKey.RENTAL_CANCER
-        DiagnoseKey.COLON_CANCER -> CancerDiagnoseUiKey.COLON_CANCER
-        DiagnoseKey.LIVER_TRANSPLANT -> DiagnoseUiKey.LIVER_TRANSPLANT
-        DiagnoseKey.OTHERS -> DiagnoseUiKey.OTHERS
+        Diagnosis.RENTAL_CANCER -> CancerDiagnoseUiKey.RENTAL_CANCER
+        Diagnosis.COLON_CANCER -> CancerDiagnoseUiKey.COLON_CANCER
+        Diagnosis.LIVER_TRANSPLANT -> DiagnoseUiKey.LIVER_TRANSPLANT
+        Diagnosis.OTHERS -> DiagnoseUiKey.OTHERS
     }
