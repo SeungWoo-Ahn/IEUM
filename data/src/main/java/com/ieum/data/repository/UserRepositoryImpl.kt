@@ -21,4 +21,9 @@ class UserRepositoryImpl @Inject constructor(
         userDataSource
             .getMyProfile()
             .toDomain()
+
+    override suspend fun getOthersProfile(id: Int): User =
+        userDataSource
+            .getOthersProfile(id)
+            .toDomain()
 }
