@@ -19,4 +19,7 @@ sealed interface MainScreen {
 
     @Serializable
     data class PostTreatmentRecords(val id: String?) : MainScreen
+
+    @Serializable
+    data class PostDailyRecords(val id: String?) : MainScreen
 }

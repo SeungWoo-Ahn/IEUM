@@ -10,6 +10,7 @@ import com.ieum.presentation.screen.IEUMAppState
 import com.ieum.presentation.screen.auth.login.LoginRoute
 import com.ieum.presentation.screen.auth.register.RegisterRoute
 import com.ieum.presentation.screen.auth.welcome.WelcomeRoute
+import com.ieum.presentation.screen.main.navigateToMainGraph
 
 fun NavGraphBuilder.nestedAuthGraph(appState: IEUMAppState) {
     val navController = appState.navController
@@ -17,7 +18,7 @@ fun NavGraphBuilder.nestedAuthGraph(appState: IEUMAppState) {
     navigation<ScreenGraph.Auth>(startDestination = AuthScreen.Login) {
         composable<AuthScreen.Login> {
             LoginRoute(
-                moveMain = {  },
+                moveMain = navController::navigateToMainGraph,
                 moveRegister = navController::navigateToRegisterScreen,
             )
         }
@@ -30,7 +31,7 @@ fun NavGraphBuilder.nestedAuthGraph(appState: IEUMAppState) {
         }
         composable<AuthScreen.Welcome> {
             WelcomeRoute(
-                moveMain = { },
+                moveMain = navController::navigateToMainGraph,
             )
         }
     }
