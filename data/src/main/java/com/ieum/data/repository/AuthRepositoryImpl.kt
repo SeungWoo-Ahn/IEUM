@@ -5,7 +5,6 @@ import com.ieum.data.mapper.asBody
 import com.ieum.data.mapper.toDomain
 import com.ieum.domain.model.auth.OAuthRequest
 import com.ieum.domain.model.auth.OAuthResult
-import com.ieum.domain.model.auth.OAuthUser
 import com.ieum.domain.repository.AuthRepository
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -17,10 +16,5 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun login(oAuthRequest: OAuthRequest): OAuthResult =
         authDataSource
             .login(oAuthRequest.asBody())
-            .toDomain()
-
-    override suspend fun getOAuthUser(): OAuthUser =
-        authDataSource
-            .getOAuthUser()
             .toDomain()
 }
