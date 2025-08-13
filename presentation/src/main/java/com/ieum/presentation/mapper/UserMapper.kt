@@ -45,7 +45,7 @@ fun DiagnoseUiKey.toDomain(): Diagnose =
 fun CancerDiagnoseUiModel.toDomain(): CancerDiagnose? =
     stage?.let {
         when (key) {
-            CancerDiagnoseUiKey.RENTAL_CANCER -> CancerDiagnose.RentalCancer(it)
+            CancerDiagnoseUiKey.RENTAL_CANCER -> CancerDiagnose.RectalCancer(it)
             CancerDiagnoseUiKey.COLON_CANCER -> CancerDiagnose.ColonCancer(it)
         }
     }
@@ -53,7 +53,7 @@ fun CancerDiagnoseUiModel.toDomain(): CancerDiagnose? =
 
 fun DiagnoseUiKeys.toDomainKey(): Diagnosis =
     when (this) {
-        CancerDiagnoseUiKey.RENTAL_CANCER -> Diagnosis.RENTAL_CANCER
+        CancerDiagnoseUiKey.RENTAL_CANCER -> Diagnosis.RECTAL_CANCER
         CancerDiagnoseUiKey.COLON_CANCER -> Diagnosis.COLON_CANCER
         DiagnoseUiKey.LIVER_TRANSPLANT -> Diagnosis.LIVER_TRANSPLANT
         DiagnoseUiKey.OTHERS -> Diagnosis.OTHERS
@@ -61,7 +61,7 @@ fun DiagnoseUiKeys.toDomainKey(): Diagnosis =
 
 fun Diagnosis.toUiKey(): DiagnoseUiKeys =
     when (this) {
-        Diagnosis.RENTAL_CANCER -> CancerDiagnoseUiKey.RENTAL_CANCER
+        Diagnosis.RECTAL_CANCER -> CancerDiagnoseUiKey.RENTAL_CANCER
         Diagnosis.COLON_CANCER -> CancerDiagnoseUiKey.COLON_CANCER
         Diagnosis.LIVER_TRANSPLANT -> DiagnoseUiKey.LIVER_TRANSPLANT
         Diagnosis.OTHERS -> DiagnoseUiKey.OTHERS
