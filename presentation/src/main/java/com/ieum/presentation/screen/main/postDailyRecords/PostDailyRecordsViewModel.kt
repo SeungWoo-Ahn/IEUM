@@ -11,14 +11,19 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.ieum.design_system.textfield.TextFieldState
 import com.ieum.domain.model.image.ImageSource
+import com.ieum.domain.model.post.PostDailyRecordsRequest
+import com.ieum.domain.repository.PostRepository
 import com.ieum.presentation.navigation.MainScreen
 import com.ieum.presentation.util.ImageUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class PostDailyRecordsViewModel @Inject constructor(
+    private val postRepository: PostRepository,
     private val imageUtil: ImageUtil,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
@@ -26,6 +31,9 @@ class PostDailyRecordsViewModel @Inject constructor(
 
     var uiState by mutableStateOf<PostDailyRecordsUiState>(PostDailyRecordsUiState.Idle)
         private set
+
+    private val _event = Channel<PostDailyRecordsEvent>()
+    val event = _event.receiveAsFlow()
 
     val titleState = TextFieldState()
     val storyState = TextFieldState()
@@ -68,7 +76,16 @@ class PostDailyRecordsViewModel @Inject constructor(
     fun onPost() {
         viewModelScope.launch {
             uiState = PostDailyRecordsUiState.Loading
-            // TODO: 비즈니스 로직 추가
+            // TODO: 비즈니스 로직 수정
+            postRepository.postDailyRecords(
+                request = PostDailyRecordsRequest(
+                    title = titleState.getTrimmedText(),
+                    story = storyState.getTrimmedText().ifEmpty { null },
+                    imageList = imageList,
+                    shareCommunity = shareCommunity,
+                )
+            )
+            _event.send(PostDailyRecordsEvent.MoveBack)
         }
     }
 }
