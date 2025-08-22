@@ -17,10 +17,11 @@ import com.ieum.design_system.theme.screenPadding
 import com.ieum.design_system.util.dropShadow
 import com.ieum.domain.model.user.AgeGroup
 import com.ieum.presentation.mapper.toDescription
+import com.ieum.presentation.model.user.SexUiModel
 import com.ieum.presentation.model.user.UserTypeUiModel
 
 @Composable
-fun RegisterSelector(
+internal fun RegisterSelector(
     modifier: Modifier = Modifier,
     isSelected: Boolean,
     name: String,
@@ -56,6 +57,32 @@ fun SelectUserType(
                 name = stringResource(userType.description),
                 onClick = {
                     state.selectItem(userType)
+                    onClick()
+                },
+            )
+        }
+    }
+}
+
+@Composable
+fun SelectSex(
+    modifier: Modifier = Modifier,
+    state: ISingleSelectorState<SexUiModel>,
+    onClick: () -> Unit,
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(top = 48.dp)
+            .padding(horizontal = screenPadding),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        state.itemList.forEach { sex ->
+            RegisterSelector(
+                isSelected = sex == SexUiModel.FEMALE,
+                name = stringResource(sex.description),
+                onClick = {
+                    state.selectItem(sex)
                     onClick()
                 },
             )

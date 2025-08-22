@@ -27,10 +27,12 @@ import com.ieum.design_system.textfield.IMaxLengthTextFieldState
 import com.ieum.design_system.theme.screenPadding
 import com.ieum.design_system.topbar.TopBarForBack
 import com.ieum.domain.model.user.AgeGroup
+import com.ieum.presentation.model.user.SexUiModel
 import com.ieum.presentation.model.user.UserTypeUiModel
 import com.ieum.presentation.screen.component.AddressComponent
 import com.ieum.presentation.screen.component.DiagnoseComponent
 import com.ieum.presentation.screen.component.SelectAgeGroup
+import com.ieum.presentation.screen.component.SelectSex
 import com.ieum.presentation.screen.component.SelectUserType
 import com.ieum.presentation.screen.component.TypeInterest
 import com.ieum.presentation.screen.component.TypeNickname
@@ -63,6 +65,7 @@ fun RegisterRoute(
         nextEnabled = nextEnabled,
         currentStage = viewModel.currentStage,
         userTypeState = viewModel.userTypeState,
+        sexState = viewModel.sexState,
         nickNameState = viewModel.nickNameState,
         diagnoseState = viewModel.diagnoseState,
         ageGroupState = viewModel.ageGroupState,
@@ -82,6 +85,7 @@ private fun RegisterScreen(
     nextEnabled: Boolean,
     currentStage: RegisterStage,
     userTypeState: ISingleSelectorState<UserTypeUiModel>,
+    sexState: ISingleSelectorState<SexUiModel>,
     nickNameState: IMaxLengthTextFieldState,
     diagnoseState: DiagnoseState,
     ageGroupState: ISingleSelectorState<AgeGroup>,
@@ -100,6 +104,10 @@ private fun RegisterScreen(
         when (currentStage) {
             RegisterStage.SelectUserType -> SelectUserType(
                 state = userTypeState,
+                onClick = onNextStep,
+            )
+            RegisterStage.SelectSex -> SelectSex(
+                state = sexState,
                 onClick = onNextStep,
             )
             RegisterStage.TypeNickname -> TODO()
@@ -180,6 +188,8 @@ private fun RegisterStageScreenArea(
                 modifier = Modifier.padding(top = 48.dp),
                 state = interestState,
             )
+
+            RegisterStage.SelectSex -> TODO()
         }
     }
 }

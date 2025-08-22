@@ -4,17 +4,25 @@ import com.ieum.domain.model.user.AgeGroup
 import com.ieum.domain.model.user.CancerDiagnose
 import com.ieum.domain.model.user.CancerStage
 import com.ieum.domain.model.user.Diagnose
+import com.ieum.domain.model.user.Sex
 import com.ieum.domain.model.user.UserType
 import com.ieum.presentation.R
 import com.ieum.presentation.model.user.CancerDiagnoseUiKey
 import com.ieum.presentation.model.user.CancerDiagnoseUiModel
 import com.ieum.presentation.model.user.DiagnoseUiKey
+import com.ieum.presentation.model.user.SexUiModel
 import com.ieum.presentation.model.user.UserTypeUiModel
 
 fun UserTypeUiModel.toDomain(): UserType =
     when (this) {
         UserTypeUiModel.PATIENT -> UserType.PATIENT
         UserTypeUiModel.CAREGIVER -> UserType.CAREGIVER
+    }
+
+fun SexUiModel.toDomain(): Sex =
+    when (this) {
+        SexUiModel.MALE -> Sex.MALE
+        SexUiModel.FEMALE -> Sex.FEMALE
     }
 
 fun AgeGroup.toDescription(): Int =
