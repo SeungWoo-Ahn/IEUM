@@ -1,7 +1,6 @@
 package com.ieum.presentation.model.user
 
 import androidx.annotation.StringRes
-import com.ieum.domain.model.user.CancerStage
 import com.ieum.presentation.R
 
 sealed interface DiagnoseUiKeys {
@@ -14,11 +13,13 @@ enum class DiagnoseUiKey(@StringRes override val displayName: Int) : DiagnoseUiK
 }
 
 enum class CancerDiagnoseUiKey(@StringRes override val displayName: Int) : DiagnoseUiKeys {
-    RENTAL_CANCER(displayName = R.string.rental_cancer),
+    RECTAL_CANCER(displayName = R.string.rectal_cancer),
     COLON_CANCER(displayName = R.string.colon_cancer),
 }
 
 data class CancerDiagnoseUiModel(
     val key: CancerDiagnoseUiKey,
-    val stage: CancerStage? = null
-)
+    val stage: CancerStageUiModel,
+) {
+    val isSelected: Boolean get() = stage != CancerStageUiModel.STAGE_UNKNOWN
+}

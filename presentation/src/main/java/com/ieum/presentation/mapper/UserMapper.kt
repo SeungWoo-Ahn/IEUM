@@ -6,10 +6,10 @@ import com.ieum.domain.model.user.CancerStage
 import com.ieum.domain.model.user.Diagnose
 import com.ieum.domain.model.user.Sex
 import com.ieum.domain.model.user.UserType
-import com.ieum.presentation.R
 import com.ieum.presentation.model.user.AgeGroupUiModel
 import com.ieum.presentation.model.user.CancerDiagnoseUiKey
 import com.ieum.presentation.model.user.CancerDiagnoseUiModel
+import com.ieum.presentation.model.user.CancerStageUiModel
 import com.ieum.presentation.model.user.DiagnoseUiKey
 import com.ieum.presentation.model.user.SexUiModel
 import com.ieum.presentation.model.user.UserTypeUiModel
@@ -35,25 +35,25 @@ fun AgeGroupUiModel.toDomain(): AgeGroup =
         AgeGroupUiModel.OVER_SEVENTY -> AgeGroup.OVER_SEVENTY
     }
 
-fun CancerStage?.toDescription(): Int =
-    when (this) {
-        CancerStage.STAGE_1 -> R.string.cancer_stage_1
-        CancerStage.STAGE_2 -> R.string.cancer_stage_2
-        CancerStage.STAGE_3 -> R.string.cancer_stage_3
-        CancerStage.STAGE_4 -> R.string.cancer_stage_4
-        else -> R.string.cancer_stage_unknown
-    }
-
 fun DiagnoseUiKey.toDomain(): Diagnose =
     when (this) {
         DiagnoseUiKey.LIVER_TRANSPLANT -> Diagnose.LiverTransplant
         DiagnoseUiKey.OTHERS -> Diagnose.Others
     }
 
+private fun CancerStageUiModel.toDomain(): CancerStage? =
+    when (this) {
+        CancerStageUiModel.STAGE_1 -> CancerStage.STAGE_1
+        CancerStageUiModel.STAGE_2 -> CancerStage.STAGE_2
+        CancerStageUiModel.STAGE_3 -> CancerStage.STAGE_3
+        CancerStageUiModel.STAGE_4 -> CancerStage.STAGE_4
+        CancerStageUiModel.STAGE_UNKNOWN -> null
+    }
+
 fun CancerDiagnoseUiModel.toDomain(): CancerDiagnose? =
-    stage?.let {
+    stage.toDomain()?.let {
         when (key) {
-            CancerDiagnoseUiKey.RENTAL_CANCER -> CancerDiagnose.RectalCancer(it)
-            CancerDiagnoseUiKey.COLON_CANCER -> CancerDiagnose.ColonCancer(it)
+            CancerDiagnoseUiKey.RECTAL_CANCER -> CancerDiagnose.RectalCancer(cancerStage = it)
+            CancerDiagnoseUiKey.COLON_CANCER -> CancerDiagnose.ColonCancer(cancerStage = it)
         }
     }

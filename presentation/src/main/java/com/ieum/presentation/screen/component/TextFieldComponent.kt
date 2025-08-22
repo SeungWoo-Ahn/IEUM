@@ -1,9 +1,9 @@
 package com.ieum.presentation.screen.component
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.ieum.design_system.button.NextButton
 import com.ieum.design_system.button.SkipOrNextButton
 import com.ieum.design_system.icon.InfoCircleIcon
+import com.ieum.design_system.spacer.IEUMSpacer
 import com.ieum.design_system.textfield.IMaxLengthTextFieldState
 import com.ieum.design_system.textfield.ITextFieldState
 import com.ieum.design_system.textfield.MaxLengthTextField
@@ -33,44 +34,35 @@ fun TypeNickname(
     state: IMaxLengthTextFieldState,
     onButtonClick: () -> Unit,
 ) {
-    Box(
+    Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(top = 16.dp)
-            .padding(horizontal = screenPadding)
+            .padding(
+                horizontal = screenPadding,
+                vertical = 16.dp,
+            ),
     ) {
-        Column(
-            modifier = modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(44.dp),
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(2.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(2.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                InfoCircleIcon()
-                Text(
-                    text = stringResource(R.string.info_nickname),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Gray600,
-                )
-            }
-            MaxLengthTextField(
-                state = state,
-                placeHolder = stringResource(R.string.placeholder_type_nickname)
+            InfoCircleIcon()
+            Text(
+                text = stringResource(R.string.info_nickname),
+                style = MaterialTheme.typography.bodyMedium,
+                color = Gray600,
             )
         }
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.BottomCenter)
-                .padding(vertical = 16.dp),
-            contentAlignment = Alignment.Center,
-        ) {
-            NextButton(
-                enabled = buttonEnabled,
-                onClick = onButtonClick
-            )
-        }
+        IEUMSpacer(size = 44)
+        MaxLengthTextField(
+            state = state,
+            placeHolder = stringResource(R.string.placeholder_type_nickname)
+        )
+        IEUMSpacer(modifier = Modifier.weight(1f))
+        NextButton(
+            enabled = buttonEnabled,
+            onClick = onButtonClick
+        )
     }
 }
 
@@ -81,32 +73,24 @@ fun TypeInterest(
     state: IMaxLengthTextFieldState,
     onButtonClick: () -> Unit,
 ) {
-    Box(
+    Column(
         modifier = modifier
-            .fillMaxWidth()
-            .padding(top = 48.dp)
-            .padding(horizontal = screenPadding)
+            .fillMaxSize()
+            .padding(
+                top = 48.dp,
+                bottom = 16.dp,
+            )
+            .padding(horizontal = screenPadding),
+        verticalArrangement = Arrangement.SpaceBetween,
     ) {
-        Column(
-            modifier = modifier.fillMaxWidth()
-        ) {
-            MaxLengthTextField(
-                state = state,
-                placeHolder = stringResource(R.string.placeholder_type_interest)
-            )
-        }
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.BottomCenter)
-                .padding(vertical = 16.dp),
-            contentAlignment = Alignment.Center,
-        ) {
-            SkipOrNextButton(
-                enabled = buttonEnabled,
-                onNext = onButtonClick,
-            )
-        }
+        MaxLengthTextField(
+            state = state,
+            placeHolder = stringResource(R.string.placeholder_type_interest)
+        )
+        SkipOrNextButton(
+            enabled = buttonEnabled,
+            onNext = onButtonClick,
+        )
     }
 }
 

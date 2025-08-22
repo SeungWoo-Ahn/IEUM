@@ -12,6 +12,7 @@ import com.ieum.domain.usecase.address.GetAddressListUseCase
 import com.ieum.domain.usecase.user.RegisterUseCase
 import com.ieum.presentation.mapper.toDomain
 import com.ieum.presentation.model.user.AgeGroupUiModel
+import com.ieum.presentation.model.user.CancerDiagnoseUiModel
 import com.ieum.presentation.model.user.SexUiModel
 import com.ieum.presentation.model.user.UserTypeUiModel
 import com.ieum.presentation.state.AddressState
@@ -28,7 +29,8 @@ class RegisterViewModel @Inject constructor(
     getAddressListUseCase: GetAddressListUseCase,
     private val registerUseCase: RegisterUseCase,
 ) : ViewModel() {
-    private var uiState by mutableStateOf<RegisterUiState>(RegisterUiState.Idle)
+    var uiState by mutableStateOf<RegisterUiState>(RegisterUiState.Idle)
+        private set
 
     private val _event = MutableSharedFlow<RegisterEvent>()
     val event: SharedFlow<RegisterEvent> = _event.asSharedFlow()
@@ -79,8 +81,18 @@ class RegisterViewModel @Inject constructor(
             RegisterStage.SelectAgeGroup -> ageGroupState.validate()
             RegisterStage.SelectResidence -> residenceState.validate()
             RegisterStage.SelectHospital -> hospitalState.validate()
-            RegisterStage.TypeInterest -> interestState.validate() && uiState != RegisterUiState.Loading
+            RegisterStage.TypeInterest -> interestState.validate()
         }
+
+    fun showCancerStageSheet(cancerDiagnose: CancerDiagnoseUiModel) {
+        uiState = RegisterUiState.ShowCancerStageSheet(data = cancerDiagnose) {
+            diagnoseState.cancerDiagnoseState.onDiagnose(cancerDiagnose.copy(stage = it))
+        }
+    }
+
+    fun resetUiState() {
+        uiState = RegisterUiState.Idle
+    }
 
     private fun register() {
         viewModelScope.launch {
