@@ -2,10 +2,12 @@ package com.ieum.data.repository.di
 
 import com.ieum.data.repository.AddressRepositoryImpl
 import com.ieum.data.repository.AuthRepositoryImpl
+import com.ieum.data.repository.FakePostRepositoryImpl
 import com.ieum.data.repository.PreferenceRepositoryImpl
 import com.ieum.data.repository.UserRepositoryImpl
 import com.ieum.domain.repository.AddressRepository
 import com.ieum.domain.repository.AuthRepository
+import com.ieum.domain.repository.PostRepository
 import com.ieum.domain.repository.PreferenceRepository
 import com.ieum.domain.repository.UserRepository
 import dagger.Binds
@@ -27,4 +29,7 @@ internal interface DataModule {
 
     @Binds
     fun bindsPreferenceRepository(preferenceRepository: PreferenceRepositoryImpl): PreferenceRepository
+
+    @Binds
+    fun bindsPostRepository(postRepository: FakePostRepositoryImpl): PostRepository
 }
