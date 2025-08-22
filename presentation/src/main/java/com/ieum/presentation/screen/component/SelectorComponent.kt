@@ -3,6 +3,7 @@ package com.ieum.presentation.screen.component
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -12,10 +13,11 @@ import com.ieum.design_system.button.IEUMButton
 import com.ieum.design_system.selector.ISingleSelectorState
 import com.ieum.design_system.theme.Slate900
 import com.ieum.design_system.theme.White
+import com.ieum.design_system.theme.screenPadding
 import com.ieum.design_system.util.dropShadow
 import com.ieum.domain.model.user.AgeGroup
-import com.ieum.domain.model.user.UserType
 import com.ieum.presentation.mapper.toDescription
+import com.ieum.presentation.model.user.UserTypeUiModel
 
 @Composable
 fun RegisterSelector(
@@ -38,21 +40,24 @@ fun RegisterSelector(
 @Composable
 fun SelectUserType(
     modifier: Modifier = Modifier,
-    state: ISingleSelectorState<UserType>,
+    state: ISingleSelectorState<UserTypeUiModel>,
     onClick: () -> Unit,
 ) {
     Column(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(top = 48.dp)
+            .padding(horizontal = screenPadding),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         state.itemList.forEach { userType ->
             RegisterSelector(
-                isSelected = userType == UserType.CAREGIVER,
-                name = stringResource(userType.toDescription()),
+                isSelected = userType == UserTypeUiModel.CAREGIVER,
+                name = stringResource(userType.description),
                 onClick = {
                     state.selectItem(userType)
                     onClick()
-                }
+                },
             )
         }
     }

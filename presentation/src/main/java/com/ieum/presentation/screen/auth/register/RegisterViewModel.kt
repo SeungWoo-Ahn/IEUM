@@ -9,9 +9,11 @@ import com.ieum.design_system.selector.SingleSelectorState
 import com.ieum.design_system.textfield.MaxLengthTextFieldState
 import com.ieum.domain.model.user.AgeGroup
 import com.ieum.domain.model.user.RegisterRequest
-import com.ieum.domain.model.user.UserType
+import com.ieum.domain.model.user.Sex
 import com.ieum.domain.usecase.address.GetAddressListUseCase
 import com.ieum.domain.usecase.user.RegisterUseCase
+import com.ieum.presentation.mapper.toDomain
+import com.ieum.presentation.model.user.UserTypeUiModel
 import com.ieum.presentation.state.AddressState
 import com.ieum.presentation.state.DiagnoseState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -35,7 +37,7 @@ class RegisterViewModel @Inject constructor(
     var currentStage by mutableStateOf(RegisterStage.SelectUserType)
         private set
 
-    val userTypeState = SingleSelectorState(itemList = UserType.entries)
+    val userTypeState = SingleSelectorState(itemList = UserTypeUiModel.entries)
     val nickNameState = MaxLengthTextFieldState(maxLength = 20)
     val diagnoseState = DiagnoseState()
     val ageGroupState = SingleSelectorState(itemList = AgeGroup.entries)
@@ -84,7 +86,8 @@ class RegisterViewModel @Inject constructor(
         viewModelScope.launch {
             uiState = RegisterUiState.Loading
             val registerRequest = RegisterRequest(
-                userType = userTypeState.selectedItem!!,
+                userType = userTypeState.selectedItem!!.toDomain(),
+                sex = Sex.MALE,
                 nickName = nickNameState.getTrimmedText(),
                 diagnoses = diagnoseState.getSelectedDiagnoseList(),
                 ageGroup = ageGroupState.selectedItem,

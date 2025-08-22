@@ -27,7 +27,7 @@ import com.ieum.design_system.textfield.IMaxLengthTextFieldState
 import com.ieum.design_system.theme.screenPadding
 import com.ieum.design_system.topbar.TopBarForBack
 import com.ieum.domain.model.user.AgeGroup
-import com.ieum.domain.model.user.UserType
+import com.ieum.presentation.model.user.UserTypeUiModel
 import com.ieum.presentation.screen.component.AddressComponent
 import com.ieum.presentation.screen.component.DiagnoseComponent
 import com.ieum.presentation.screen.component.SelectAgeGroup
@@ -81,7 +81,7 @@ private fun RegisterScreen(
     scope: CoroutineScope,
     nextEnabled: Boolean,
     currentStage: RegisterStage,
-    userTypeState: ISingleSelectorState<UserType>,
+    userTypeState: ISingleSelectorState<UserTypeUiModel>,
     nickNameState: IMaxLengthTextFieldState,
     diagnoseState: DiagnoseState,
     ageGroupState: ISingleSelectorState<AgeGroup>,
@@ -92,34 +92,22 @@ private fun RegisterScreen(
     onNextStep: () -> Unit,
 ) {
     Column(
-        modifier = modifier
-            .fillMaxSize()
+        modifier = modifier.fillMaxSize()
     ) {
         TopBarForBack(onBack = onPrevStep)
         IEUMSpacer(size = 12)
         RegisterGuideArea(guide = stringResource(currentStage.guide))
-        Box(
-            modifier = Modifier.weight(1f)
-        ) {
-            RegisterStageScreenArea(
-                scope = scope,
-                currentStage = currentStage,
-                userTypeState = userTypeState,
-                nickNameState = nickNameState,
-                diagnoseState = diagnoseState,
-                ageGroupState = ageGroupState,
-                residenceState = residenceState,
-                hospitalState = hospitalState,
-                interestState = interestState,
-                onNextStep = onNextStep,
+        when (currentStage) {
+            RegisterStage.SelectUserType -> SelectUserType(
+                state = userTypeState,
+                onClick = onNextStep,
             )
-            RegisterButtonArea(
-                modifier = Modifier.align(Alignment.BottomCenter),
-                currentStage = currentStage,
-                nextEnabled = nextEnabled,
-                selectedDiagnoseCnt = diagnoseState.getSelectedCnt(),
-                onNextStep = onNextStep,
-            )
+            RegisterStage.TypeNickname -> TODO()
+            RegisterStage.SelectDiagnose -> TODO()
+            RegisterStage.SelectAgeGroup -> TODO()
+            RegisterStage.SelectResidence -> TODO()
+            RegisterStage.SelectHospital -> TODO()
+            RegisterStage.TypeInterest -> TODO()
         }
     }
 }
@@ -145,7 +133,7 @@ private fun RegisterGuideArea(
 private fun RegisterStageScreenArea(
     scope: CoroutineScope,
     currentStage: RegisterStage,
-    userTypeState: ISingleSelectorState<UserType>,
+    userTypeState: ISingleSelectorState<UserTypeUiModel>,
     nickNameState: IMaxLengthTextFieldState,
     diagnoseState: DiagnoseState,
     ageGroupState: ISingleSelectorState<AgeGroup>,

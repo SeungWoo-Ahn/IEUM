@@ -4,18 +4,17 @@ import com.ieum.domain.model.user.AgeGroup
 import com.ieum.domain.model.user.CancerDiagnose
 import com.ieum.domain.model.user.CancerStage
 import com.ieum.domain.model.user.Diagnose
-import com.ieum.domain.model.user.Diagnosis
 import com.ieum.domain.model.user.UserType
 import com.ieum.presentation.R
 import com.ieum.presentation.model.user.CancerDiagnoseUiKey
 import com.ieum.presentation.model.user.CancerDiagnoseUiModel
 import com.ieum.presentation.model.user.DiagnoseUiKey
-import com.ieum.presentation.model.user.DiagnoseUiKeys
+import com.ieum.presentation.model.user.UserTypeUiModel
 
-fun UserType.toDescription(): Int =
+fun UserTypeUiModel.toDomain(): UserType =
     when (this) {
-        UserType.PATIENT -> R.string.description_user_type_patient
-        UserType.CAREGIVER -> R.string.description_user_type_caregiver
+        UserTypeUiModel.PATIENT -> UserType.PATIENT
+        UserTypeUiModel.CAREGIVER -> UserType.CAREGIVER
     }
 
 fun AgeGroup.toDescription(): Int =
@@ -48,21 +47,4 @@ fun CancerDiagnoseUiModel.toDomain(): CancerDiagnose? =
             CancerDiagnoseUiKey.RENTAL_CANCER -> CancerDiagnose.RectalCancer(it)
             CancerDiagnoseUiKey.COLON_CANCER -> CancerDiagnose.ColonCancer(it)
         }
-    }
-
-
-fun DiagnoseUiKeys.toDomainKey(): Diagnosis =
-    when (this) {
-        CancerDiagnoseUiKey.RENTAL_CANCER -> Diagnosis.RECTAL_CANCER
-        CancerDiagnoseUiKey.COLON_CANCER -> Diagnosis.COLON_CANCER
-        DiagnoseUiKey.LIVER_TRANSPLANT -> Diagnosis.LIVER_TRANSPLANT
-        DiagnoseUiKey.OTHERS -> Diagnosis.OTHERS
-    }
-
-fun Diagnosis.toUiKey(): DiagnoseUiKeys =
-    when (this) {
-        Diagnosis.RECTAL_CANCER -> CancerDiagnoseUiKey.RENTAL_CANCER
-        Diagnosis.COLON_CANCER -> CancerDiagnoseUiKey.COLON_CANCER
-        Diagnosis.LIVER_TRANSPLANT -> DiagnoseUiKey.LIVER_TRANSPLANT
-        Diagnosis.OTHERS -> DiagnoseUiKey.OTHERS
     }
