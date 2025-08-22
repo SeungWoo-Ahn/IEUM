@@ -8,7 +8,7 @@ import com.ieum.design_system.icon.EatWellIcon
 import com.ieum.domain.model.image.ImageSource
 import com.ieum.presentation.R
 
-enum class DietaryStatusInfo(
+enum class DietaryStatusUiModel(
     @StringRes val description: Int,
     val icon: @Composable () -> Unit,
 ) {
@@ -17,15 +17,15 @@ enum class DietaryStatusInfo(
     EAT_NOTHING(R.string.eat_nothing, { EatNothingIcon() }),
 }
 
-data class DietaryStatusUiModel(
-    val info: DietaryStatusInfo,
+data class DietaryUiModel(
+    val status: DietaryStatusUiModel,
     val content: String,
 )
 
 data class PostTreatmentRecordsUiModel(
     val specificSymptoms: String,
     val takingMedicine: Boolean?,
-    val dietaryStatus: DietaryStatusUiModel?,
+    val dietaryStatus: DietaryUiModel?,
     val memo: String,
     val imageList: List<ImageSource>,
     val shareCommunity: Boolean,

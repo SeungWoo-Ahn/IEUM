@@ -43,7 +43,7 @@ import com.ieum.design_system.theme.Slate700
 import com.ieum.design_system.theme.White
 import com.ieum.domain.model.image.ImageSource
 import com.ieum.presentation.R
-import com.ieum.presentation.model.post.DietaryStatusUiModel
+import com.ieum.presentation.model.post.DietaryUiModel
 import com.ieum.presentation.screen.main.postTreatmentRecords.MAX_IMAGE_COUNT
 
 @Composable
@@ -204,7 +204,7 @@ fun TakingMedicineBox(
 
 @Composable
 fun DietaryStatusBox(
-    data: DietaryStatusUiModel?,
+    data: DietaryUiModel?,
     onClick: () -> Unit,
 ) {
     PostBox(onClick) {
@@ -224,9 +224,9 @@ fun DietaryStatusBox(
                     horizontalArrangement = Arrangement.spacedBy(2.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    data.info.icon()
+                    data.status.icon()
                     Text(
-                        text = stringResource(data.info.description),
+                        text = stringResource(data.status.description),
                         style = MaterialTheme.typography.bodySmall,
                         color = Slate700,
                     )

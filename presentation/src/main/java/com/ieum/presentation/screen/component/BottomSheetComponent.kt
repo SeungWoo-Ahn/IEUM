@@ -32,8 +32,8 @@ import com.ieum.design_system.theme.Slate200
 import com.ieum.design_system.theme.screenPadding
 import com.ieum.design_system.util.noRippleClickable
 import com.ieum.presentation.R
-import com.ieum.presentation.model.post.DietaryStatusInfo
 import com.ieum.presentation.model.post.DietaryStatusUiModel
+import com.ieum.presentation.model.post.DietaryUiModel
 import com.ieum.presentation.model.user.CancerDiagnoseUiModel
 import com.ieum.presentation.model.user.CancerStageUiModel
 import kotlinx.coroutines.CoroutineScope
@@ -114,17 +114,17 @@ fun SpecificSymptomsSheet(
 fun DietaryStatusSheet(
     scope: CoroutineScope,
     sheetState: SheetState,
-    data: DietaryStatusUiModel?,
-    callback: (DietaryStatusUiModel) -> Unit,
+    data: DietaryUiModel?,
+    callback: (DietaryUiModel) -> Unit,
     onDismissRequest: () -> Unit,
 ) {
-    val selectorState = remember { SingleSelectorState(DietaryStatusInfo.entries) }
+    val selectorState = remember { SingleSelectorState(DietaryStatusUiModel.entries) }
     val textFieldState = remember { TextFieldState() }
     val buttonEnabled by remember { derivedStateOf { selectorState.validate() } }
 
     LaunchedEffect(Unit) {
         data?.let {
-            selectorState.setItem(data.info)
+            selectorState.setItem(data.status)
             textFieldState.typeText(data.content)
         }
     }
@@ -165,8 +165,8 @@ fun DietaryStatusSheet(
             scope
                 .launch {
                     callback(
-                        DietaryStatusUiModel(
-                            info = selectorState.selectedItem!!,
+                        DietaryUiModel(
+                            status = selectorState.selectedItem!!,
                             content = textFieldState.getTrimmedText()
                         )
                     )
@@ -182,7 +182,7 @@ fun DietaryStatusSheet(
 @Composable
 private fun DietaryStatusInfoSelector(
     modifier: Modifier = Modifier,
-    info: DietaryStatusInfo,
+    info: DietaryStatusUiModel,
     isSelected: Boolean,
     onClick: () -> Unit,
 ) {
