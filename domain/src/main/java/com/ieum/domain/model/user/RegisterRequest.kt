@@ -2,6 +2,7 @@ package com.ieum.domain.model.user
 
 data class RegisterRequest(
     val userType: UserType,
+    val sex: Sex,
     val nickName: String,
     val diagnoses: List<Diagnose>,
     val ageGroup: AgeGroup?,

@@ -4,10 +4,10 @@ import com.ieum.domain.model.user.User
 import com.ieum.domain.repository.UserRepository
 import javax.inject.Inject
 
-class GetMyProfileUseCase @Inject constructor(
+class GetOthersProfileUseCase @Inject constructor(
     private val userRepository: UserRepository,
 ) {
-    suspend operator fun invoke(): Result<User> = runCatching {
-        userRepository.getMyProfile()
+    suspend operator fun invoke(id: Int): Result<User> = runCatching {
+        userRepository.getOthersProfile(id)
     }
 }

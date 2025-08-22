@@ -9,17 +9,17 @@ import com.ieum.domain.usecase.address.GetAddressListUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-sealed interface AddressUiState {
-    data object Loading : AddressUiState
+sealed class AddressUiState {
+    data object Loading : AddressUiState()
 
     data class Success(
         val cityList: List<Address> = emptyList(),
         val provinceList: List<Address> = emptyList(),
         val selectedCity: Address? = null,
         val selectedProvince: Address? = null,
-    ) : AddressUiState
+    ) : AddressUiState()
 
-    data object Error : AddressUiState
+    data object Error : AddressUiState()
 }
 
 class AddressState(

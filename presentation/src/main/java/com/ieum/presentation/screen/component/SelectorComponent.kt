@@ -1,24 +1,35 @@
 package com.ieum.presentation.screen.component
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ieum.design_system.button.IEUMButton
+import com.ieum.design_system.button.SelectedCountButton
+import com.ieum.design_system.button.SkipOrNextButton
 import com.ieum.design_system.selector.ISingleSelectorState
 import com.ieum.design_system.theme.Slate900
 import com.ieum.design_system.theme.White
+import com.ieum.design_system.theme.screenPadding
 import com.ieum.design_system.util.dropShadow
-import com.ieum.domain.model.user.AgeGroup
-import com.ieum.domain.model.user.UserType
-import com.ieum.presentation.mapper.toDescription
+import com.ieum.presentation.model.user.AgeGroupUiModel
+import com.ieum.presentation.model.user.CancerDiagnoseUiModel
+import com.ieum.presentation.model.user.CancerStageUiModel
+import com.ieum.presentation.model.user.SexUiModel
+import com.ieum.presentation.model.user.UserTypeUiModel
+import com.ieum.presentation.state.AddressState
+import com.ieum.presentation.state.DiagnoseState
 
 @Composable
-fun RegisterSelector(
+internal fun RegisterSelector(
     modifier: Modifier = Modifier,
     isSelected: Boolean,
     name: String,
@@ -38,21 +49,50 @@ fun RegisterSelector(
 @Composable
 fun SelectUserType(
     modifier: Modifier = Modifier,
-    state: ISingleSelectorState<UserType>,
+    state: ISingleSelectorState<UserTypeUiModel>,
     onClick: () -> Unit,
 ) {
     Column(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(top = 48.dp)
+            .padding(horizontal = screenPadding),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         state.itemList.forEach { userType ->
             RegisterSelector(
-                isSelected = userType == UserType.CAREGIVER,
-                name = stringResource(userType.toDescription()),
+                isSelected = userType == UserTypeUiModel.CAREGIVER,
+                name = stringResource(userType.description),
                 onClick = {
                     state.selectItem(userType)
                     onClick()
-                }
+                },
+            )
+        }
+    }
+}
+
+@Composable
+fun SelectSex(
+    modifier: Modifier = Modifier,
+    state: ISingleSelectorState<SexUiModel>,
+    onClick: () -> Unit,
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(top = 48.dp)
+            .padding(horizontal = screenPadding),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        state.itemList.forEach { sex ->
+            RegisterSelector(
+                isSelected = sex == SexUiModel.FEMALE,
+                name = stringResource(sex.description),
+                onClick = {
+                    state.selectItem(sex)
+                    onClick()
+                },
             )
         }
     }
@@ -61,18 +101,114 @@ fun SelectUserType(
 @Composable
 fun SelectAgeGroup(
     modifier: Modifier = Modifier,
-    state: ISingleSelectorState<AgeGroup>,
+    buttonEnabled: Boolean,
+    state: ISingleSelectorState<AgeGroupUiModel>,
+    onButtonClick: () -> Unit,
 ) {
-    Column(
-        modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+    Column (
+        modifier = modifier
+            .fillMaxSize()
+            .padding(
+                top = 48.dp,
+                bottom = 16.dp,
+            )
+            .padding(horizontal = screenPadding),
+        verticalArrangement = Arrangement.SpaceBetween,
     ) {
-        state.itemList.forEach { ageGroup ->
-            RegisterSelector(
-                isSelected = state.isSelected(ageGroup),
-                name = stringResource(ageGroup.toDescription()),
-                onClick = { state.selectItem(ageGroup) }
+        Column(
+            modifier = modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            state.itemList.forEach { ageGroup ->
+                RegisterSelector(
+                    isSelected = state.isSelected(ageGroup),
+                    name = stringResource(ageGroup.description),
+                    onClick = { state.selectItem(ageGroup) }
+                )
+            }
+        }
+        SkipOrNextButton(
+            enabled = buttonEnabled,
+            onNext = onButtonClick,
+        )
+    }
+}
+
+@Composable
+fun SelectAddress(
+    modifier: Modifier = Modifier,
+    buttonEnabled: Boolean,
+    state: AddressState,
+    onButtonClick: () -> Unit,
+) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(top = 48.dp)
+    ) {
+        AddressComponent(state = state)
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.BottomCenter)
+                .padding(
+                    horizontal = screenPadding,
+                    vertical = 16.dp
+                ),
+            contentAlignment = Alignment.Center,
+        ) {
+            SkipOrNextButton(
+                enabled = buttonEnabled,
+                onNext = onButtonClick,
             )
         }
+    }
+}
+
+@Composable
+fun SelectDiagnose(
+    modifier: Modifier = Modifier,
+    buttonEnabled: Boolean,
+    state: DiagnoseState,
+    showCancerStageSheet: (CancerDiagnoseUiModel) -> Unit,
+    onButtonClick: () -> Unit,
+) {
+    Column (
+        modifier = modifier
+            .fillMaxSize()
+            .padding(
+                top = 48.dp,
+                bottom = 16.dp,
+            )
+            .padding(horizontal = screenPadding),
+        verticalArrangement = Arrangement.SpaceBetween,
+    ) {
+        Column(
+            modifier = modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            state.cancerDiagnoseState.itemList.forEach { diagnose ->
+                RegisterSelector(
+                    isSelected = diagnose.isSelected,
+                    name = stringResource(diagnose.key.displayName) + when (diagnose.stage) {
+                        CancerStageUiModel.STAGE_UNKNOWN -> ""
+                        else -> stringResource(diagnose.stage.description)
+                    },
+                    onClick = { showCancerStageSheet(diagnose) }
+                )
+            }
+            state.commonDiagnoseState.itemList.forEach { diagnose ->
+                RegisterSelector(
+                    isSelected = state.commonDiagnoseState.isSelected(diagnose),
+                    name = stringResource(diagnose.displayName),
+                    onClick = { state.commonDiagnoseState.selectItem(diagnose) }
+                )
+            }
+        }
+        SelectedCountButton(
+            enabled = buttonEnabled,
+            selectedCount = state.totalSelectedCount,
+            onClick = onButtonClick,
+        )
     }
 }

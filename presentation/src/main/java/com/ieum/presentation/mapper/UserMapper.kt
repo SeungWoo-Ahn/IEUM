@@ -4,36 +4,35 @@ import com.ieum.domain.model.user.AgeGroup
 import com.ieum.domain.model.user.CancerDiagnose
 import com.ieum.domain.model.user.CancerStage
 import com.ieum.domain.model.user.Diagnose
-import com.ieum.domain.model.user.DiagnoseKey
+import com.ieum.domain.model.user.Sex
 import com.ieum.domain.model.user.UserType
-import com.ieum.presentation.R
+import com.ieum.presentation.model.user.AgeGroupUiModel
 import com.ieum.presentation.model.user.CancerDiagnoseUiKey
 import com.ieum.presentation.model.user.CancerDiagnoseUiModel
+import com.ieum.presentation.model.user.CancerStageUiModel
 import com.ieum.presentation.model.user.DiagnoseUiKey
-import com.ieum.presentation.model.user.DiagnoseUiKeys
+import com.ieum.presentation.model.user.SexUiModel
+import com.ieum.presentation.model.user.UserTypeUiModel
 
-fun UserType.toDescription(): Int =
+fun UserTypeUiModel.toDomain(): UserType =
     when (this) {
-        UserType.PATIENT -> R.string.description_user_type_patient
-        UserType.CAREGIVER -> R.string.description_user_type_caregiver
+        UserTypeUiModel.PATIENT -> UserType.PATIENT
+        UserTypeUiModel.CAREGIVER -> UserType.CAREGIVER
     }
 
-fun AgeGroup.toDescription(): Int =
+fun SexUiModel.toDomain(): Sex =
     when (this) {
-        AgeGroup.UNDER_THIRTY-> R.string.description_under_30
-        AgeGroup.FORTIES -> R.string.description_40s
-        AgeGroup.FIFTIES -> R.string.description_50s
-        AgeGroup.SIXTIES -> R.string.description_60s
-        AgeGroup.OVER_SEVENTY -> R.string.description_over_70
+        SexUiModel.MALE -> Sex.MALE
+        SexUiModel.FEMALE -> Sex.FEMALE
     }
 
-fun CancerStage?.toDescription(): Int =
+fun AgeGroupUiModel.toDomain(): AgeGroup =
     when (this) {
-        CancerStage.STAGE_1 -> R.string.cancer_stage_1
-        CancerStage.STAGE_2 -> R.string.cancer_stage_2
-        CancerStage.STAGE_3 -> R.string.cancer_stage_3
-        CancerStage.STAGE_4 -> R.string.cancer_stage_4
-        else -> R.string.cancer_stage_unknown
+        AgeGroupUiModel.UNDER_THIRTY -> AgeGroup.UNDER_THIRTY
+        AgeGroupUiModel.FORTIES -> AgeGroup.FORTIES
+        AgeGroupUiModel.FIFTIES -> AgeGroup.FIFTIES
+        AgeGroupUiModel.SIXTIES -> AgeGroup.SIXTIES
+        AgeGroupUiModel.OVER_SEVENTY -> AgeGroup.OVER_SEVENTY
     }
 
 fun DiagnoseUiKey.toDomain(): Diagnose =
@@ -42,27 +41,19 @@ fun DiagnoseUiKey.toDomain(): Diagnose =
         DiagnoseUiKey.OTHERS -> Diagnose.Others
     }
 
+private fun CancerStageUiModel.toDomain(): CancerStage? =
+    when (this) {
+        CancerStageUiModel.STAGE_1 -> CancerStage.STAGE_1
+        CancerStageUiModel.STAGE_2 -> CancerStage.STAGE_2
+        CancerStageUiModel.STAGE_3 -> CancerStage.STAGE_3
+        CancerStageUiModel.STAGE_4 -> CancerStage.STAGE_4
+        CancerStageUiModel.STAGE_UNKNOWN -> null
+    }
+
 fun CancerDiagnoseUiModel.toDomain(): CancerDiagnose? =
-    stage?.let {
+    stage.toDomain()?.let {
         when (key) {
-            CancerDiagnoseUiKey.RENTAL_CANCER -> CancerDiagnose.RentalCancer(it)
-            CancerDiagnoseUiKey.COLON_CANCER -> CancerDiagnose.ColonCancer(it)
+            CancerDiagnoseUiKey.RECTAL_CANCER -> CancerDiagnose.RectalCancer(cancerStage = it)
+            CancerDiagnoseUiKey.COLON_CANCER -> CancerDiagnose.ColonCancer(cancerStage = it)
         }
-    }
-
-
-fun DiagnoseUiKeys.toDomainKey(): DiagnoseKey =
-    when (this) {
-        CancerDiagnoseUiKey.RENTAL_CANCER -> DiagnoseKey.RENTAL_CANCER
-        CancerDiagnoseUiKey.COLON_CANCER -> DiagnoseKey.COLON_CANCER
-        DiagnoseUiKey.LIVER_TRANSPLANT -> DiagnoseKey.LIVER_TRANSPLANT
-        DiagnoseUiKey.OTHERS -> DiagnoseKey.OTHERS
-    }
-
-fun DiagnoseKey.toUiKey(): DiagnoseUiKeys =
-    when (this) {
-        DiagnoseKey.RENTAL_CANCER -> CancerDiagnoseUiKey.RENTAL_CANCER
-        DiagnoseKey.COLON_CANCER -> CancerDiagnoseUiKey.COLON_CANCER
-        DiagnoseKey.LIVER_TRANSPLANT -> DiagnoseUiKey.LIVER_TRANSPLANT
-        DiagnoseKey.OTHERS -> DiagnoseUiKey.OTHERS
     }

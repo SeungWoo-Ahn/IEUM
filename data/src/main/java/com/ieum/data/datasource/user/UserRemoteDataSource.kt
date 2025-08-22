@@ -27,4 +27,9 @@ class UserRemoteDataSource @Inject constructor(
         ktorClient
             .get("api/v1/users/profile")
             .body<UserDto>()
+
+    override suspend fun getOthersProfile(id: Int): UserDto =
+        ktorClient
+            .get("api/v1/users/$id/profile")
+            .body<UserDto>()
 }

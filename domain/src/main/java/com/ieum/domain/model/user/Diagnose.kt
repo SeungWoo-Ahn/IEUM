@@ -1,32 +1,41 @@
 package com.ieum.domain.model.user
 
-enum class DiagnoseKey {
-    RENTAL_CANCER,
-    COLON_CANCER,
-    LIVER_TRANSPLANT,
-    OTHERS,
+import com.ieum.domain.model.base.KeyAble
+
+enum class Diagnosis(override val key: String) : KeyAble<String> {
+    RECTAL_CANCER("rectal_cancer"),
+    COLON_CANCER("colon_cancer"),
+    LIVER_TRANSPLANT("liver_transplant"),
+    OTHERS("others");
+
+    companion object {
+        private val map = entries.associateBy(Diagnosis::key)
+
+        fun fromKey(key: String): Diagnosis = map[key]
+            ?: throw IllegalArgumentException("Invalid Diagnosis key: $key")
+    }
 }
 
 sealed interface Diagnose {
-    val key: DiagnoseKey
+    val name: Diagnosis
 
     data object LiverTransplant : Diagnose {
-        override val key: DiagnoseKey get() = DiagnoseKey.LIVER_TRANSPLANT
+        override val name: Diagnosis get() = Diagnosis.LIVER_TRANSPLANT
     }
 
     data object Others : Diagnose {
-        override val key: DiagnoseKey get() = DiagnoseKey.OTHERS
+        override val name: Diagnosis get() = Diagnosis.OTHERS
     }
 }
 
 sealed interface CancerDiagnose : Diagnose {
     val cancerStage: CancerStage
 
-    data class ColonCancer(override val cancerStage: CancerStage) : CancerDiagnose {
-        override val key: DiagnoseKey get() = DiagnoseKey.COLON_CANCER
+    data class RectalCancer(override val cancerStage: CancerStage) : CancerDiagnose {
+        override val name: Diagnosis get() = Diagnosis.RECTAL_CANCER
     }
 
-    data class RentalCancer(override val cancerStage: CancerStage) : CancerDiagnose {
-        override val key: DiagnoseKey get() = DiagnoseKey.RENTAL_CANCER
+    data class ColonCancer(override val cancerStage: CancerStage) : CancerDiagnose {
+        override val name: Diagnosis get() = Diagnosis.COLON_CANCER
     }
 }

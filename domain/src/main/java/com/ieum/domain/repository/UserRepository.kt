@@ -7,4 +7,6 @@ interface UserRepository {
     suspend fun register(registerRequest: RegisterRequest)
 
     suspend fun getMyProfile(): User
+
+    suspend fun getOthersProfile(id: Int): User
 }

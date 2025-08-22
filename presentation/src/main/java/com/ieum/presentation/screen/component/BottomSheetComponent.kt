@@ -11,6 +11,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -33,6 +34,8 @@ import com.ieum.design_system.util.noRippleClickable
 import com.ieum.presentation.R
 import com.ieum.presentation.model.post.DietaryStatusInfo
 import com.ieum.presentation.model.post.DietaryStatusUiModel
+import com.ieum.presentation.model.user.CancerDiagnoseUiModel
+import com.ieum.presentation.model.user.CancerStageUiModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -249,6 +252,61 @@ fun MemoSheet(
                 .invokeOnCompletion {
                     onDismissRequest()
                 }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CancerStageSheet(
+    modifier: Modifier = Modifier,
+    scope: CoroutineScope,
+    data: CancerDiagnoseUiModel,
+    callback: (CancerStageUiModel) -> Unit,
+    onDismissRequest: () -> Unit,
+) {
+    val selectorState = remember { SingleSelectorState(CancerStageUiModel.entries) }
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+
+    LaunchedEffect(Unit) {
+        selectorState.setItem(data.stage)
+    }
+
+    IEUMBottomSheet(
+        sheetState = sheetState,
+        onDismissRequest = onDismissRequest,
+    ) {
+        Column(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(all = screenPadding),
+            verticalArrangement = Arrangement.spacedBy(32.dp),
+        ) {
+            Text(
+                text = stringResource(R.string.guide_select_cancer_stage, stringResource(data.key.displayName)),
+                style = MaterialTheme.typography.headlineLarge,
+            )
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                selectorState.itemList.forEach { cancerStage ->
+                    RegisterSelector(
+                        isSelected = selectorState.isSelected(cancerStage),
+                        name = stringResource(cancerStage.description),
+                        onClick = {
+                            scope
+                                .launch {
+                                    callback(cancerStage)
+                                    sheetState.hide()
+                                }
+                                .invokeOnCompletion {
+                                    onDismissRequest()
+                                }
+                        }
+                    )
+                }
+            }
         }
     }
 }

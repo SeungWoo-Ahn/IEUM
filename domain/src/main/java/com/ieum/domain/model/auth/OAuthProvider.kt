@@ -1,5 +1,14 @@
 package com.ieum.domain.model.auth
 
-enum class OAuthProvider {
-    KAKAO
+import com.ieum.domain.model.base.KeyAble
+
+enum class OAuthProvider(override val key: String) : KeyAble<String> {
+    KAKAO("kakao");
+
+    companion object {
+        private val map = entries.associateBy(OAuthProvider::key)
+
+        fun fromKey(key: String): OAuthProvider = map[key]
+            ?: throw IllegalArgumentException("Invalid OAuthProvider key: $key")
+    }
 }

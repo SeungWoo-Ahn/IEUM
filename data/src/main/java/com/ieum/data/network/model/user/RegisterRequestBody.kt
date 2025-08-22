@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class RegisterRequestBody(
     val userType: String,
+    val sex: String,
     val nickname: String,
     val diagnoses: List<DiagnoseDto>,
     val ageGroup: String?,

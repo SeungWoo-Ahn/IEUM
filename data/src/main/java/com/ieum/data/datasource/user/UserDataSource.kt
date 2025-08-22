@@ -7,4 +7,6 @@ interface UserDataSource {
     suspend fun register(registerRequestBody: RegisterRequestBody)
 
     suspend fun getMyProfile(): UserDto
+
+    suspend fun getOthersProfile(id: Int): UserDto
 }

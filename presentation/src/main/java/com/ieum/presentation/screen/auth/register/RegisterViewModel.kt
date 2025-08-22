@@ -7,11 +7,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ieum.design_system.selector.SingleSelectorState
 import com.ieum.design_system.textfield.MaxLengthTextFieldState
-import com.ieum.domain.model.user.AgeGroup
 import com.ieum.domain.model.user.RegisterRequest
-import com.ieum.domain.model.user.UserType
 import com.ieum.domain.usecase.address.GetAddressListUseCase
 import com.ieum.domain.usecase.user.RegisterUseCase
+import com.ieum.presentation.mapper.toDomain
+import com.ieum.presentation.model.user.AgeGroupUiModel
+import com.ieum.presentation.model.user.CancerDiagnoseUiModel
+import com.ieum.presentation.model.user.SexUiModel
+import com.ieum.presentation.model.user.UserTypeUiModel
 import com.ieum.presentation.state.AddressState
 import com.ieum.presentation.state.DiagnoseState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +22,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,7 +29,8 @@ class RegisterViewModel @Inject constructor(
     getAddressListUseCase: GetAddressListUseCase,
     private val registerUseCase: RegisterUseCase,
 ) : ViewModel() {
-    private var uiState by mutableStateOf<RegisterUiState>(RegisterUiState.Idle)
+    var uiState by mutableStateOf<RegisterUiState>(RegisterUiState.Idle)
+        private set
 
     private val _event = MutableSharedFlow<RegisterEvent>()
     val event: SharedFlow<RegisterEvent> = _event.asSharedFlow()
@@ -35,10 +38,11 @@ class RegisterViewModel @Inject constructor(
     var currentStage by mutableStateOf(RegisterStage.SelectUserType)
         private set
 
-    val userTypeState = SingleSelectorState(itemList = UserType.entries)
+    val userTypeState = SingleSelectorState(itemList = UserTypeUiModel.entries)
+    val sexState = SingleSelectorState(itemList = SexUiModel.entries)
     val nickNameState = MaxLengthTextFieldState(maxLength = 20)
     val diagnoseState = DiagnoseState()
-    val ageGroupState = SingleSelectorState(itemList = AgeGroup.entries)
+    val ageGroupState = SingleSelectorState(itemList = AgeGroupUiModel.entries)
     val residenceState = AddressState(
         getAddressListUseCase = getAddressListUseCase,
         coroutineScope = viewModelScope,
@@ -71,27 +75,37 @@ class RegisterViewModel @Inject constructor(
 
     fun nextEnabled(): Boolean =
         when (currentStage) {
-            RegisterStage.SelectUserType -> true
+            RegisterStage.SelectUserType, RegisterStage.SelectSex -> true
             RegisterStage.TypeNickname -> nickNameState.validate()
             RegisterStage.SelectDiagnose -> diagnoseState.validate()
             RegisterStage.SelectAgeGroup -> ageGroupState.validate()
             RegisterStage.SelectResidence -> residenceState.validate()
             RegisterStage.SelectHospital -> hospitalState.validate()
-            RegisterStage.TypeInterest -> interestState.validate() && uiState != RegisterUiState.Loading
+            RegisterStage.TypeInterest -> interestState.validate()
         }
+
+    fun showCancerStageSheet(cancerDiagnose: CancerDiagnoseUiModel) {
+        uiState = RegisterUiState.ShowCancerStageSheet(data = cancerDiagnose) {
+            diagnoseState.cancerDiagnoseState.onDiagnose(cancerDiagnose.copy(stage = it))
+        }
+    }
+
+    fun resetUiState() {
+        uiState = RegisterUiState.Idle
+    }
 
     private fun register() {
         viewModelScope.launch {
             uiState = RegisterUiState.Loading
             val registerRequest = RegisterRequest(
-                userType = userTypeState.selectedItem!!,
+                userType = userTypeState.selectedItem!!.toDomain(),
+                sex = sexState.selectedItem!!.toDomain(),
                 nickName = nickNameState.getTrimmedText(),
                 diagnoses = diagnoseState.getSelectedDiagnoseList(),
-                ageGroup = ageGroupState.selectedItem,
+                ageGroup = ageGroupState.selectedItem?.toDomain(),
                 residenceArea = residenceState.getSelectedProvince()?.fullName,
                 hospitalArea = hospitalState.getSelectedProvince()?.fullName,
             )
-            Timber.i(registerRequest.toString())
             _event.emit(RegisterEvent.MoveWelcome)
 /*            registerUseCase(registerRequest)
                 .onSuccess {

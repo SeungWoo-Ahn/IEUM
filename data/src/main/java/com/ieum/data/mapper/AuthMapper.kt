@@ -1,7 +1,6 @@
 package com.ieum.data.mapper
 
 import com.ieum.data.TokenEntity
-import com.ieum.data.network.model.auth.OAuthProviderDto
 import com.ieum.data.network.model.auth.OAuthRequestBody
 import com.ieum.data.network.model.auth.OAuthResponse
 import com.ieum.data.network.model.auth.OAuthUserDto
@@ -12,26 +11,16 @@ import com.ieum.domain.model.auth.OAuthResult
 import com.ieum.domain.model.auth.OAuthUser
 import com.ieum.domain.model.auth.Token
 
-internal fun OAuthProvider.toDto(): OAuthProviderDto =
-    when (this) {
-        OAuthProvider.KAKAO -> OAuthProviderDto.KAKAO
-    }
-
-internal fun OAuthProviderDto.toDomain(): OAuthProvider =
-    when (this) {
-        OAuthProviderDto.KAKAO -> OAuthProvider.KAKAO
-    }
-
 fun OAuthRequest.asBody(): OAuthRequestBody =
     OAuthRequestBody(
-        provider = provider.toDto().key,
+        provider = provider.key,
         authorizationCode = code,
     )
 
 fun OAuthUserDto.toDomain(): OAuthUser =
     OAuthUser(
         oauthId = oauthId,
-        provider = OAuthProviderDto.fromKey(provider).toDomain(),
+        provider = OAuthProvider.fromKey(provider),
         email = email,
         name = name,
         profileImage = profileImage,

@@ -5,6 +5,7 @@ import com.ieum.presentation.R
 
 enum class RegisterStage(@StringRes val guide: Int) {
     SelectUserType(guide = R.string.guide_select_user_type),
+    SelectSex(guide = R.string.guide_select_sex),
     TypeNickname(guide = R.string.guide_type_nickname),
     SelectDiagnose(guide = R.string.guide_select_diagnose),
     SelectAgeGroup(guide = R.string.guide_select_age_group),
@@ -12,6 +13,3 @@ enum class RegisterStage(@StringRes val guide: Int) {
     SelectHospital(guide = R.string.guide_select_hospital),
     TypeInterest(guide = R.string.guide_type_interest),
 }
-
-fun RegisterStage.needFullScreen(): Boolean =
-    this == RegisterStage.SelectResidence || this == RegisterStage.SelectHospital
