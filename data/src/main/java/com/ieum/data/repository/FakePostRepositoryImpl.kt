@@ -51,14 +51,20 @@ class FakePostRepositoryImpl @Inject constructor() : PostRepository {
                     content = "식욕이 없어서 아침에 토스트 한 조각만 먹고 거의 공복 유지."
                 ),
                 memo = null, // 메모가 없는 경우
-                imageList = emptyList(),
+                imageList = listOf(
+                    ImageSource.Remote(url = "https://recipe1.ezmember.co.kr/cache/recipe/2019/02/10/5d4289fb101abbe27c28cd65759d23d31.jpg")
+                ),
                 shareCommunity = false
             ),
             Post.DailyRecords(
                 id = 3,
                 title = "오늘의 일상",
                 story = "오전에는 병원 정기 검진을 다녀왔고, 오후에는 밀린 서류 작업을 마무리했다.",
-                imageList = emptyList(), // 이미지가 없는 경우
+                imageList = listOf(
+                    ImageSource.Remote(url = "https://www.shhosp.co.kr/common/front/group/images/cc/bg_international.jpg"),
+                    ImageSource.Remote(url = "https://www.moonhwa.or.kr/upload/rbs/editor/201702101727151.jpg"),
+
+                ), // 이미지가 없는 경우
                 shareCommunity = false
             ),
         )
