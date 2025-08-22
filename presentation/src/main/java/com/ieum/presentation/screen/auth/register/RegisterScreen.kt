@@ -30,7 +30,6 @@ import com.ieum.domain.model.user.AgeGroup
 import com.ieum.presentation.model.user.AgeGroupUiModel
 import com.ieum.presentation.model.user.SexUiModel
 import com.ieum.presentation.model.user.UserTypeUiModel
-import com.ieum.presentation.screen.component.AddressComponent
 import com.ieum.presentation.screen.component.AddressSelector
 import com.ieum.presentation.screen.component.DiagnoseComponent
 import com.ieum.presentation.screen.component.SelectAgeGroup
@@ -63,7 +62,6 @@ fun RegisterRoute(
 
     RegisterScreen(
         modifier = modifier,
-        scope = scope,
         nextEnabled = nextEnabled,
         currentStage = viewModel.currentStage,
         userTypeState = viewModel.userTypeState,
@@ -83,7 +81,6 @@ fun RegisterRoute(
 @Composable
 private fun RegisterScreen(
     modifier: Modifier,
-    scope: CoroutineScope,
     nextEnabled: Boolean,
     currentStage: RegisterStage,
     userTypeState: ISingleSelectorState<UserTypeUiModel>,
@@ -133,7 +130,11 @@ private fun RegisterScreen(
                 state = hospitalState,
                 onButtonClick = onNextStep,
             )
-            RegisterStage.TypeInterest -> TODO()
+            RegisterStage.TypeInterest -> TypeInterest(
+                buttonEnabled = nextEnabled,
+                state = interestState,
+                onButtonClick = onNextStep,
+            )
         }
     }
 }
@@ -177,18 +178,6 @@ private fun RegisterStageScreenArea(
                 modifier = Modifier.padding(top = 48.dp),
                 scope = scope,
                 state = diagnoseState,
-            )
-            RegisterStage.SelectResidence -> AddressComponent(
-                modifier = Modifier.padding(top = 48.dp),
-                state = residenceState,
-            )
-            RegisterStage.SelectHospital -> AddressComponent(
-                modifier = Modifier.padding(top = 48.dp),
-                state = hospitalState
-            )
-            RegisterStage.TypeInterest -> TypeInterest(
-                modifier = Modifier.padding(top = 48.dp),
-                state = interestState,
             )
             else -> {}
         }

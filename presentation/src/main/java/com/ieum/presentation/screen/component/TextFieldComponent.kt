@@ -16,6 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.ieum.design_system.button.NextButton
+import com.ieum.design_system.button.SkipOrNextButton
 import com.ieum.design_system.icon.InfoCircleIcon
 import com.ieum.design_system.textfield.IMaxLengthTextFieldState
 import com.ieum.design_system.textfield.ITextFieldState
@@ -76,15 +77,36 @@ fun TypeNickname(
 @Composable
 fun TypeInterest(
     modifier: Modifier = Modifier,
+    buttonEnabled: Boolean,
     state: IMaxLengthTextFieldState,
+    onButtonClick: () -> Unit,
 ) {
-    Column(
-        modifier = modifier.fillMaxWidth()
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(top = 48.dp)
+            .padding(horizontal = screenPadding)
     ) {
-        MaxLengthTextField(
-            state = state,
-            placeHolder = stringResource(R.string.placeholder_type_interest)
-        )
+        Column(
+            modifier = modifier.fillMaxWidth()
+        ) {
+            MaxLengthTextField(
+                state = state,
+                placeHolder = stringResource(R.string.placeholder_type_interest)
+            )
+        }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.BottomCenter)
+                .padding(vertical = 16.dp),
+            contentAlignment = Alignment.Center,
+        ) {
+            SkipOrNextButton(
+                enabled = buttonEnabled,
+                onNext = onButtonClick,
+            )
+        }
     }
 }
 
