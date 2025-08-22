@@ -7,6 +7,7 @@ import com.ieum.domain.model.user.Diagnose
 import com.ieum.domain.model.user.Sex
 import com.ieum.domain.model.user.UserType
 import com.ieum.presentation.R
+import com.ieum.presentation.model.user.AgeGroupUiModel
 import com.ieum.presentation.model.user.CancerDiagnoseUiKey
 import com.ieum.presentation.model.user.CancerDiagnoseUiModel
 import com.ieum.presentation.model.user.DiagnoseUiKey
@@ -25,13 +26,13 @@ fun SexUiModel.toDomain(): Sex =
         SexUiModel.FEMALE -> Sex.FEMALE
     }
 
-fun AgeGroup.toDescription(): Int =
+fun AgeGroupUiModel.toDomain(): AgeGroup =
     when (this) {
-        AgeGroup.UNDER_THIRTY-> R.string.description_under_30
-        AgeGroup.FORTIES -> R.string.description_40s
-        AgeGroup.FIFTIES -> R.string.description_50s
-        AgeGroup.SIXTIES -> R.string.description_60s
-        AgeGroup.OVER_SEVENTY -> R.string.description_over_70
+        AgeGroupUiModel.UNDER_THIRTY -> AgeGroup.UNDER_THIRTY
+        AgeGroupUiModel.FORTIES -> AgeGroup.FORTIES
+        AgeGroupUiModel.FIFTIES -> AgeGroup.FIFTIES
+        AgeGroupUiModel.SIXTIES -> AgeGroup.SIXTIES
+        AgeGroupUiModel.OVER_SEVENTY -> AgeGroup.OVER_SEVENTY
     }
 
 fun CancerStage?.toDescription(): Int =

@@ -1,22 +1,24 @@
 package com.ieum.presentation.screen.component
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ieum.design_system.button.IEUMButton
+import com.ieum.design_system.button.SkipOrNextButton
 import com.ieum.design_system.selector.ISingleSelectorState
 import com.ieum.design_system.theme.Slate900
 import com.ieum.design_system.theme.White
 import com.ieum.design_system.theme.screenPadding
 import com.ieum.design_system.util.dropShadow
-import com.ieum.domain.model.user.AgeGroup
-import com.ieum.presentation.mapper.toDescription
+import com.ieum.presentation.model.user.AgeGroupUiModel
 import com.ieum.presentation.model.user.SexUiModel
 import com.ieum.presentation.model.user.UserTypeUiModel
 
@@ -93,17 +95,38 @@ fun SelectSex(
 @Composable
 fun SelectAgeGroup(
     modifier: Modifier = Modifier,
-    state: ISingleSelectorState<AgeGroup>,
+    buttonEnabled: Boolean,
+    state: ISingleSelectorState<AgeGroupUiModel>,
+    onButtonClick: () -> Unit,
 ) {
-    Column(
-        modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(top = 48.dp)
+            .padding(horizontal = screenPadding)
     ) {
-        state.itemList.forEach { ageGroup ->
-            RegisterSelector(
-                isSelected = state.isSelected(ageGroup),
-                name = stringResource(ageGroup.toDescription()),
-                onClick = { state.selectItem(ageGroup) }
+        Column(
+            modifier = modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            state.itemList.forEach { ageGroup ->
+                RegisterSelector(
+                    isSelected = state.isSelected(ageGroup),
+                    name = stringResource(ageGroup.description),
+                    onClick = { state.selectItem(ageGroup) }
+                )
+            }
+        }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.BottomCenter)
+                .padding(vertical = 16.dp),
+            contentAlignment = Alignment.Center,
+        ) {
+            SkipOrNextButton(
+                enabled = buttonEnabled,
+                onNext = onButtonClick,
             )
         }
     }

@@ -27,6 +27,7 @@ import com.ieum.design_system.textfield.IMaxLengthTextFieldState
 import com.ieum.design_system.theme.screenPadding
 import com.ieum.design_system.topbar.TopBarForBack
 import com.ieum.domain.model.user.AgeGroup
+import com.ieum.presentation.model.user.AgeGroupUiModel
 import com.ieum.presentation.model.user.SexUiModel
 import com.ieum.presentation.model.user.UserTypeUiModel
 import com.ieum.presentation.screen.component.AddressComponent
@@ -88,7 +89,7 @@ private fun RegisterScreen(
     sexState: ISingleSelectorState<SexUiModel>,
     nickNameState: IMaxLengthTextFieldState,
     diagnoseState: DiagnoseState,
-    ageGroupState: ISingleSelectorState<AgeGroup>,
+    ageGroupState: ISingleSelectorState<AgeGroupUiModel>,
     residenceState: AddressState,
     hospitalState: AddressState,
     interestState: IMaxLengthTextFieldState,
@@ -116,7 +117,11 @@ private fun RegisterScreen(
                 onButtonClick = onNextStep,
             )
             RegisterStage.SelectDiagnose -> TODO()
-            RegisterStage.SelectAgeGroup -> TODO()
+            RegisterStage.SelectAgeGroup -> SelectAgeGroup(
+                buttonEnabled = nextEnabled,
+                state = ageGroupState,
+                onButtonClick = onNextStep,
+            )
             RegisterStage.SelectResidence -> TODO()
             RegisterStage.SelectHospital -> TODO()
             RegisterStage.TypeInterest -> TODO()
@@ -166,10 +171,6 @@ private fun RegisterStageScreenArea(
                 modifier = Modifier.padding(top = 48.dp),
                 scope = scope,
                 state = diagnoseState,
-            )
-            RegisterStage.SelectAgeGroup -> SelectAgeGroup(
-                modifier = Modifier.padding(top = 48.dp),
-                state = ageGroupState,
             )
             RegisterStage.SelectResidence -> AddressComponent(
                 modifier = Modifier.padding(top = 48.dp),

@@ -7,11 +7,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ieum.design_system.selector.SingleSelectorState
 import com.ieum.design_system.textfield.MaxLengthTextFieldState
-import com.ieum.domain.model.user.AgeGroup
 import com.ieum.domain.model.user.RegisterRequest
 import com.ieum.domain.usecase.address.GetAddressListUseCase
 import com.ieum.domain.usecase.user.RegisterUseCase
 import com.ieum.presentation.mapper.toDomain
+import com.ieum.presentation.model.user.AgeGroupUiModel
 import com.ieum.presentation.model.user.SexUiModel
 import com.ieum.presentation.model.user.UserTypeUiModel
 import com.ieum.presentation.state.AddressState
@@ -40,7 +40,7 @@ class RegisterViewModel @Inject constructor(
     val sexState = SingleSelectorState(itemList = SexUiModel.entries)
     val nickNameState = MaxLengthTextFieldState(maxLength = 20)
     val diagnoseState = DiagnoseState()
-    val ageGroupState = SingleSelectorState(itemList = AgeGroup.entries)
+    val ageGroupState = SingleSelectorState(itemList = AgeGroupUiModel.entries)
     val residenceState = AddressState(
         getAddressListUseCase = getAddressListUseCase,
         coroutineScope = viewModelScope,
@@ -90,7 +90,7 @@ class RegisterViewModel @Inject constructor(
                 sex = sexState.selectedItem!!.toDomain(),
                 nickName = nickNameState.getTrimmedText(),
                 diagnoses = diagnoseState.getSelectedDiagnoseList(),
-                ageGroup = ageGroupState.selectedItem,
+                ageGroup = ageGroupState.selectedItem?.toDomain(),
                 residenceArea = residenceState.getSelectedProvince()?.fullName,
                 hospitalArea = hospitalState.getSelectedProvince()?.fullName,
             )
