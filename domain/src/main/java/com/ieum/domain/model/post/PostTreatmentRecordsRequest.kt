@@ -3,7 +3,7 @@ package com.ieum.domain.model.post
 import com.ieum.domain.model.image.ImageSource
 
 data class PostTreatmentRecordsRequest(
-    val specificSymptoms: String,
+    val specificSymptoms: String?,
     val takingMedicine: Boolean,
     val dietary: Dietary,
     val memo: String,

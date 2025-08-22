@@ -9,15 +9,20 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.ieum.domain.model.image.ImageSource
+import com.ieum.domain.repository.PostRepository
+import com.ieum.presentation.mapper.toRequest
 import com.ieum.presentation.model.post.PostTreatmentRecordsUiModel
 import com.ieum.presentation.navigation.MainScreen
 import com.ieum.presentation.util.ImageUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class PostTreatmentRecordsViewModel @Inject constructor(
+    private val postRepository: PostRepository,
     private val imageUtil: ImageUtil,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
@@ -28,6 +33,9 @@ class PostTreatmentRecordsViewModel @Inject constructor(
 
     var uiModel by mutableStateOf(PostTreatmentRecordsUiModel.EMPTY)
         private set
+
+    private val _event = Channel<PostTreatmentRecordsEvent>()
+    val event = _event.receiveAsFlow()
 
     init {
         // TODO: id != null (수정) 일 때, 데이터 로드
@@ -51,7 +59,7 @@ class PostTreatmentRecordsViewModel @Inject constructor(
 
     fun showDietaryStatusSheet() {
         uiState = PostTreatmentRecordsUiState.ShowDietaryStatusSheet {
-            uiModel = uiModel.copy(dietaryStatus = it)
+            uiModel = uiModel.copy(dietary = it)
         }
     }
 
@@ -87,7 +95,9 @@ class PostTreatmentRecordsViewModel @Inject constructor(
     fun onPost() {
         viewModelScope.launch {
             uiState = PostTreatmentRecordsUiState.Loading
-            // TODO: 비즈니스 로직 추가
+            // TODO: 비즈니스 로직 수정
+            postRepository.postTreatmentRecords(uiModel.toRequest())
+            _event.send(PostTreatmentRecordsEvent.MoveBack)
         }
     }
 }

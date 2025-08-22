@@ -14,6 +14,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -59,6 +60,14 @@ fun PostTreatmentRecordsRoute(
         onResult = viewModel::onPhotoPickerResult,
     )
 
+    LaunchedEffect(Unit) {
+        viewModel.event.collect {
+            when (it) {
+                PostTreatmentRecordsEvent.MoveBack -> onBack()
+            }
+        }
+    }
+
     PostTreatmentRecordsScreen(
         modifier = modifier,
         isLoading = uiState == PostTreatmentRecordsUiState.Loading,
@@ -99,7 +108,7 @@ fun PostTreatmentRecordsRoute(
         DietaryStatusSheet(
             scope = scope,
             sheetState = sheetState,
-            data = uiModel.dietaryStatus,
+            data = uiModel.dietary,
             callback = uiState.callback,
             onDismissRequest = viewModel::resetUiState,
         )
@@ -160,7 +169,7 @@ private fun PostTreatmentRecordsScreen(
                     onClick = showTakingMedicineDialog,
                 )
                 DietaryStatusBox(
-                    data = uiModel.dietaryStatus,
+                    data = uiModel.dietary,
                     onClick = showDietaryStatusSheet,
                 )
                 MemoBox(

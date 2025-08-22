@@ -25,7 +25,7 @@ data class DietaryUiModel(
 data class PostTreatmentRecordsUiModel(
     val specificSymptoms: String,
     val takingMedicine: Boolean?,
-    val dietaryStatus: DietaryUiModel?,
+    val dietary: DietaryUiModel?,
     val memo: String,
     val imageList: List<ImageSource>,
     val shareCommunity: Boolean,
@@ -36,7 +36,7 @@ data class PostTreatmentRecordsUiModel(
         val EMPTY = PostTreatmentRecordsUiModel(
             specificSymptoms = "",
             takingMedicine = null,
-            dietaryStatus = null,
+            dietary = null,
             memo = "",
             imageList = emptyList(),
             shareCommunity = false,
