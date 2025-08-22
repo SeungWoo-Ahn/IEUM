@@ -27,7 +27,7 @@ import com.ieum.presentation.state.AddressState
 import com.ieum.presentation.state.AddressUiState
 
 @Composable
-fun AddressComponent(
+internal fun AddressComponent(
     modifier: Modifier = Modifier,
     state: AddressState,
 ) {

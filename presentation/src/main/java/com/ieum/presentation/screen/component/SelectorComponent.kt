@@ -21,6 +21,7 @@ import com.ieum.design_system.util.dropShadow
 import com.ieum.presentation.model.user.AgeGroupUiModel
 import com.ieum.presentation.model.user.SexUiModel
 import com.ieum.presentation.model.user.UserTypeUiModel
+import com.ieum.presentation.state.AddressState
 
 @Composable
 internal fun RegisterSelector(
@@ -122,6 +123,37 @@ fun SelectAgeGroup(
                 .fillMaxWidth()
                 .align(Alignment.BottomCenter)
                 .padding(vertical = 16.dp),
+            contentAlignment = Alignment.Center,
+        ) {
+            SkipOrNextButton(
+                enabled = buttonEnabled,
+                onNext = onButtonClick,
+            )
+        }
+    }
+}
+
+@Composable
+fun AddressSelector(
+    modifier: Modifier = Modifier,
+    buttonEnabled: Boolean,
+    state: AddressState,
+    onButtonClick: () -> Unit,
+) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(top = 48.dp)
+    ) {
+        AddressComponent(state = state)
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.BottomCenter)
+                .padding(
+                    horizontal = screenPadding,
+                    vertical = 16.dp
+                ),
             contentAlignment = Alignment.Center,
         ) {
             SkipOrNextButton(

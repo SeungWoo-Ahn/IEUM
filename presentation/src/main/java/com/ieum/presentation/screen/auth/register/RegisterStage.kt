@@ -13,6 +13,3 @@ enum class RegisterStage(@StringRes val guide: Int) {
     SelectHospital(guide = R.string.guide_select_hospital),
     TypeInterest(guide = R.string.guide_type_interest),
 }
-
-fun RegisterStage.needFullScreen(): Boolean =
-    this == RegisterStage.SelectResidence || this == RegisterStage.SelectHospital

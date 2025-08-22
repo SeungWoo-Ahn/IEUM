@@ -31,6 +31,7 @@ import com.ieum.presentation.model.user.AgeGroupUiModel
 import com.ieum.presentation.model.user.SexUiModel
 import com.ieum.presentation.model.user.UserTypeUiModel
 import com.ieum.presentation.screen.component.AddressComponent
+import com.ieum.presentation.screen.component.AddressSelector
 import com.ieum.presentation.screen.component.DiagnoseComponent
 import com.ieum.presentation.screen.component.SelectAgeGroup
 import com.ieum.presentation.screen.component.SelectSex
@@ -122,8 +123,16 @@ private fun RegisterScreen(
                 state = ageGroupState,
                 onButtonClick = onNextStep,
             )
-            RegisterStage.SelectResidence -> TODO()
-            RegisterStage.SelectHospital -> TODO()
+            RegisterStage.SelectResidence -> AddressSelector(
+                buttonEnabled = nextEnabled,
+                state = residenceState,
+                onButtonClick = onNextStep,
+            )
+            RegisterStage.SelectHospital -> AddressSelector(
+                buttonEnabled = nextEnabled,
+                state = hospitalState,
+                onButtonClick = onNextStep,
+            )
             RegisterStage.TypeInterest -> TODO()
         }
     }
@@ -162,9 +171,6 @@ private fun RegisterStageScreenArea(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(
-                horizontal = if (currentStage.needFullScreen()) 0.dp else 24.dp
-            )
     ) {
         when (currentStage) {
             RegisterStage.SelectDiagnose -> DiagnoseComponent(
