@@ -110,7 +110,11 @@ private fun RegisterScreen(
                 state = sexState,
                 onClick = onNextStep,
             )
-            RegisterStage.TypeNickname -> TODO()
+            RegisterStage.TypeNickname -> TypeNickname(
+                buttonEnabled = nextEnabled,
+                state = nickNameState,
+                onButtonClick = onNextStep,
+            )
             RegisterStage.SelectDiagnose -> TODO()
             RegisterStage.SelectAgeGroup -> TODO()
             RegisterStage.SelectResidence -> TODO()
@@ -158,15 +162,6 @@ private fun RegisterStageScreenArea(
             )
     ) {
         when (currentStage) {
-            RegisterStage.SelectUserType -> SelectUserType(
-                modifier = Modifier.padding(top = 48.dp),
-                state = userTypeState,
-                onClick = onNextStep,
-            )
-            RegisterStage.TypeNickname -> TypeNickname(
-                modifier = Modifier.padding(top = 16.dp),
-                state = nickNameState,
-            )
             RegisterStage.SelectDiagnose -> DiagnoseComponent(
                 modifier = Modifier.padding(top = 48.dp),
                 scope = scope,
@@ -188,8 +183,7 @@ private fun RegisterStageScreenArea(
                 modifier = Modifier.padding(top = 48.dp),
                 state = interestState,
             )
-
-            RegisterStage.SelectSex -> TODO()
+            else -> {}
         }
     }
 }

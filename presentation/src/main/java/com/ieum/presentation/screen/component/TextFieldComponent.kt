@@ -1,5 +1,7 @@
 package com.ieum.presentation.screen.component
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,39 +15,61 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import com.ieum.design_system.button.NextButton
 import com.ieum.design_system.icon.InfoCircleIcon
-import com.ieum.design_system.spacer.IEUMSpacer
 import com.ieum.design_system.textfield.IMaxLengthTextFieldState
 import com.ieum.design_system.textfield.ITextFieldState
 import com.ieum.design_system.textfield.MaxLengthTextField
 import com.ieum.design_system.textfield.StylelessTextField
 import com.ieum.design_system.theme.Gray600
+import com.ieum.design_system.theme.screenPadding
 import com.ieum.presentation.R
 
 @Composable
 fun TypeNickname(
     modifier: Modifier = Modifier,
+    buttonEnabled: Boolean,
     state: IMaxLengthTextFieldState,
+    onButtonClick: () -> Unit,
 ) {
-    Column(
-        modifier = modifier.fillMaxWidth()
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(top = 16.dp)
+            .padding(horizontal = screenPadding)
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
+        Column(
+            modifier = modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(44.dp),
         ) {
-            InfoCircleIcon()
-            IEUMSpacer(size = 2)
-            Text(
-                text = stringResource(R.string.info_nickname),
-                style = MaterialTheme.typography.bodyMedium,
-                color = Gray600,
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(2.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                InfoCircleIcon()
+                Text(
+                    text = stringResource(R.string.info_nickname),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Gray600,
+                )
+            }
+            MaxLengthTextField(
+                state = state,
+                placeHolder = stringResource(R.string.placeholder_type_nickname)
             )
         }
-        IEUMSpacer(size = 44)
-        MaxLengthTextField(
-            state = state,
-            placeHolder = stringResource(R.string.placeholder_type_nickname)
-        )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.BottomCenter)
+                .padding(vertical = 16.dp),
+            contentAlignment = Alignment.Center,
+        ) {
+            NextButton(
+                enabled = buttonEnabled,
+                onClick = onButtonClick
+            )
+        }
     }
 }
 
