@@ -74,4 +74,8 @@ dependencies {
 
     // coil
     implementation(libs.bundles.coil)
+
+    // paging3
+    implementation(libs.androidx.paging3)
+    implementation(libs.androidx.paging3.compose)
 }
