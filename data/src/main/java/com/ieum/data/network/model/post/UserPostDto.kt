@@ -15,8 +15,8 @@ sealed class UserPostDto {
     @SerialName("wellness")
     data class Wellness(
         override val id: Int,
-        val diagnosis: String?,
-        val mood: Int?,
+        val diagnosis: String,
+        val mood: Int,
         val unusualSymptoms: String?,
         val medicationTaken: Boolean?,
         val diet: DietDto?,
@@ -31,8 +31,8 @@ sealed class UserPostDto {
     @SerialName("daily")
     data class Daily(
         override val id: Int,
-        val title: String?,
-        val content: String?,
+        val title: String,
+        val content: String,
         override val images: List<PostImageDto.ForResponse>?,
         override val shared: Boolean = false,
         override val createdAt: Int,

@@ -12,5 +12,5 @@ sealed class PostImageDto {
     @Serializable
     data class ForResponse(
         val url: String,
-    )
+    ) : PostImageDto()
 }

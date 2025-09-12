@@ -8,7 +8,7 @@ data class PostWellnessRequestBody(
     val mood: Int,
     val unusualSymptoms: String?,
     val medicationTaken: Boolean,
-    val diet: DietDto?,
+    val diet: DietDto,
     val memo: String?,
     val images: List<PostImageDto.ForRequest>?,
     val shared: Boolean,
