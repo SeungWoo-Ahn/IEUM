@@ -4,6 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class GetPostListResponse(
-    val posts: List<PostDto>,
+    val posts: List<AllPostDto>,
     val pagination: PostPagination,
 )

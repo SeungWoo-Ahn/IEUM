@@ -3,10 +3,10 @@ package com.ieum.data.datasource.post
 import androidx.paging.PagingData
 import com.ieum.data.network.di.IEUMNetwork
 import com.ieum.data.network.di.NetworkSource
+import com.ieum.data.network.model.post.AllPostDto
 import com.ieum.data.network.model.post.GetPostListResponse
 import com.ieum.data.network.model.post.PostDailyRequestBody
 import com.ieum.data.network.model.post.PostDailyResponse
-import com.ieum.data.network.model.post.PostDto
 import com.ieum.data.network.model.post.PostWellnessRequestBody
 import com.ieum.data.network.model.post.PostWellnessResponse
 import io.ktor.client.HttpClient
@@ -72,12 +72,12 @@ class PostRemoteDataSource @Inject constructor(
             }
             .body<GetPostListResponse>()
 
-    override fun getAllPostListFlow(diagnosis: String?): Flow<PagingData<PostDto>> {
+    override fun getAllPostListFlow(diagnosis: String?): Flow<PagingData<AllPostDto>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getPost(id: Int, type: String): PostDto =
+    override suspend fun getPost(id: Int, type: String): AllPostDto =
         ktorClient
             .get("api/v1/posts/${type}/${id}")
-            .body<PostDto>()
+            .body<AllPostDto>()
 }
