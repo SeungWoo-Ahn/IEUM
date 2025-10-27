@@ -1,10 +1,12 @@
 package com.ieum.data.mapper
 
 import com.ieum.data.network.model.post.DietDto
+import com.ieum.data.network.model.post.PostDailyRequestBody
 import com.ieum.data.network.model.post.PostImageDto
 import com.ieum.data.network.model.post.PostWellnessRequestBody
 import com.ieum.domain.model.image.ImageSource
 import com.ieum.domain.model.post.Diet
+import com.ieum.domain.model.post.PostDailyRequest
 import com.ieum.domain.model.post.PostWellnessRequest
 
 suspend fun PostWellnessRequest.asBody(): PostWellnessRequestBody =
@@ -32,3 +34,11 @@ private suspend fun ImageSource.Local.toDto(): PostImageDto.ForRequest? {
         base64Data = base64Data,
     )
 }
+
+suspend fun PostDailyRequest.asBody(): PostDailyRequestBody =
+    PostDailyRequestBody(
+        title = title,
+        content = content,
+        images = imageList.mapNotNull { it.toDto() }.ifEmpty { null },
+        shared = shared,
+    )

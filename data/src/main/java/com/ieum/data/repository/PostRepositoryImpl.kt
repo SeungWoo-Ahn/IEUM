@@ -30,16 +30,17 @@ class PostRepositoryImpl @Inject constructor(
         postDataSource.deleteWellness(id)
     }
 
-    override suspend fun postDaily(request: PostDailyRequest): Int {
-        TODO("Not yet implemented")
-    }
+    override suspend fun postDaily(request: PostDailyRequest): Int =
+        postDataSource
+            .postDaily(request.asBody())
+            .id
 
     override suspend fun patchDaily(id: Int, request: PostDailyRequest) {
-        TODO("Not yet implemented")
+        postDataSource.patchDaily(id, request.asBody())
     }
 
     override suspend fun deleteDaily(id: Int) {
-        TODO("Not yet implemented")
+        postDataSource.deleteWellness(id)
     }
 
     override fun getAllPostListFlow(diagnosis: List<Diagnosis>): Flow<PagingData<Post>> {
