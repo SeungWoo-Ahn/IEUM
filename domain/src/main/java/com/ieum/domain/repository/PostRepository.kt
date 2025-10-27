@@ -11,17 +11,17 @@ import kotlinx.coroutines.flow.Flow
 interface PostRepository {
     suspend fun postWellness(request: PostWellnessRequest): Int
 
-    suspend fun patchWellness(id: Int, request: PostWellnessRequest): Int
+    suspend fun patchWellness(id: Int, request: PostWellnessRequest)
 
     suspend fun deleteWellness(id: Int)
 
     suspend fun postDaily(request: PostDailyRequest): Int
 
-    suspend fun patchDaily(id: Int, request: PostDailyRequest): Int
+    suspend fun patchDaily(id: Int, request: PostDailyRequest)
 
     suspend fun deleteDaily(id: Int)
 
-    fun getAllPostListFlow(diagnosis: Diagnosis?): Flow<PagingData<Post>>
+    fun getAllPostListFlow(diagnosis: List<Diagnosis>): Flow<PagingData<Post>>
 
     suspend fun getPost(id: Int, type: PostType): Post
 }

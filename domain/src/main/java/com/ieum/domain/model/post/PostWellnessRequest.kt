@@ -1,8 +1,10 @@
 package com.ieum.domain.model.post
 
 import com.ieum.domain.model.image.ImageSource
+import com.ieum.domain.model.user.Diagnosis
 
 data class PostWellnessRequest(
+    val diagnosis: Diagnosis,
     val mood: Mood,
     val unusualSymptoms: String,
     val medicationTaken: Boolean?,

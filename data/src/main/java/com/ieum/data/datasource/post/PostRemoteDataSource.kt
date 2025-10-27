@@ -33,15 +33,13 @@ class PostRemoteDataSource @Inject constructor(
             }
             .body<PostWellnessResponse>()
 
-    override suspend fun patchWellness(
-        id: Int,
-        body: PostWellnessRequestBody
-    ): PostWellnessResponse =
+    override suspend fun patchWellness(id: Int, body: PostWellnessRequestBody) {
         ktorClient
             .patch("api/v1/posts/wellness/${id}") {
                 setBody(body)
             }
-            .body<PostWellnessResponse>()
+    }
+
 
     override suspend fun deleteWellness(id: Int) {
         ktorClient.delete("api/v1/posts/wellness/${id}")
@@ -54,18 +52,18 @@ class PostRemoteDataSource @Inject constructor(
             }
             .body<PostDailyResponse>()
 
-    override suspend fun patchDaily(id: Int, body: PostDailyRequestBody): PostDailyResponse =
+    override suspend fun patchDaily(id: Int, body: PostDailyRequestBody) {
         ktorClient
             .patch("api/v1/posts/daily/${id}") {
                 setBody(body)
             }
-            .body<PostDailyResponse>()
+    }
 
     override suspend fun deleteDaily(id: Int) {
         ktorClient.delete("api/v1/posts/daily/${id}")
     }
 
-    override suspend fun getAllPostList(diagnosis: String?): GetPostListResponse =
+    private suspend fun getAllPostList(diagnosis: String?): GetPostListResponse =
         ktorClient
             .get("api/v1/posts") {
                 diagnosis?.let { parameter("diagnosis", it) }
