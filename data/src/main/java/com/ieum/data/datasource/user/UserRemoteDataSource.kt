@@ -2,11 +2,15 @@ package com.ieum.data.datasource.user
 
 import com.ieum.data.network.di.IEUMNetwork
 import com.ieum.data.network.di.NetworkSource
+import com.ieum.data.network.model.post.GetPostListResponse
+import com.ieum.data.network.model.post.MyPostDto
+import com.ieum.data.network.model.post.OtherPostDto
 import com.ieum.data.network.model.user.RegisterRequestBody
 import com.ieum.data.network.model.user.UserDto
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
+import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import javax.inject.Inject
@@ -22,7 +26,6 @@ class UserRemoteDataSource @Inject constructor(
             }
     }
 
-
     override suspend fun getMyProfile(): UserDto =
         ktorClient
             .get("api/v1/users/profile")
@@ -32,4 +35,31 @@ class UserRemoteDataSource @Inject constructor(
         ktorClient
             .get("api/v1/users/$id/profile")
             .body<UserDto>()
+
+    override suspend fun getMyPostList(
+        page: Int,
+        size: Int,
+        type: String
+    ): GetPostListResponse<MyPostDto> =
+        ktorClient
+            .get("api/v1/users/posts") {
+                parameter("page", page)
+                parameter("pageSize", size)
+                parameter("type", type)
+            }
+            .body<GetPostListResponse<MyPostDto>>()
+
+    override suspend fun getOtherPostList(
+        page: Int,
+        size: Int,
+        id: Int,
+        type: String
+    ): GetPostListResponse<OtherPostDto> =
+        ktorClient
+            .get("api/v1/users/${id}/posts") {
+                parameter("page", page)
+                parameter("pageSize", size)
+                parameter("type", type)
+            }
+            .body<GetPostListResponse<OtherPostDto>>()
 }
