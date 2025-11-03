@@ -1,11 +1,9 @@
 package com.ieum.domain.repository
 
-import androidx.paging.PagingData
 import com.ieum.domain.model.post.Post
 import com.ieum.domain.model.post.PostType
 import com.ieum.domain.model.user.RegisterRequest
 import com.ieum.domain.model.user.User
-import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
     suspend fun register(registerRequest: RegisterRequest)
@@ -14,7 +12,7 @@ interface UserRepository {
 
     suspend fun getOthersProfile(id: Int): User
 
-    fun getMyPostListFlow(type: PostType): Flow<PagingData<Post>>
+    suspend fun getMyPostList(page: Int, size: Int, type: PostType): List<Post>
 
-    fun getOthersPostListFlow(id: Int, type: PostType): Flow<PagingData<Post>>
+    suspend fun getOthersPostList(page: Int, size: Int, id: Int, type: PostType): List<Post>
 }

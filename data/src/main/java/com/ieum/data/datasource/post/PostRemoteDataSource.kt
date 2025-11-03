@@ -1,6 +1,5 @@
 package com.ieum.data.datasource.post
 
-import androidx.paging.PagingData
 import com.ieum.data.network.di.IEUMNetwork
 import com.ieum.data.network.di.NetworkSource
 import com.ieum.data.network.model.post.AllPostDto
@@ -17,7 +16,6 @@ import io.ktor.client.request.parameter
 import io.ktor.client.request.patch
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -39,7 +37,6 @@ class PostRemoteDataSource @Inject constructor(
                 setBody(body)
             }
     }
-
 
     override suspend fun deleteWellness(id: Int) {
         ktorClient.delete("api/v1/posts/wellness/${id}")
@@ -63,16 +60,18 @@ class PostRemoteDataSource @Inject constructor(
         ktorClient.delete("api/v1/posts/daily/${id}")
     }
 
-    private suspend fun getAllPostList(diagnosis: String?): GetPostListResponse<AllPostDto> =
+    override suspend fun getAllPostList(
+        page: Int,
+        size: Int,
+        diagnosis: String?,
+    ): GetPostListResponse<AllPostDto> =
         ktorClient
             .get("api/v1/posts") {
+                parameter("page", page)
+                parameter("pageSize", size)
                 diagnosis?.let { parameter("diagnosis", it) }
             }
             .body<GetPostListResponse<AllPostDto>>()
-
-    override fun getAllPostListFlow(diagnosis: String?): Flow<PagingData<AllPostDto>> {
-        TODO("Not yet implemented")
-    }
 
     override suspend fun getPost(id: Int, type: String): AllPostDto =
         ktorClient

@@ -1,12 +1,10 @@
 package com.ieum.domain.repository
 
-import androidx.paging.PagingData
 import com.ieum.domain.model.post.Post
 import com.ieum.domain.model.post.PostDailyRequest
 import com.ieum.domain.model.post.PostType
 import com.ieum.domain.model.post.PostWellnessRequest
 import com.ieum.domain.model.user.Diagnosis
-import kotlinx.coroutines.flow.Flow
 
 interface PostRepository {
     suspend fun postWellness(request: PostWellnessRequest): Int
@@ -21,7 +19,7 @@ interface PostRepository {
 
     suspend fun deleteDaily(id: Int)
 
-    fun getAllPostListFlow(diagnosis: Diagnosis?): Flow<PagingData<Post>>
+    suspend fun getAllPostList(page: Int, size: Int, diagnosis: Diagnosis?): List<Post>
 
     suspend fun getPost(id: Int, type: PostType): Post
 }

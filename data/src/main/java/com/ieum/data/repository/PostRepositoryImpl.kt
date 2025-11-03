@@ -1,7 +1,5 @@
 package com.ieum.data.repository
 
-import androidx.paging.PagingData
-import androidx.paging.map
 import com.ieum.data.datasource.post.PostDataSource
 import com.ieum.data.mapper.asBody
 import com.ieum.data.mapper.toDomain
@@ -12,8 +10,6 @@ import com.ieum.domain.model.post.PostType
 import com.ieum.domain.model.post.PostWellnessRequest
 import com.ieum.domain.model.user.Diagnosis
 import com.ieum.domain.repository.PostRepository
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -47,12 +43,11 @@ class PostRepositoryImpl @Inject constructor(
         postDataSource.deleteWellness(id)
     }
 
-    override fun getAllPostListFlow(diagnosis: Diagnosis?): Flow<PagingData<Post>> =
+    override suspend fun getAllPostList(page: Int, size: Int, diagnosis: Diagnosis?): List<Post> =
         postDataSource
-            .getAllPostListFlow(diagnosis?.key)
-            .map { pagingData ->
-                pagingData.map(AllPostDto::toDomain)
-            }
+            .getAllPostList(page = page, size = size, diagnosis = diagnosis?.key)
+            .posts
+            .map(AllPostDto::toDomain)
 
     override suspend fun getPost(id: Int, type: PostType): Post =
         postDataSource

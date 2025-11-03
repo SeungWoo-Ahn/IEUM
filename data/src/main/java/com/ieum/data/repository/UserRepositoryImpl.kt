@@ -1,7 +1,5 @@
 package com.ieum.data.repository
 
-import androidx.paging.PagingData
-import androidx.paging.map
 import com.ieum.data.datasource.user.UserDataSource
 import com.ieum.data.mapper.asBody
 import com.ieum.data.mapper.toDomain
@@ -12,8 +10,6 @@ import com.ieum.domain.model.post.PostType
 import com.ieum.domain.model.user.RegisterRequest
 import com.ieum.domain.model.user.User
 import com.ieum.domain.repository.UserRepository
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -35,17 +31,20 @@ class UserRepositoryImpl @Inject constructor(
             .getOthersProfile(id)
             .toDomain()
 
-    override fun getMyPostListFlow(type: PostType): Flow<PagingData<Post>> =
+    override suspend fun getMyPostList(page: Int, size: Int, type: PostType): List<Post> =
         userDataSource
-            .getMyPostListFlow(type.key)
-            .map { pagingData ->
-                pagingData.map(MyPostDto::toDomain)
-            }
+            .getMyPostList(page = page, size = size, type = type.key)
+            .posts
+            .map(MyPostDto::toDomain)
 
-    override fun getOthersPostListFlow(id: Int, type: PostType): Flow<PagingData<Post>> =
+    override suspend fun getOthersPostList(
+        page: Int,
+        size: Int,
+        id: Int,
+        type: PostType
+    ): List<Post> =
         userDataSource
-            .getOtherPostListFlow(id, type.key)
-            .map { pagingData ->
-                pagingData.map(OtherPostDto::toDomain)
-            }
+            .getOtherPostList(page = page, size = size, id = id, type = type.key)
+            .posts
+            .map(OtherPostDto::toDomain)
 }
