@@ -16,5 +16,5 @@ interface UserRepository {
 
     fun getMyPostListFlow(type: PostType): Flow<PagingData<Post>>
 
-    fun getOthersPostListFlow(type: PostType): Flow<PagingData<Post>>
+    fun getOthersPostListFlow(id: Int, type: PostType): Flow<PagingData<Post>>
 }

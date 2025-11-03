@@ -63,12 +63,12 @@ class PostRemoteDataSource @Inject constructor(
         ktorClient.delete("api/v1/posts/daily/${id}")
     }
 
-    private suspend fun getAllPostList(diagnosis: String?): GetPostListResponse =
+    private suspend fun getAllPostList(diagnosis: String?): GetPostListResponse<AllPostDto> =
         ktorClient
             .get("api/v1/posts") {
                 diagnosis?.let { parameter("diagnosis", it) }
             }
-            .body<GetPostListResponse>()
+            .body<GetPostListResponse<AllPostDto>>()
 
     override fun getAllPostListFlow(diagnosis: String?): Flow<PagingData<AllPostDto>> {
         TODO("Not yet implemented")

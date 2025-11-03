@@ -2,7 +2,7 @@ package com.ieum.data.network.model.post
 
 import kotlinx.serialization.Serializable
 
-internal interface BasePostDto {
+interface BasePostDto {
     val id: Int
     val type: String
     val images: List<PostImageDto.ForResponse>?

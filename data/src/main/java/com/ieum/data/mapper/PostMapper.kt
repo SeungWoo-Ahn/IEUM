@@ -2,6 +2,8 @@ package com.ieum.data.mapper
 
 import com.ieum.data.network.model.post.AllPostDto
 import com.ieum.data.network.model.post.DietDto
+import com.ieum.data.network.model.post.MyPostDto
+import com.ieum.data.network.model.post.OtherPostDto
 import com.ieum.data.network.model.post.PostDailyRequestBody
 import com.ieum.data.network.model.post.PostImageDto
 import com.ieum.data.network.model.post.PostWellnessRequestBody
@@ -77,6 +79,66 @@ fun AllPostDto.toDomain(): Post =
             id = id,
             userId = userId,
             userNickname = userNickname,
+            title = requireNotNull(title),
+            content = requireNotNull(content),
+            imageList = images?.map(PostImageDto.ForResponse::toDomain),
+            shared = true,
+            createdAt = createdAt,
+            updatedAt = updatedAt,
+        )
+        else -> throw IllegalArgumentException("Unknown post type: $type")
+    }
+
+fun MyPostDto.toDomain(): Post =
+    when (type) {
+        PostType.WELLNESS.key -> Post.Wellness(
+            id = id,
+            userId = null,
+            userNickname = null,
+            mood = Mood.fromKey(requireNotNull(mood)),
+            unusualSymptoms = unusualSymptoms,
+            medicationTaken = requireNotNull(medicationTaken),
+            diet = requireNotNull(diet).toDomain(),
+            memo = memo,
+            imageList = images?.map(PostImageDto.ForResponse::toDomain),
+            shared = shared,
+            createdAt = createdAt,
+            updatedAt = updatedAt,
+        )
+        PostType.DAILY.key -> Post.Daily(
+            id = id,
+            userId = null,
+            userNickname = null,
+            title = requireNotNull(title),
+            content = requireNotNull(content),
+            imageList = images?.map(PostImageDto.ForResponse::toDomain),
+            shared = shared,
+            createdAt = createdAt,
+            updatedAt = updatedAt,
+        )
+        else -> throw IllegalArgumentException("Unknown post type: $type")
+    }
+
+fun OtherPostDto.toDomain(): Post =
+    when (type) {
+        PostType.WELLNESS.key -> Post.Wellness(
+            id = id,
+            userId = null,
+            userNickname = null,
+            mood = Mood.fromKey(requireNotNull(mood)),
+            unusualSymptoms = unusualSymptoms,
+            medicationTaken = requireNotNull(medicationTaken),
+            diet = requireNotNull(diet).toDomain(),
+            memo = memo,
+            imageList = images?.map(PostImageDto.ForResponse::toDomain),
+            shared = true,
+            createdAt = createdAt,
+            updatedAt = updatedAt,
+        )
+        PostType.DAILY.key -> Post.Daily(
+            id = id,
+            userId = null,
+            userNickname = null,
             title = requireNotNull(title),
             content = requireNotNull(content),
             imageList = images?.map(PostImageDto.ForResponse::toDomain),
