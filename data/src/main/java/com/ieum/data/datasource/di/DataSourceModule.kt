@@ -6,6 +6,8 @@ import com.ieum.data.datasource.address.AddressLocalDataCache
 import com.ieum.data.datasource.address.AddressRemoteDataSource
 import com.ieum.data.datasource.auth.AuthDataSource
 import com.ieum.data.datasource.auth.AuthRemoteDataSource
+import com.ieum.data.datasource.post.PostDataSource
+import com.ieum.data.datasource.post.PostRemoteDataSource
 import com.ieum.data.datasource.user.UserDataSource
 import com.ieum.data.datasource.user.UserRemoteDataSource
 import dagger.Binds
@@ -27,4 +29,7 @@ internal interface DataSourceModule {
 
     @Binds
     fun bindsUserDataSource(userDataSource: UserRemoteDataSource): UserDataSource
+
+    @Binds
+    fun bindsPostDataSource(postDataSource: PostRemoteDataSource): PostDataSource
 }
