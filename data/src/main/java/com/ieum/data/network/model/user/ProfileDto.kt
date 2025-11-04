@@ -7,6 +7,7 @@ interface BaseProfileDto {
     val oauthProvider: String
     val userType: String
     val nickname: String
+    val sex: String?
     val diagnoses: List<DiagnoseDto>?
     val chemotherapy: ChemotherapyDto?
     val radiationTherapy: RadiationTherapyDto?
@@ -29,6 +30,7 @@ data class MyProfileDto(
     override val oauthProvider: String,
     override val userType: String,
     override val nickname: String,
+    override val sex: String,
     override val diagnoses: List<DiagnoseDto>,
     override val chemotherapy: ChemotherapyDto?,
     override val radiationTherapy: RadiationTherapyDto?,
@@ -41,7 +43,7 @@ data class MyProfileDto(
     override val radiationTherapyVisible: Boolean,
     override val ageGroupVisible: Boolean,
     override val residenceAreaVisible: Boolean,
-    override val hospitalAreaVisible: Boolean
+    override val hospitalAreaVisible: Boolean,
 ) : BaseProfileDto
 
 @Serializable
@@ -50,6 +52,7 @@ data class OtherProfileDto(
     override val oauthProvider: String,
     override val userType: String,
     override val nickname: String,
+    override val sex: String?,
     override val diagnoses: List<DiagnoseDto>?,
     override val chemotherapy: ChemotherapyDto?,
     override val radiationTherapy: RadiationTherapyDto?,
