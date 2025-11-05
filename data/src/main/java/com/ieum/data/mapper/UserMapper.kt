@@ -3,7 +3,7 @@ package com.ieum.data.mapper
 import com.ieum.data.network.model.user.ChemotherapyDto
 import com.ieum.data.network.model.user.DiagnoseDto
 import com.ieum.data.network.model.user.MyProfileDto
-import com.ieum.data.network.model.user.OtherProfileDto
+import com.ieum.data.network.model.user.OthersProfileDto
 import com.ieum.data.network.model.user.RadiationTherapyDto
 import com.ieum.data.network.model.user.RegisterRequestBody
 import com.ieum.domain.model.auth.OAuthProvider
@@ -86,7 +86,7 @@ fun MyProfileDto.toDomain(): Profile =
             ?.let { if (hospitalAreaVisible) DataVisibility.Open(it) else DataVisibility.Hide(it) },
     )
 
-fun OtherProfileDto.toDomain(): Profile =
+fun OthersProfileDto.toDomain(): Profile =
     Profile(
         id = id,
         oAuthProvider = OAuthProvider.fromKey(oauthProvider),

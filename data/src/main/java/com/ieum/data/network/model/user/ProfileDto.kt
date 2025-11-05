@@ -47,7 +47,7 @@ data class MyProfileDto(
 ) : BaseProfileDto
 
 @Serializable
-data class OtherProfileDto(
+data class OthersProfileDto(
     override val id: Int,
     override val oauthProvider: String,
     override val userType: String,

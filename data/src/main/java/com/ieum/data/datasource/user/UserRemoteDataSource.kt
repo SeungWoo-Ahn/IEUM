@@ -6,7 +6,7 @@ import com.ieum.data.network.model.post.GetPostListResponse
 import com.ieum.data.network.model.post.MyPostDto
 import com.ieum.data.network.model.post.OtherPostDto
 import com.ieum.data.network.model.user.MyProfileDto
-import com.ieum.data.network.model.user.OtherProfileDto
+import com.ieum.data.network.model.user.OthersProfileDto
 import com.ieum.data.network.model.user.RegisterRequestBody
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -32,10 +32,10 @@ class UserRemoteDataSource @Inject constructor(
             .get("api/v1/users/profile")
             .body<MyProfileDto>()
 
-    override suspend fun getOthersProfile(id: Int): OtherProfileDto =
+    override suspend fun getOthersProfile(id: Int): OthersProfileDto =
         ktorClient
             .get("api/v1/users/$id/profile")
-            .body<OtherProfileDto>()
+            .body<OthersProfileDto>()
 
     override suspend fun getMyPostList(
         page: Int,
