@@ -4,6 +4,7 @@ import com.ieum.data.network.model.user.ChemotherapyDto
 import com.ieum.data.network.model.user.DiagnoseDto
 import com.ieum.data.network.model.user.MyProfileDto
 import com.ieum.data.network.model.user.OthersProfileDto
+import com.ieum.data.network.model.user.PatchProfileRequestBody
 import com.ieum.data.network.model.user.RadiationTherapyDto
 import com.ieum.data.network.model.user.RegisterRequestBody
 import com.ieum.domain.model.auth.OAuthProvider
@@ -14,6 +15,7 @@ import com.ieum.domain.model.user.Chemotherapy
 import com.ieum.domain.model.user.DataStatus
 import com.ieum.domain.model.user.Diagnose
 import com.ieum.domain.model.user.Diagnosis
+import com.ieum.domain.model.user.PatchProfileRequest
 import com.ieum.domain.model.user.Profile
 import com.ieum.domain.model.user.RadiationTherapy
 import com.ieum.domain.model.user.RegisterRequest
@@ -51,10 +53,22 @@ fun RegisterRequest.asBody(): RegisterRequestBody =
         hospitalArea = hospitalArea,
     )
 
+private fun Chemotherapy.toDto(): ChemotherapyDto =
+    ChemotherapyDto(
+        cycle = cycle,
+        startDate = startDate,
+    )
+
 private fun ChemotherapyDto.toDomain(): Chemotherapy =
     Chemotherapy(
         cycle = cycle,
         startDate = startDate,
+    )
+
+private fun RadiationTherapy.toDto(): RadiationTherapyDto =
+    RadiationTherapyDto(
+        startDate = startDate,
+        endDate = endDate,
     )
 
 private fun RadiationTherapyDto.toDomain(): RadiationTherapy =
@@ -148,5 +162,34 @@ fun OthersProfileDto.toDomain(): Profile =
             DataStatus.Open(hospitalArea)
         },
     )
+
+private fun <T> DataStatus<T>?.split(): Pair<T?, Boolean?> = when (this) {
+    null, DataStatus.None -> null to null
+    is DataStatus.Open<T> -> data to true
+    is DataStatus.Hide<T> -> data to false
+}
+
+fun PatchProfileRequest.asBody(): PatchProfileRequestBody {
+    val (diagnoses, diagnosesVisible) = diagnoses.split()
+    val (chemotherapy, chemotherapyVisible) = chemotherapy.split()
+    val (radiationTherapy, radiationTherapyVisible) = radiationTherapy.split()
+    val (ageGroup, ageGroupVisible) = ageGroup.split()
+    val (residenceArea, residenceAreaVisible) = residenceArea.split()
+    val (hospitalArea, hospitalAreaVisible) = hospitalArea.split()
+    return PatchProfileRequestBody(
+        diagnoses = diagnoses?.map(Diagnose::toDto),
+        diagnosesVisible = diagnosesVisible,
+        chemotherapy = chemotherapy?.toDto(),
+        chemotherapyVisible = chemotherapyVisible,
+        radiationTherapy = radiationTherapy?.toDto(),
+        radiationTherapyVisible = radiationTherapyVisible,
+        ageGroup = ageGroup?.key,
+        ageGroupVisible = ageGroupVisible,
+        residenceArea = residenceArea,
+        residenceAreaVisible = residenceAreaVisible,
+        hospitalArea = hospitalArea,
+        hospitalAreaVisible = hospitalAreaVisible,
+    )
+}
 
 
