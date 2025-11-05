@@ -7,11 +7,13 @@ import com.ieum.data.network.model.post.MyPostDto
 import com.ieum.data.network.model.post.OtherPostDto
 import com.ieum.data.network.model.user.MyProfileDto
 import com.ieum.data.network.model.user.OthersProfileDto
+import com.ieum.data.network.model.user.PatchProfileRequestBody
 import com.ieum.data.network.model.user.RegisterRequestBody
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
+import io.ktor.client.request.patch
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import javax.inject.Inject
@@ -20,10 +22,10 @@ class UserRemoteDataSource @Inject constructor(
     @NetworkSource(IEUMNetwork.Default)
     private val ktorClient: HttpClient,
 ) : UserDataSource {
-    override suspend fun register(registerRequestBody: RegisterRequestBody) {
+    override suspend fun register(requestBody: RegisterRequestBody) {
         ktorClient
             .post("api/v1/users/register") {
-                setBody(registerRequestBody)
+                setBody(requestBody)
             }
     }
 
@@ -31,6 +33,13 @@ class UserRemoteDataSource @Inject constructor(
         ktorClient
             .get("api/v1/users/profile")
             .body<MyProfileDto>()
+
+    override suspend fun patchMyProfile(requestBody: PatchProfileRequestBody) {
+        ktorClient
+            .patch("api/v1/users/profile") {
+                setBody(requestBody)
+            }
+    }
 
     override suspend fun getOthersProfile(id: Int): OthersProfileDto =
         ktorClient

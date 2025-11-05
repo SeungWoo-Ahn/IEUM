@@ -5,12 +5,15 @@ import com.ieum.data.network.model.post.MyPostDto
 import com.ieum.data.network.model.post.OtherPostDto
 import com.ieum.data.network.model.user.MyProfileDto
 import com.ieum.data.network.model.user.OthersProfileDto
+import com.ieum.data.network.model.user.PatchProfileRequestBody
 import com.ieum.data.network.model.user.RegisterRequestBody
 
 interface UserDataSource {
-    suspend fun register(registerRequestBody: RegisterRequestBody)
+    suspend fun register(requestBody: RegisterRequestBody)
 
     suspend fun getMyProfile(): MyProfileDto
+
+    suspend fun patchMyProfile(requestBody: PatchProfileRequestBody)
 
     suspend fun getOthersProfile(id: Int): OthersProfileDto
 
