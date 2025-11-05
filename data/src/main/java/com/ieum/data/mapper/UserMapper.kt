@@ -11,7 +11,7 @@ import com.ieum.domain.model.user.AgeGroup
 import com.ieum.domain.model.user.CancerDiagnose
 import com.ieum.domain.model.user.CancerStage
 import com.ieum.domain.model.user.Chemotherapy
-import com.ieum.domain.model.user.DataVisibility
+import com.ieum.domain.model.user.DataStatus
 import com.ieum.domain.model.user.Diagnose
 import com.ieum.domain.model.user.Diagnosis
 import com.ieum.domain.model.user.Profile
@@ -71,19 +71,34 @@ fun MyProfileDto.toDomain(): Profile =
         userType = UserType.fromKey(userType),
         nickname = nickname,
         sex = Sex.fromKey(sex)
-            .let { if (sexVisible) DataVisibility.Open(it) else DataVisibility.Hide(it) },
+            .let { if (sexVisible) DataStatus.Open(it) else DataStatus.Hide(it) },
         diagnoses = diagnoses.map(DiagnoseDto::toDomain)
-            .let { if (diagnosesVisible) DataVisibility.Open(it) else DataVisibility.Hide(it) },
-        chemotherapy = chemotherapy?.toDomain()
-            ?.let { if (chemotherapyVisible) DataVisibility.Open(it) else DataVisibility.Hide(it) },
-        radiationTherapy = radiationTherapy?.toDomain()
-            ?.let { if (radiationTherapyVisible) DataVisibility.Open(it) else DataVisibility.Hide(it) },
-        ageGroup = ageGroup?.let { AgeGroup.fromKey(it) }
-            ?.let { if (ageGroupVisible) DataVisibility.Open(it) else DataVisibility.Hide(it) },
-        residenceArea = residenceArea
-            ?.let { if (residenceAreaVisible) DataVisibility.Open(it) else DataVisibility.Hide(it) },
-        hospitalArea = hospitalArea
-            ?.let { if (hospitalAreaVisible) DataVisibility.Open(it) else DataVisibility.Hide(it) },
+            .let { if (diagnosesVisible) DataStatus.Open(it) else DataStatus.Hide(it) },
+        chemotherapy = when {
+            chemotherapy == null -> DataStatus.None
+            chemotherapyVisible -> DataStatus.Open(chemotherapy.toDomain())
+            else -> DataStatus.Hide(chemotherapy.toDomain())
+        },
+        radiationTherapy = when {
+            radiationTherapy == null -> DataStatus.None
+            radiationTherapyVisible -> DataStatus.Open(radiationTherapy.toDomain())
+            else -> DataStatus.Hide(radiationTherapy.toDomain())
+        },
+        ageGroup = when {
+            ageGroup == null -> DataStatus.None
+            ageGroupVisible -> DataStatus.Open(AgeGroup.fromKey(ageGroup))
+            else -> DataStatus.Hide(AgeGroup.fromKey(ageGroup))
+        },
+        residenceArea = when {
+            residenceArea == null -> DataStatus.None
+            residenceAreaVisible -> DataStatus.Open(residenceArea)
+            else -> DataStatus.Hide(residenceArea)
+        },
+        hospitalArea = when {
+            hospitalArea == null -> DataStatus.None
+            hospitalAreaVisible -> DataStatus.Open(hospitalArea)
+            else -> DataStatus.Hide(hospitalArea)
+        },
     )
 
 fun OthersProfileDto.toDomain(): Profile =
@@ -94,43 +109,43 @@ fun OthersProfileDto.toDomain(): Profile =
         userType = UserType.fromKey(userType),
         nickname = nickname,
         sex = if (sexVisible) {
-            DataVisibility.Open(
+            DataStatus.Open(
                 Sex.fromKey(requireNotNull(sex))
             )
         } else {
-            DataVisibility.None
+            DataStatus.None
         },
         diagnoses = if (diagnosesVisible) {
-            DataVisibility.Open(
+            DataStatus.Open(
                 requireNotNull(diagnoses).map(DiagnoseDto::toDomain)
             )
         } else {
-            DataVisibility.None
+            DataStatus.None
         },
-        chemotherapy = if (chemotherapyVisible) {
-            chemotherapy?.let { DataVisibility.Open(it.toDomain()) }
+        chemotherapy = if (chemotherapy == null || chemotherapyVisible.not()) {
+            DataStatus.None
         } else {
-            DataVisibility.None
+            DataStatus.Open(chemotherapy.toDomain())
         },
-        radiationTherapy = if (radiationTherapyVisible) {
-            radiationTherapy?.let { DataVisibility.Open(it.toDomain()) }
+        radiationTherapy = if (radiationTherapy == null || radiationTherapyVisible.not()) {
+            DataStatus.None
         } else {
-            DataVisibility.None
+            DataStatus.Open(radiationTherapy.toDomain())
         },
-        ageGroup = if (ageGroupVisible) {
-            ageGroup?.let { DataVisibility.Open(AgeGroup.fromKey(it)) }
+        ageGroup = if (ageGroup == null || ageGroupVisible.not()) {
+            DataStatus.None
         } else {
-            DataVisibility.None
+            DataStatus.Open(AgeGroup.fromKey(ageGroup))
         },
-        residenceArea = if (residenceAreaVisible) {
-            residenceArea?.let { DataVisibility.Open(it) }
+        residenceArea = if (residenceArea == null || residenceAreaVisible.not()) {
+            DataStatus.None
         } else {
-            DataVisibility.None
+            DataStatus.Open(residenceArea)
         },
-        hospitalArea = if (hospitalAreaVisible) {
-            hospitalArea?.let { DataVisibility.Open(it) }
+        hospitalArea = if (hospitalArea == null || hospitalAreaVisible.not()) {
+            DataStatus.None
         } else {
-            DataVisibility.None
+            DataStatus.Open(hospitalArea)
         },
     )
 
