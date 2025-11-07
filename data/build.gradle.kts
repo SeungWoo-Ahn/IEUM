@@ -21,7 +21,7 @@ android {
         }
         buildConfigField("String", "SGIS_CONSUMER_KEY", properties.getProperty("SGIS_CONSUMER_KEY"))
         buildConfigField("String", "SGIS_CONSUMER_SECRET", properties.getProperty("SGIS_CONSUMER_SECRET"))
-
+        buildConfigField("String", "BASE_URL", properties.getProperty("BASE_URL"))
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8

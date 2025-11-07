@@ -1,5 +1,6 @@
 package com.ieum.data.network.di
 
+import com.ieum.data.BuildConfig
 import com.ieum.data.network.model.base.ErrorResponse
 import com.ieum.data.network.model.base.SGISErrorResponse
 import com.ieum.data.network.util.TokenManager
@@ -71,7 +72,7 @@ internal object NetworkModule {
         createKtorClient().config {
             expectSuccess = true
             defaultRequest {
-                url("") // TODO: BASE_URL 넣기
+                url(BuildConfig.BASE_URL)
                 header(HttpHeaders.ContentType, ContentType.Application.Json)
             }
             HttpResponseValidator {
