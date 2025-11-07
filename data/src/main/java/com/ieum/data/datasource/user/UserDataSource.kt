@@ -3,15 +3,19 @@ package com.ieum.data.datasource.user
 import com.ieum.data.network.model.post.GetPostListResponse
 import com.ieum.data.network.model.post.MyPostDto
 import com.ieum.data.network.model.post.OtherPostDto
+import com.ieum.data.network.model.user.MyProfileDto
+import com.ieum.data.network.model.user.OthersProfileDto
+import com.ieum.data.network.model.user.PatchProfileRequestBody
 import com.ieum.data.network.model.user.RegisterRequestBody
-import com.ieum.data.network.model.user.UserDto
 
 interface UserDataSource {
-    suspend fun register(registerRequestBody: RegisterRequestBody)
+    suspend fun register(requestBody: RegisterRequestBody)
 
-    suspend fun getMyProfile(): UserDto
+    suspend fun getMyProfile(): MyProfileDto
 
-    suspend fun getOthersProfile(id: Int): UserDto
+    suspend fun patchMyProfile(requestBody: PatchProfileRequestBody)
+
+    suspend fun getOthersProfile(id: Int): OthersProfileDto
 
     suspend fun getMyPostList(page: Int, size: Int, type: String): GetPostListResponse<MyPostDto>
 

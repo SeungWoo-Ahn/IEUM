@@ -2,15 +2,18 @@ package com.ieum.domain.repository
 
 import com.ieum.domain.model.post.Post
 import com.ieum.domain.model.post.PostType
+import com.ieum.domain.model.user.PatchProfileRequest
+import com.ieum.domain.model.user.Profile
 import com.ieum.domain.model.user.RegisterRequest
-import com.ieum.domain.model.user.User
 
 interface UserRepository {
-    suspend fun register(registerRequest: RegisterRequest)
+    suspend fun register(request: RegisterRequest)
 
-    suspend fun getMyProfile(): User
+    suspend fun getMyProfile(): Profile
 
-    suspend fun getOthersProfile(id: Int): User
+    suspend fun patchMyProfile(request: PatchProfileRequest)
+
+    suspend fun getOthersProfile(id: Int): Profile
 
     suspend fun getMyPostList(page: Int, size: Int, type: PostType): List<Post>
 

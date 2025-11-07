@@ -7,8 +7,9 @@ import com.ieum.data.network.model.post.MyPostDto
 import com.ieum.data.network.model.post.OtherPostDto
 import com.ieum.domain.model.post.Post
 import com.ieum.domain.model.post.PostType
+import com.ieum.domain.model.user.PatchProfileRequest
+import com.ieum.domain.model.user.Profile
 import com.ieum.domain.model.user.RegisterRequest
-import com.ieum.domain.model.user.User
 import com.ieum.domain.repository.UserRepository
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -17,16 +18,20 @@ import javax.inject.Singleton
 class UserRepositoryImpl @Inject constructor(
     private val userDataSource: UserDataSource,
 ) : UserRepository {
-    override suspend fun register(registerRequest: RegisterRequest) =
+    override suspend fun register(request: RegisterRequest) =
         userDataSource
-            .register(registerRequest.asBody())
+            .register(request.asBody())
 
-    override suspend fun getMyProfile(): User =
+    override suspend fun getMyProfile(): Profile =
         userDataSource
             .getMyProfile()
             .toDomain()
 
-    override suspend fun getOthersProfile(id: Int): User =
+    override suspend fun patchMyProfile(request: PatchProfileRequest) =
+        userDataSource
+            .patchMyProfile(request.asBody())
+
+    override suspend fun getOthersProfile(id: Int): Profile =
         userDataSource
             .getOthersProfile(id)
             .toDomain()
