@@ -32,8 +32,8 @@ import com.ieum.design_system.theme.Slate200
 import com.ieum.design_system.theme.screenPadding
 import com.ieum.design_system.util.noRippleClickable
 import com.ieum.presentation.R
-import com.ieum.presentation.model.post.DietaryStatusInfo
-import com.ieum.presentation.model.post.DietaryStatusUiModel
+import com.ieum.presentation.model.post.AmountEatenUiModel
+import com.ieum.presentation.model.post.DietUiModel
 import com.ieum.presentation.model.user.CancerDiagnoseUiModel
 import com.ieum.presentation.model.user.CancerStageUiModel
 import kotlinx.coroutines.CoroutineScope
@@ -64,7 +64,7 @@ private fun PostSheetButton(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SpecificSymptomsSheet(
+fun UnusualSymptomsSheet(
     scope: CoroutineScope,
     sheetState: SheetState,
     data: String,
@@ -88,12 +88,12 @@ fun SpecificSymptomsSheet(
             verticalArrangement = Arrangement.spacedBy(24.dp),
         ) {
             PostSheetQuestion(
-                question = stringResource(R.string.question_specific_symptoms),
+                question = stringResource(R.string.question_unusual_symptoms),
             )
             MultiLineTextField(
                 modifier = Modifier.height(140.dp),
                 state = textFieldState,
-                placeHolder = stringResource(R.string.placeholder_specific_symptoms),
+                placeHolder = stringResource(R.string.placeholder_unusual_symptoms),
             )
         }
         PostSheetButton {
@@ -111,21 +111,21 @@ fun SpecificSymptomsSheet(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DietaryStatusSheet(
+fun DietSheet(
     scope: CoroutineScope,
     sheetState: SheetState,
-    data: DietaryStatusUiModel?,
-    callback: (DietaryStatusUiModel) -> Unit,
+    data: DietUiModel?,
+    callback: (DietUiModel) -> Unit,
     onDismissRequest: () -> Unit,
 ) {
-    val selectorState = remember { SingleSelectorState(DietaryStatusInfo.entries) }
+    val selectorState = remember { SingleSelectorState(AmountEatenUiModel.entries) }
     val textFieldState = remember { TextFieldState() }
     val buttonEnabled by remember { derivedStateOf { selectorState.validate() } }
 
     LaunchedEffect(Unit) {
         data?.let {
-            selectorState.setItem(data.info)
-            textFieldState.typeText(data.content)
+            selectorState.setItem(data.amountEaten)
+            textFieldState.typeText(data.mealContent)
         }
     }
 
@@ -139,18 +139,18 @@ fun DietaryStatusSheet(
                 .padding(all = screenPadding),
         ) {
             PostSheetQuestion(
-                question = stringResource(R.string.question_dietary_status),
+                question = stringResource(R.string.question_diet),
             )
             IEUMSpacer(size = 24)
             Row(
                 horizontalArrangement = Arrangement.spacedBy(10.dp),
             ) {
-                selectorState.itemList.forEach { info ->
-                    DietaryStatusInfoSelector(
+                selectorState.itemList.forEach { amountEaten ->
+                    AmountEatenSelector(
                         modifier = Modifier.weight(1f),
-                        info = info,
-                        isSelected = selectorState.isSelected(info),
-                        onClick = { selectorState.selectItem(info) },
+                        amountEaten = amountEaten,
+                        isSelected = selectorState.isSelected(amountEaten),
+                        onClick = { selectorState.selectItem(amountEaten) },
                     )
                 }
             }
@@ -158,16 +158,16 @@ fun DietaryStatusSheet(
             MultiLineTextField(
                 modifier = Modifier.height(190.dp),
                 state = textFieldState,
-                placeHolder = stringResource(R.string.placeholder_dietary_status),
+                placeHolder = stringResource(R.string.placeholder_diet),
             )
         }
         PostSheetButton(enabled = buttonEnabled) {
             scope
                 .launch {
                     callback(
-                        DietaryStatusUiModel(
-                            info = selectorState.selectedItem!!,
-                            content = textFieldState.getTrimmedText()
+                        DietUiModel(
+                            amountEaten = selectorState.selectedItem!!,
+                            mealContent = textFieldState.getTrimmedText()
                         )
                     )
                     sheetState.hide()
@@ -180,9 +180,9 @@ fun DietaryStatusSheet(
 }
 
 @Composable
-private fun DietaryStatusInfoSelector(
+private fun AmountEatenSelector(
     modifier: Modifier = Modifier,
-    info: DietaryStatusInfo,
+    amountEaten: AmountEatenUiModel,
     isSelected: Boolean,
     onClick: () -> Unit,
 ) {
@@ -201,9 +201,9 @@ private fun DietaryStatusInfoSelector(
         horizontalArrangement = Arrangement.spacedBy(4.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        info.icon()
+        amountEaten.icon()
         Text(
-            text = stringResource(info.description),
+            text = stringResource(amountEaten.description),
             style = MaterialTheme.typography.bodyMedium,
         )
     }

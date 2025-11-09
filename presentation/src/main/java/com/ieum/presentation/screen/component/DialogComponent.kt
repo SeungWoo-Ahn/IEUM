@@ -21,7 +21,7 @@ import com.ieum.design_system.dialog.IEUMDialog
 import com.ieum.design_system.icon.CompleteIcon
 import com.ieum.design_system.icon.DailyIcon
 import com.ieum.design_system.icon.IncompleteIcon
-import com.ieum.design_system.icon.TreatmentRecordsIcon
+import com.ieum.design_system.icon.WellnessIcon
 import com.ieum.design_system.spacer.IEUMSpacer
 import com.ieum.design_system.theme.Lime500
 import com.ieum.design_system.theme.Slate200
@@ -33,7 +33,7 @@ import com.ieum.design_system.util.noRippleClickable
 import com.ieum.presentation.R
 
 @Composable
-fun TakingMedicineDialog(
+fun MedicationTakenDialog(
     data: Boolean?,
     callback: (Boolean) -> Unit,
     onDismissRequest: () -> Unit,
@@ -45,10 +45,10 @@ fun TakingMedicineDialog(
                 .padding(all = screenPadding)
         ) {
             PostSheetQuestion(
-                question = stringResource(R.string.question_taking_medicine)
+                question = stringResource(R.string.question_medication_taken)
             )
             IEUMSpacer(size = 32)
-            TakingMedicineSelector(
+            MedicationTakenSelector(
                 name = stringResource(R.string.complete),
                 icon = { CompleteIcon() },
                 isSelected = data == true,
@@ -58,7 +58,7 @@ fun TakingMedicineDialog(
                 }
             )
             IEUMSpacer(size = 12)
-            TakingMedicineSelector(
+            MedicationTakenSelector(
                 name = stringResource(R.string.incomplete),
                 icon = { IncompleteIcon() },
                 isSelected = data == false,
@@ -72,7 +72,7 @@ fun TakingMedicineDialog(
 }
 
 @Composable
-private fun TakingMedicineSelector(
+private fun MedicationTakenSelector(
     name: String,
     icon: @Composable () -> Unit,
     isSelected: Boolean,
@@ -104,7 +104,7 @@ private fun TakingMedicineSelector(
 
 @Composable
 fun AddPostDialog(
-    movePostTreatmentRecords: () -> Unit,
+    movePostWellness: () -> Unit,
     movePostDaily: () -> Unit,
     onDismissRequest: () -> Unit,
 ) {
@@ -131,10 +131,10 @@ fun AddPostDialog(
             verticalArrangement = Arrangement.spacedBy(28.dp),
         ) {
             AddPostItem(
-                name = stringResource(R.string.treatment_records),
-                guide = stringResource(R.string.guide_treatment_records),
-                icon = { TreatmentRecordsIcon() },
-                onClick = movePostTreatmentRecords
+                name = stringResource(R.string.wellness_records),
+                guide = stringResource(R.string.guide_wellness_records),
+                icon = { WellnessIcon() },
+                onClick = movePostWellness
             )
             AddPostItem(
                 name = stringResource(R.string.daily_records),

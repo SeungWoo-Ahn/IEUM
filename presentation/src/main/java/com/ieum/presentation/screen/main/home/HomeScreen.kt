@@ -18,12 +18,12 @@ import com.ieum.presentation.screen.component.AddPostDialog
 @Composable
 fun HomeRoute(
     modifier: Modifier = Modifier,
-    movePostTreatmentRecords: () -> Unit,
+    movePostWellness: () -> Unit,
     movePostDaily: () -> Unit,
 ) {
     HomeScreen(
         modifier = modifier,
-        movePostTreatmentRecords = movePostTreatmentRecords,
+        movePostWellness = movePostWellness,
         movePostDaily = movePostDaily,
     )
 }
@@ -31,7 +31,7 @@ fun HomeRoute(
 @Composable
 private fun HomeScreen(
     modifier: Modifier,
-    movePostTreatmentRecords: () -> Unit,
+    movePostWellness: () -> Unit,
     movePostDaily: () -> Unit,
 ) {
     var showAddPostDialog by remember { mutableStateOf(false) }
@@ -51,7 +51,7 @@ private fun HomeScreen(
         }
         if (showAddPostDialog) {
             AddPostDialog(
-                movePostTreatmentRecords = movePostTreatmentRecords,
+                movePostWellness = movePostWellness,
                 movePostDaily = movePostDaily,
                 onDismissRequest = { showAddPostDialog = false }
             )

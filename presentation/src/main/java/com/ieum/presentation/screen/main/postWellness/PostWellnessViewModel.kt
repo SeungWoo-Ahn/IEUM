@@ -1,4 +1,4 @@
-package com.ieum.presentation.screen.main.postTreatmentRecords
+package com.ieum.presentation.screen.main.postWellness
 
 import android.net.Uri
 import androidx.compose.runtime.getValue
@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.ieum.domain.model.image.ImageSource
-import com.ieum.presentation.model.post.PostTreatmentRecordsUiModel
+import com.ieum.presentation.model.post.PostWellnessUiModel
 import com.ieum.presentation.navigation.MainScreen
 import com.ieum.presentation.util.ImageUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,16 +17,16 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class PostTreatmentRecordsViewModel @Inject constructor(
+class PostWellnessViewModel @Inject constructor(
     private val imageUtil: ImageUtil,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
-    private val id = savedStateHandle.toRoute<MainScreen.PostTreatmentRecords>().id
+    private val id = savedStateHandle.toRoute<MainScreen.PostWellness>().id
 
-    var uiState by mutableStateOf<PostTreatmentRecordsUiState>(PostTreatmentRecordsUiState.Idle)
+    var uiState by mutableStateOf<PostWellnessUiState>(PostWellnessUiState.Idle)
         private set
 
-    var uiModel by mutableStateOf(PostTreatmentRecordsUiModel.EMPTY)
+    var uiModel by mutableStateOf(PostWellnessUiModel.EMPTY)
         private set
 
     init {
@@ -34,29 +34,29 @@ class PostTreatmentRecordsViewModel @Inject constructor(
     }
 
     fun resetUiState() {
-        uiState = PostTreatmentRecordsUiState.Idle
+        uiState = PostWellnessUiState.Idle
     }
 
-    fun showSpecificSymptomsSheet() {
-        uiState = PostTreatmentRecordsUiState.ShowSpecificSymptomsSheet {
-            uiModel = uiModel.copy(specificSymptoms = it)
+    fun showUnusualSymptomsSheet() {
+        uiState = PostWellnessUiState.ShowUnusualSymptomsSheet {
+            uiModel = uiModel.copy(unusualSymptoms = it)
         }
     }
 
-    fun showTakingMedicineDialog() {
-        uiState = PostTreatmentRecordsUiState.ShowTakingMedicineDialog {
-            uiModel = uiModel.copy(takingMedicine = it)
+    fun showMedicationTakenDialog() {
+        uiState = PostWellnessUiState.ShowMedicationTakenDialog {
+            uiModel = uiModel.copy(medicationTaken = it)
         }
     }
 
-    fun showDietaryStatusSheet() {
-        uiState = PostTreatmentRecordsUiState.ShowDietaryStatusSheet {
-            uiModel = uiModel.copy(dietaryStatus = it)
+    fun showDietSheet() {
+        uiState = PostWellnessUiState.ShowDietSheet {
+            uiModel = uiModel.copy(diet = it)
         }
     }
 
     fun showMemoSheet() {
-        uiState = PostTreatmentRecordsUiState.ShowMemoSheet {
+        uiState = PostWellnessUiState.ShowMemoSheet {
             uiModel = uiModel.copy(memo = it)
         }
     }
@@ -81,12 +81,12 @@ class PostTreatmentRecordsViewModel @Inject constructor(
     }
 
     fun toggleShareCommunity() {
-        uiModel = uiModel.copy(shareCommunity = uiModel.shareCommunity.not())
+        uiModel = uiModel.copy(shared = uiModel.shared.not())
     }
 
     fun onPost() {
         viewModelScope.launch {
-            uiState = PostTreatmentRecordsUiState.Loading
+            uiState = PostWellnessUiState.Loading
             // TODO: 비즈니스 로직 추가
         }
     }

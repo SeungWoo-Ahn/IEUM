@@ -30,13 +30,11 @@ class LoginViewModel @Inject constructor(
             uiState = LoginUiState.Loading
             strategy.proceed()
                 .onSuccess { oAuthRequest ->
-                    Timber.i(oAuthRequest.toString())
-                    _event.emit(LoginEvent.MoveRegister) // TODO: login 연결 이후 제거
-                    /*login(oAuthRequest)*/
+                    login(oAuthRequest)
                 }
                 .onFailure { t ->
-                    Timber.e(t)
                     // OAuth 로그인 실패
+                    Timber.e(t)
                 }
             uiState = LoginUiState.Idle
         }
@@ -51,8 +49,9 @@ class LoginViewModel @Inject constructor(
                     _event.emit(LoginEvent.MoveRegister)
                 }
             }
-            .onFailure {
+            .onFailure { t ->
                 // 로그인 API 실패
+                Timber.e(t)
             }
     }
 }

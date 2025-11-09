@@ -18,7 +18,7 @@ sealed interface MainScreen {
     data object Home : MainScreen
 
     @Serializable
-    data class PostTreatmentRecords(val id: String?) : MainScreen
+    data class PostWellness(val id: String?) : MainScreen
 
     @Serializable
     data class PostDaily(val id: String?) : MainScreen

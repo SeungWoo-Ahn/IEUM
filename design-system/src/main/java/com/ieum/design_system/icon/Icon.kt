@@ -73,12 +73,12 @@ fun CloseCircleIcon() {
 }
 
 @Composable
-fun TreatmentRecordsIcon() {
+fun WellnessIcon() {
     Icon(
         modifier = Modifier.size(24.dp),
-        painter = painterResource(R.drawable.ic_treatment_records),
+        painter = painterResource(R.drawable.ic_wellness),
         tint = Color.Unspecified,
-        contentDescription = "ic-treatment-records",
+        contentDescription = "ic-wellness",
     )
 }
 
@@ -173,12 +173,12 @@ fun EatSmallAmountsIcon() {
 }
 
 @Composable
-fun EatNothingIcon() {
+fun EatBarelyIcon() {
     Icon(
         modifier = Modifier.size(24.dp),
-        painter = painterResource(R.drawable.ic_eat_nothing),
+        painter = painterResource(R.drawable.ic_eat_barely),
         tint = Color.Unspecified,
-        contentDescription = "ic-eat-nothing",
+        contentDescription = "ic-eat-barely",
     )
 }
 
