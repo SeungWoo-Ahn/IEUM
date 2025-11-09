@@ -21,10 +21,10 @@ suspend fun PostWellnessRequest.asBody(): PostWellnessRequestBody =
         diagnosis = diagnosis.key,
         mood = mood.key,
         unusualSymptoms = unusualSymptoms,
-        medicationTaken = medicationTaken ?: false,
-        diet = (diet ?: Diet.DEFAULT).toDto(),
+        medicationTaken = medicationTaken,
+        diet = diet?.toDto(),
         memo = memo,
-        images = imageList.mapNotNull { it.toDto() }.ifEmpty { null },
+        images = imageList?.mapNotNull { it.toDto() }?.ifEmpty { null },
         shared = shared,
     )
 

@@ -6,10 +6,10 @@ import com.ieum.domain.model.user.Diagnosis
 data class PostWellnessRequest(
     val diagnosis: Diagnosis,
     val mood: Mood,
-    val unusualSymptoms: String,
-    val medicationTaken: Boolean?,
+    val unusualSymptoms: String?,
+    val medicationTaken: Boolean,
     val diet: Diet?,
-    val memo: String,
-    val imageList: List<ImageSource.Local>,
+    val memo: String?,
+    val imageList: List<ImageSource.Local>?,
     val shared: Boolean,
 )
