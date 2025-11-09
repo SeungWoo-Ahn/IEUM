@@ -1,5 +1,6 @@
 package com.ieum.design_system.icon
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -217,3 +218,92 @@ fun PlusCircleIcon(
         contentDescription = "ic-plus-circle",
     )
 }
+
+@Composable
+fun MoodHappyIcon() {
+    Icon(
+        modifier = Modifier.fillMaxSize(),
+        painter = painterResource(R.drawable.ic_mood_happy),
+        tint = Color.Unspecified,
+        contentDescription = "ic-mood-happy",
+    )
+}
+
+@Composable
+fun MoodGoodIcon() {
+    Icon(
+        modifier = Modifier.fillMaxSize(),
+        painter = painterResource(R.drawable.ic_mood_good),
+        tint = Color.Unspecified,
+        contentDescription = "ic-mood-good",
+    )
+}
+
+@Composable
+fun MoodNormalIcon() {
+    Icon(
+        modifier = Modifier.fillMaxSize(),
+        painter = painterResource(R.drawable.ic_mood_normal),
+        tint = Color.Unspecified,
+        contentDescription = "ic-mood-normal",
+    )
+}
+
+@Composable
+fun MoodBadIcon() {
+    Icon(
+        modifier = Modifier.fillMaxSize(),
+        painter = painterResource(R.drawable.ic_mood_bad),
+        tint = Color.Unspecified,
+        contentDescription = "ic-mood-bad",
+    )
+}
+
+@Composable
+fun MoodWorstIcon() {
+    Icon(
+        modifier = Modifier.fillMaxSize(),
+        painter = painterResource(R.drawable.ic_mood_worst),
+        tint = Color.Unspecified,
+        contentDescription = "ic-mood-worst",
+    )
+}
+
+@Composable
+fun MoodSelectIcon() {
+    Icon(
+        modifier = Modifier.fillMaxSize(),
+        painter = painterResource(R.drawable.ic_mood_select),
+        tint = Color.Unspecified,
+        contentDescription = "ic-mood-select",
+    )
+}
+
+@Composable
+fun RefreshBlackIcon() {
+    Icon(
+        modifier = Modifier.size(32.dp),
+        painter = painterResource(R.drawable.ic_refresh_black),
+        tint = Color.Unspecified,
+        contentDescription = "ic-refresh-black",
+    )
+}
+
+@Composable
+fun LeftIcon() {
+    Icon(
+        modifier = Modifier.size(24.dp),
+        painter = painterResource(R.drawable.ic_left),
+        contentDescription = "ic-left",
+    )
+}
+
+@Composable
+fun RightIcon() {
+    Icon(
+        modifier = Modifier.size(24.dp),
+        painter = painterResource(R.drawable.ic_right),
+        contentDescription = "ic-right",
+    )
+}
+

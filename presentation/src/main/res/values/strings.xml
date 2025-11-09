@@ -46,7 +46,12 @@
     
     <string name="wellness_records">치료 기록</string>
     <string name="daily_records">일상 기록</string>
-    
+
+    <string name="mood_happy">행복해요</string>
+    <string name="mood_good">좋아요</string>
+    <string name="mood_normal">평범해요</string>
+    <string name="mood_bad">별로에요</string>
+    <string name="mood_worst">최악이에요</string>
     <string name="unusual_symptoms">특이증상</string>
     <string name="medication_taken">복약</string>
     <string name="diet">식이상태</string>
@@ -56,6 +61,7 @@
     <string name="memo">메모</string>
     <string name="add_image">사진 추가</string>
     <string name="share_community">커뮤니티에 공유</string>
+    <string name="select_complete">선택완료</string>
     <string name="complete">완료</string>
     <string name="incomplete">미완료</string>
     <string name="post">게시하기</string>
@@ -69,6 +75,7 @@
     <string name="guide_add_image">최대 %d장까지 가능합니다</string>
     <string name="guide_share_community">체크하시면 커뮤니티에 공개됩니다</string>
 
+    <string name="question_mood">지금 기분은 어떤가요?</string>
     <string name="question_unusual_symptoms">어떤 특이증상이 있었나요?</string>
     <string name="question_medication_taken">복약 상태는 어떤가요?</string>
     <string name="question_diet">어떻게 드셨나요?</string>
