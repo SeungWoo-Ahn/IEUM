@@ -40,6 +40,7 @@ import com.ieum.presentation.screen.component.UnusualSymptomsBox
 import com.ieum.presentation.screen.component.TakingMedicineBox
 import com.ieum.presentation.screen.component.MedicationTakenDialog
 import com.ieum.presentation.screen.component.MoodBox
+import com.ieum.presentation.screen.component.MoodDialog
 import com.ieum.presentation.screen.component.UnusualSymptomsSheet
 import kotlinx.coroutines.CoroutineScope
 
@@ -60,10 +61,12 @@ fun PostWellnessRoute(
         contract = ActivityResultContracts.PickMultipleVisualMedia(MAX_IMAGE_COUNT),
         onResult = viewModel::onPhotoPickerResult,
     )
-
+    val buttonEnabled by remember {
+        derivedStateOf { uiState != PostWellnessUiState.Loading && uiModel.validate() }
+    }
     PostWellnessScreen(
         modifier = modifier,
-        isLoading = uiState == PostWellnessUiState.Loading,
+        buttonEnabled = buttonEnabled,
         uiModel = uiModel,
         showMoodDialog = viewModel::showMoodDialog,
         showUnusualSymptomsSheet = viewModel::showUnusualSymptomsSheet,
@@ -82,6 +85,14 @@ fun PostWellnessRoute(
         onPost = viewModel::onPost,
         onBack = onBack,
     )
+    if (uiState is PostWellnessUiState.ShowMoodDialog) {
+        MoodDialog(
+            scope = scope,
+            data = uiModel.mood,
+            callback = uiState.callback,
+            onDismissRequest = viewModel::resetUiState,
+        )
+    }
     if (uiState is PostWellnessUiState.ShowUnusualSymptomsSheet) {
         UnusualSymptomsSheet(
             scope = scope,
@@ -121,7 +132,7 @@ fun PostWellnessRoute(
 @Composable
 private fun PostWellnessScreen(
     modifier: Modifier,
-    isLoading: Boolean,
+    buttonEnabled: Boolean,
     uiModel: PostWellnessUiModel,
     showMoodDialog: () -> Unit,
     showUnusualSymptomsSheet: () -> Unit,
@@ -134,8 +145,6 @@ private fun PostWellnessScreen(
     onPost: () -> Unit,
     onBack: () -> Unit,
 ) {
-    val buttonEnabled by remember { derivedStateOf { isLoading.not() && uiModel.validate() } }
-
     Column(
         modifier = modifier
             .fillMaxSize()

@@ -34,17 +34,17 @@ enum class MoodUiModel(
     val backGroundColor: Color,
     val icon: @Composable () -> Unit,
 ) {
-    HAPPY(
-        description = R.string.mood_happy,
-        strokeColor = Color(0x80F0B100),
-        backGroundColor = Color(0x33FDC700),
-        icon = { MoodHappyIcon() }
+    WORST(
+    description = R.string.mood_worst,
+    strokeColor = Color(0x8051A2FF),
+    backGroundColor = Color(0x3351A2FF),
+    icon = { MoodWorstIcon() }
     ),
-    GOOD(
-        description = R.string.mood_good,
-        strokeColor = Color(0x809AE600),
-        backGroundColor = Color(0x339AE600),
-        icon = { MoodGoodIcon() }
+    BAD(
+        description = R.string.mood_bad,
+        strokeColor = Color(0x8000D3F3),
+        backGroundColor = Color(0x3300D3F3),
+        icon = { MoodBadIcon() }
     ),
     NORMAL(
         description = R.string.mood_normal,
@@ -52,17 +52,17 @@ enum class MoodUiModel(
         backGroundColor = Color(0x3300D5BE),
         icon = { MoodNormalIcon() }
     ),
-    BAD(
-        description = R.string.mood_happy,
-        strokeColor = Color(0x8000D3F3),
-        backGroundColor = Color(0x3300D3F3),
-        icon = { MoodBadIcon() }
+    GOOD(
+        description = R.string.mood_good,
+        strokeColor = Color(0x809AE600),
+        backGroundColor = Color(0x339AE600),
+        icon = { MoodGoodIcon() }
     ),
-    WORST(
+    HAPPY(
         description = R.string.mood_happy,
-        strokeColor = Color(0x8051A2FF),
-        backGroundColor = Color(0x3351A2FF),
-        icon = { MoodWorstIcon() }
+        strokeColor = Color(0x80F0B100),
+        backGroundColor = Color(0x33FDC700),
+        icon = { MoodHappyIcon() }
     ),
 }
 

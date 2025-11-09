@@ -9,6 +9,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,12 +22,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.ieum.design_system.button.DarkButton
 import com.ieum.design_system.dialog.IEUMDialog
 import com.ieum.design_system.icon.CompleteIcon
 import com.ieum.design_system.icon.DailyIcon
 import com.ieum.design_system.icon.IncompleteIcon
+import com.ieum.design_system.icon.LeftIcon
+import com.ieum.design_system.icon.RightIcon
 import com.ieum.design_system.icon.WellnessIcon
 import com.ieum.design_system.spacer.IEUMSpacer
+import com.ieum.design_system.theme.Black
 import com.ieum.design_system.theme.Lime500
 import com.ieum.design_system.theme.Slate200
 import com.ieum.design_system.theme.Slate500
@@ -31,6 +40,143 @@ import com.ieum.design_system.theme.screenPadding
 import com.ieum.design_system.util.dropShadow
 import com.ieum.design_system.util.noRippleClickable
 import com.ieum.presentation.R
+import com.ieum.presentation.model.post.MoodUiModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+
+@Composable
+fun MoodDialog(
+    scope: CoroutineScope,
+    data: MoodUiModel?,
+    callback: (MoodUiModel) -> Unit,
+    onDismissRequest: () -> Unit,
+) {
+    val entries = MoodUiModel.entries
+
+    val pagerState = rememberPagerState(
+        initialPage = if (data != null) {
+            entries.indexOf(data)
+        } else {
+            entries.size / 2
+        },
+        pageCount = { entries.size }
+    )
+
+    IEUMDialog(onDismissRequest) {
+        Column(
+            modifier = Modifier
+                .background(color = White)
+                .padding(all = screenPadding)
+        ) {
+            PostSheetQuestion(
+                question = stringResource(R.string.question_mood)
+            )
+            IEUMSpacer(size = 40)
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                HorizontalPager(state = pagerState) { page ->
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        MoodPagerItem(mood = entries[page])
+                    }
+                }
+                MoodPagerScrollIcon(
+                    modifier = Modifier.align(Alignment.CenterStart),
+                    enabled = pagerState.canScrollBackward,
+                    onClick = {
+                        scope.launch {
+                            pagerState.animateScrollToPage(pagerState.currentPage - 1)
+                        }
+                    },
+                    icon = { LeftIcon() }
+                )
+                MoodPagerScrollIcon(
+                    modifier = Modifier.align(Alignment.CenterEnd),
+                    enabled = pagerState.canScrollForward,
+                    onClick = {
+                        scope.launch {
+                            pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                        }
+                    },
+                    icon = { RightIcon() }
+                )
+            }
+            IEUMSpacer(size = 40)
+            DarkButton(
+                text = stringResource(R.string.select_complete),
+                onClick = {
+                    callback(entries[pagerState.currentPage])
+                    onDismissRequest()
+                }
+            )
+        }
+    }
+}
+
+@Composable
+private fun MoodPagerItem(
+    mood: MoodUiModel,
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(14.dp),
+    ) {
+        Box(
+            modifier = Modifier.size(140.dp)
+        ) {
+            mood.icon()
+        }
+        Box(
+            modifier = Modifier
+                .background(
+                    color = mood.backGroundColor,
+                    shape = RoundedCornerShape(size = 40.dp)
+                )
+                .border(
+                    width = 1.dp,
+                    color = mood.strokeColor,
+                    shape = RoundedCornerShape(size = 40.dp),
+                )
+                .padding(
+                    horizontal = 14.dp,
+                    vertical = 8.dp
+                ),
+            contentAlignment = Alignment.Center,
+        ) {
+            Text(
+                text = stringResource(mood.description),
+                style = MaterialTheme.typography.bodyMedium,
+            )
+        }
+    }
+}
+
+@Composable
+private fun MoodPagerScrollIcon(
+    modifier: Modifier,
+    enabled: Boolean,
+    onClick: () -> Unit,
+    icon: @Composable ()-> Unit
+) {
+    Box(
+        modifier = modifier
+            .size(32.dp)
+            .background(
+                color = if (enabled) Black.copy(alpha = 0.4f) else Black.copy(alpha = 0.1f),
+                shape = CircleShape,
+            )
+            .noRippleClickable(
+                enabled = enabled,
+                onClick = onClick
+            ),
+        contentAlignment = Alignment.Center,
+    ) {
+        icon()
+    }
+}
 
 @Composable
 fun MedicationTakenDialog(

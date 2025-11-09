@@ -10,6 +10,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.ieum.design_system.R
+import com.ieum.design_system.theme.White
 
 @Composable
 fun IEUMIcon() {
@@ -294,6 +295,7 @@ fun LeftIcon() {
     Icon(
         modifier = Modifier.size(24.dp),
         painter = painterResource(R.drawable.ic_left),
+        tint = White,
         contentDescription = "ic-left",
     )
 }
@@ -303,6 +305,7 @@ fun RightIcon() {
     Icon(
         modifier = Modifier.size(24.dp),
         painter = painterResource(R.drawable.ic_right),
+        tint = White,
         contentDescription = "ic-right",
     )
 }
