@@ -280,9 +280,9 @@ fun MoodSelectIcon() {
 }
 
 @Composable
-fun RefreshBlackIcon() {
+fun RefreshBlackIcon(modifier: Modifier) {
     Icon(
-        modifier = Modifier.size(32.dp),
+        modifier = modifier.size(32.dp),
         painter = painterResource(R.drawable.ic_refresh_black),
         tint = Color.Unspecified,
         contentDescription = "ic-refresh-black",

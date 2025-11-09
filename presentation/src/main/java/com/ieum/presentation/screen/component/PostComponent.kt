@@ -33,7 +33,9 @@ import com.ieum.design_system.icon.IncompleteIcon
 import com.ieum.design_system.icon.MealIcon
 import com.ieum.design_system.icon.MedicineIcon
 import com.ieum.design_system.icon.MemoIcon
+import com.ieum.design_system.icon.MoodSelectIcon
 import com.ieum.design_system.icon.PlusCircleIcon
+import com.ieum.design_system.icon.RefreshBlackIcon
 import com.ieum.design_system.icon.ThunderIcon
 import com.ieum.design_system.spacer.IEUMSpacer
 import com.ieum.design_system.theme.Slate100
@@ -41,9 +43,11 @@ import com.ieum.design_system.theme.Slate200
 import com.ieum.design_system.theme.Slate500
 import com.ieum.design_system.theme.Slate700
 import com.ieum.design_system.theme.White
+import com.ieum.design_system.util.noRippleClickable
 import com.ieum.domain.model.image.ImageSource
 import com.ieum.presentation.R
 import com.ieum.presentation.model.post.DietUiModel
+import com.ieum.presentation.model.post.MoodUiModel
 import com.ieum.presentation.screen.main.postWellness.MAX_IMAGE_COUNT
 
 @Composable
@@ -121,6 +125,28 @@ private fun PostSeparator() {
         thickness = 1.dp,
         color = Slate100,
     )
+}
+
+
+@Composable
+fun MoodBox(
+    data: MoodUiModel?,
+    onClick: () -> Unit,
+) {
+    Box(
+        modifier = Modifier
+            .size(108.dp)
+            .noRippleClickable(onClick = onClick)
+    ) {
+        if (data == null) {
+            MoodSelectIcon()
+        } else {
+            data.icon()
+        }
+        RefreshBlackIcon(
+            modifier = Modifier.align(Alignment.TopEnd)
+        )
+    }
 }
 
 @Composable

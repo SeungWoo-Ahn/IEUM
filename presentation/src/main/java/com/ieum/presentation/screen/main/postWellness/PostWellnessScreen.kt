@@ -23,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ieum.design_system.button.DarkButton
+import com.ieum.design_system.spacer.IEUMSpacer
 import com.ieum.design_system.theme.Slate100
 import com.ieum.design_system.theme.screenPadding
 import com.ieum.design_system.topbar.TopBarForClose
@@ -38,6 +39,7 @@ import com.ieum.presentation.screen.component.ShareCommunityBox
 import com.ieum.presentation.screen.component.UnusualSymptomsBox
 import com.ieum.presentation.screen.component.TakingMedicineBox
 import com.ieum.presentation.screen.component.MedicationTakenDialog
+import com.ieum.presentation.screen.component.MoodBox
 import com.ieum.presentation.screen.component.UnusualSymptomsSheet
 import kotlinx.coroutines.CoroutineScope
 
@@ -63,6 +65,7 @@ fun PostWellnessRoute(
         modifier = modifier,
         isLoading = uiState == PostWellnessUiState.Loading,
         uiModel = uiModel,
+        showMoodDialog = viewModel::showMoodDialog,
         showUnusualSymptomsSheet = viewModel::showUnusualSymptomsSheet,
         showMedicationTakenDialog = viewModel::showMedicationTakenDialog,
         showDietSheet = viewModel::showDietSheet,
@@ -120,6 +123,7 @@ private fun PostWellnessScreen(
     modifier: Modifier,
     isLoading: Boolean,
     uiModel: PostWellnessUiModel,
+    showMoodDialog: () -> Unit,
     showUnusualSymptomsSheet: () -> Unit,
     showMedicationTakenDialog: () -> Unit,
     showDietSheet: () -> Unit,
@@ -142,15 +146,22 @@ private fun PostWellnessScreen(
             onClose = onBack,
         )
         Box(
-            modifier = Modifier
-                .weight(1f)
-                .verticalScroll(state = rememberScrollState())
-                .padding(all = screenPadding)
+            modifier = Modifier.weight(1f)
         ) {
             Column(
-                modifier = Modifier.padding(bottom = 100.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(state = rememberScrollState())
+                    .padding(all = screenPadding)
+                    .padding(bottom = 100.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
+                MoodBox(
+                    data = uiModel.mood,
+                    onClick = showMoodDialog,
+                )
+                IEUMSpacer(size = 12)
                 UnusualSymptomsBox(
                     data = uiModel.unusualSymptoms,
                     onClick = showUnusualSymptomsSheet,
@@ -178,12 +189,18 @@ private fun PostWellnessScreen(
                     onClick = toggleShareCommunity,
                 )
             }
-            DarkButton(
-                modifier = Modifier.align(Alignment.BottomCenter),
-                text = stringResource(R.string.post),
-                enabled = buttonEnabled,
-                onClick = onPost,
-            )
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(all = screenPadding)
+                    .padding(top = 8.dp)
+            ) {
+                DarkButton(
+                    text = stringResource(R.string.post),
+                    enabled = buttonEnabled,
+                    onClick = onPost,
+                )
+            }
         }
     }
 }

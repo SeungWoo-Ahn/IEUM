@@ -37,6 +37,12 @@ class PostWellnessViewModel @Inject constructor(
         uiState = PostWellnessUiState.Idle
     }
 
+    fun showMoodDialog() {
+        uiState = PostWellnessUiState.ShowMoodDialog {
+            uiModel = uiModel.copy(mood = it)
+        }
+    }
+
     fun showUnusualSymptomsSheet() {
         uiState = PostWellnessUiState.ShowUnusualSymptomsSheet {
             uiModel = uiModel.copy(unusualSymptoms = it)
