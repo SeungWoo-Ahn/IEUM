@@ -1,4 +1,4 @@
-package com.ieum.presentation.screen.main.postDailyRecords
+package com.ieum.presentation.screen.main.postDaily
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -35,16 +35,16 @@ import com.ieum.domain.model.image.ImageSource
 import com.ieum.presentation.R
 import com.ieum.presentation.screen.component.AddImageBox
 import com.ieum.presentation.screen.component.ShareCommunityBox
-import com.ieum.presentation.screen.component.TypeStory
+import com.ieum.presentation.screen.component.TypeContent
 import com.ieum.presentation.screen.component.TypeTitle
 
 internal const val MAX_IMAGE_COUNT = 3
 
 @Composable
-fun PostDailyRecordsRoute(
+fun PostDailyRoute(
     modifier: Modifier = Modifier,
     onBack: () -> Unit,
-    viewModel: PostDailyRecordsViewModel = hiltViewModel(),
+    viewModel: PostDailyViewModel = hiltViewModel(),
 ) {
     val buttonEnabled by remember { derivedStateOf { viewModel.validate() } }
     val launcher = rememberLauncherForActivityResult(
@@ -52,11 +52,11 @@ fun PostDailyRecordsRoute(
         onResult = viewModel::onPhotoPickerResult,
     )
 
-    PostDailyRecordsScreen(
+    PostDailyScreen(
         modifier = modifier,
         buttonEnabled = buttonEnabled,
         titleState = viewModel.titleState,
-        storyState = viewModel.storyState,
+        contentState = viewModel.contentState,
         imageList = viewModel.imageList,
         shareCommunity = viewModel.shareCommunity,
         showAddImageSheet = {
@@ -74,11 +74,11 @@ fun PostDailyRecordsRoute(
 }
 
 @Composable
-private fun PostDailyRecordsScreen(
+private fun PostDailyScreen(
     modifier: Modifier,
     buttonEnabled: Boolean,
     titleState: ITextFieldState,
-    storyState: ITextFieldState,
+    contentState: ITextFieldState,
     imageList: List<ImageSource>,
     shareCommunity: Boolean,
     showAddImageSheet: () -> Unit,
@@ -124,7 +124,7 @@ private fun PostDailyRecordsScreen(
                         thickness = 1.dp,
                         color = Slate200,
                     )
-                    TypeStory(state = storyState)
+                    TypeContent(state = contentState)
                 }
                 AddImageBox(
                     data = imageList,

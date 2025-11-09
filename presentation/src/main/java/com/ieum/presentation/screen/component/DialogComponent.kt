@@ -19,7 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ieum.design_system.dialog.IEUMDialog
 import com.ieum.design_system.icon.CompleteIcon
-import com.ieum.design_system.icon.DailyRecordsIcon
+import com.ieum.design_system.icon.DailyIcon
 import com.ieum.design_system.icon.IncompleteIcon
 import com.ieum.design_system.icon.TreatmentRecordsIcon
 import com.ieum.design_system.spacer.IEUMSpacer
@@ -105,7 +105,7 @@ private fun TakingMedicineSelector(
 @Composable
 fun AddPostDialog(
     movePostTreatmentRecords: () -> Unit,
-    movePostDailyRecords: () -> Unit,
+    movePostDaily: () -> Unit,
     onDismissRequest: () -> Unit,
 ) {
     Box(
@@ -139,8 +139,8 @@ fun AddPostDialog(
             AddPostItem(
                 name = stringResource(R.string.daily_records),
                 guide = stringResource(R.string.guide_daily_records),
-                icon = { DailyRecordsIcon() },
-                onClick = movePostDailyRecords
+                icon = { DailyIcon() },
+                onClick = movePostDaily
             )
         }
     }

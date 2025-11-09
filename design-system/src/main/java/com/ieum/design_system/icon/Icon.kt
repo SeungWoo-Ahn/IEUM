@@ -83,12 +83,12 @@ fun TreatmentRecordsIcon() {
 }
 
 @Composable
-fun DailyRecordsIcon() {
+fun DailyIcon() {
     Icon(
         modifier = Modifier.size(24.dp),
-        painter = painterResource(R.drawable.ic_daily_records),
+        painter = painterResource(R.drawable.ic_daily),
         tint = Color.Unspecified,
-        contentDescription = "ic-daily-records",
+        contentDescription = "ic-daily",
     )
 }
 

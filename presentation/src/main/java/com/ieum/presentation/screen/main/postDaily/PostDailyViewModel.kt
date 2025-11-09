@@ -1,4 +1,4 @@
-package com.ieum.presentation.screen.main.postDailyRecords
+package com.ieum.presentation.screen.main.postDaily
 
 import android.net.Uri
 import androidx.compose.runtime.getValue
@@ -18,17 +18,16 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class PostDailyRecordsViewModel @Inject constructor(
+class PostDailyViewModel @Inject constructor(
     private val imageUtil: ImageUtil,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
-    private val id = savedStateHandle.toRoute<MainScreen.PostDailyRecords>().id
+    private val id = savedStateHandle.toRoute<MainScreen.PostDaily>().id
 
-    var uiState by mutableStateOf<PostDailyRecordsUiState>(PostDailyRecordsUiState.Idle)
-        private set
+    private var uiState by mutableStateOf<PostDailyUiState>(PostDailyUiState.Idle)
 
     val titleState = TextFieldState()
-    val storyState = TextFieldState()
+    val contentState = TextFieldState()
 
     private val _imageList = mutableStateListOf<ImageSource>()
     val imageList: List<ImageSource> get() = _imageList
@@ -63,12 +62,15 @@ class PostDailyRecordsViewModel @Inject constructor(
         shareCommunity = shareCommunity.not()
     }
 
-    fun validate() = uiState != PostDailyRecordsUiState.Loading && titleState.validate()
+    fun validate() = uiState != PostDailyUiState.Loading &&
+            titleState.validate() &&
+            contentState.validate()
 
     fun onPost() {
         viewModelScope.launch {
-            uiState = PostDailyRecordsUiState.Loading
+            uiState = PostDailyUiState.Loading
             // TODO: 비즈니스 로직 추가
+            uiState = PostDailyUiState.Idle
         }
     }
 }

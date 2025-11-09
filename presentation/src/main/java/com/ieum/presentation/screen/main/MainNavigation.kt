@@ -8,7 +8,7 @@ import com.ieum.presentation.navigation.MainScreen
 import com.ieum.presentation.navigation.ScreenGraph
 import com.ieum.presentation.screen.IEUMAppState
 import com.ieum.presentation.screen.main.home.HomeRoute
-import com.ieum.presentation.screen.main.postDailyRecords.PostDailyRecordsRoute
+import com.ieum.presentation.screen.main.postDaily.PostDailyRoute
 import com.ieum.presentation.screen.main.postTreatmentRecords.PostTreatmentRecordsRoute
 
 fun NavGraphBuilder.nestedMainGraph(appState: IEUMAppState) {
@@ -18,7 +18,7 @@ fun NavGraphBuilder.nestedMainGraph(appState: IEUMAppState) {
         composable<MainScreen.Home> {
             HomeRoute(
                 movePostTreatmentRecords = navController::navigateToPostTreatmentRecordsScreen,
-                movePostDailyRecords = navController::navigateToPostDailyRecordsScreen,
+                movePostDaily = navController::navigateToPostDailyScreen,
             )
         }
         composable<MainScreen.PostTreatmentRecords> {
@@ -27,8 +27,8 @@ fun NavGraphBuilder.nestedMainGraph(appState: IEUMAppState) {
                 onBack = navController::popBackStack,
             )
         }
-        composable<MainScreen.PostDailyRecords> {
-            PostDailyRecordsRoute(
+        composable<MainScreen.PostDaily> {
+            PostDailyRoute(
                 onBack = navController::popBackStack,
             )
         }
@@ -42,5 +42,5 @@ fun NavController.navigateToMainGraph() = navigate(ScreenGraph.Main) {
 fun NavController.navigateToPostTreatmentRecordsScreen(id: String? = null) =
     navigate(MainScreen.PostTreatmentRecords(id))
 
-fun NavController.navigateToPostDailyRecordsScreen(id: String? = null) =
-    navigate(MainScreen.PostDailyRecords(id))
+fun NavController.navigateToPostDailyScreen(id: String? = null) =
+    navigate(MainScreen.PostDaily(id))
