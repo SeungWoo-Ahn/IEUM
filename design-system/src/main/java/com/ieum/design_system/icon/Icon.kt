@@ -13,9 +13,11 @@ import com.ieum.design_system.R
 import com.ieum.design_system.theme.White
 
 @Composable
-fun IEUMIcon() {
+fun IEUMIcon(
+    modifier: Modifier = Modifier
+) {
     Icon(
-        modifier = Modifier.size(
+        modifier = modifier.size(
             width = 50.dp,
             height = 26.dp,
         ),

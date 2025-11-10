@@ -15,6 +15,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.ieum.design_system.icon.BackIcon
 import com.ieum.design_system.icon.CloseIcon
+import com.ieum.design_system.icon.IEUMIcon
+import com.ieum.design_system.theme.screenPadding
 
 private val topBarHeight = 52.dp
 
@@ -61,6 +63,22 @@ fun TopBarForClose(
             modifier = Modifier.align(Alignment.Center),
             text = title,
             style = MaterialTheme.typography.headlineSmall,
+        )
+    }
+}
+
+@Composable
+fun PostListTopBar(
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(topBarHeight)
+            .padding(horizontal = screenPadding)
+    ) {
+        IEUMIcon(
+            modifier = Modifier.align(Alignment.CenterStart)
         )
     }
 }
