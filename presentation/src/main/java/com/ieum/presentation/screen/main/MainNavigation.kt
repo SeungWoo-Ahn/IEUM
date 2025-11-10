@@ -39,8 +39,8 @@ fun NavController.navigateToMainGraph() = navigate(ScreenGraph.Main) {
     popUpTo(graph.id) { inclusive = true }
 }
 
-fun NavController.navigateToPostWellnessScreen(id: String? = null) =
+fun NavController.navigateToPostWellnessScreen(id: Int? = null) =
     navigate(MainScreen.PostWellness(id))
 
-fun NavController.navigateToPostDailyScreen(id: String? = null) =
+fun NavController.navigateToPostDailyScreen(id: Int? = null) =
     navigate(MainScreen.PostDaily(id))

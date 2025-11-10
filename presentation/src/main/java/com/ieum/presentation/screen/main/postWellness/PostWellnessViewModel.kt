@@ -9,6 +9,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.ieum.domain.model.image.ImageSource
+import com.ieum.domain.usecase.post.GetWellnessUseCase
+import com.ieum.domain.usecase.post.PatchWellnessUseCase
+import com.ieum.domain.usecase.post.PostWellnessUseCase
+import com.ieum.presentation.mapper.toUiModel
 import com.ieum.presentation.model.post.PostWellnessUiModel
 import com.ieum.presentation.navigation.MainScreen
 import com.ieum.presentation.util.ImageUtil
@@ -18,6 +22,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PostWellnessViewModel @Inject constructor(
+    private val getWellnessUseCase: GetWellnessUseCase,
+    private val postWellnessUseCase: PostWellnessUseCase,
+    private val patchWellnessUseCase: PatchWellnessUseCase,
     private val imageUtil: ImageUtil,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
@@ -30,7 +37,21 @@ class PostWellnessViewModel @Inject constructor(
         private set
 
     init {
-        // TODO: id != null (수정) 일 때, 데이터 로드
+/*        if (id != null) {
+            loadWellness(id)
+        }*/
+    }
+
+    private fun loadWellness(id: Int) {
+        viewModelScope.launch {
+            getWellnessUseCase(id)
+                .onSuccess { wellness ->
+                    uiModel = wellness.toUiModel()
+                }
+                .onFailure {
+                    // TODO: 로드 실패
+                }
+        }
     }
 
     fun resetUiState() {

@@ -14,9 +14,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -33,14 +30,14 @@ import com.ieum.presentation.model.post.PostWellnessUiModel
 import com.ieum.presentation.screen.component.AddImageBox
 import com.ieum.presentation.screen.component.DietBox
 import com.ieum.presentation.screen.component.DietSheet
+import com.ieum.presentation.screen.component.MedicationTakenDialog
 import com.ieum.presentation.screen.component.MemoBox
 import com.ieum.presentation.screen.component.MemoSheet
-import com.ieum.presentation.screen.component.ShareCommunityBox
-import com.ieum.presentation.screen.component.UnusualSymptomsBox
-import com.ieum.presentation.screen.component.TakingMedicineBox
-import com.ieum.presentation.screen.component.MedicationTakenDialog
 import com.ieum.presentation.screen.component.MoodBox
 import com.ieum.presentation.screen.component.MoodDialog
+import com.ieum.presentation.screen.component.ShareCommunityBox
+import com.ieum.presentation.screen.component.TakingMedicineBox
+import com.ieum.presentation.screen.component.UnusualSymptomsBox
 import com.ieum.presentation.screen.component.UnusualSymptomsSheet
 import kotlinx.coroutines.CoroutineScope
 
@@ -61,12 +58,10 @@ fun PostWellnessRoute(
         contract = ActivityResultContracts.PickMultipleVisualMedia(MAX_IMAGE_COUNT),
         onResult = viewModel::onPhotoPickerResult,
     )
-    val buttonEnabled by remember {
-        derivedStateOf { uiState != PostWellnessUiState.Loading && uiModel.validate() }
-    }
+
     PostWellnessScreen(
         modifier = modifier,
-        buttonEnabled = buttonEnabled,
+        isLoading = uiState == PostWellnessUiState.Loading,
         uiModel = uiModel,
         showMoodDialog = viewModel::showMoodDialog,
         showUnusualSymptomsSheet = viewModel::showUnusualSymptomsSheet,
@@ -132,7 +127,7 @@ fun PostWellnessRoute(
 @Composable
 private fun PostWellnessScreen(
     modifier: Modifier,
-    buttonEnabled: Boolean,
+    isLoading: Boolean,
     uiModel: PostWellnessUiModel,
     showMoodDialog: () -> Unit,
     showUnusualSymptomsSheet: () -> Unit,
@@ -206,7 +201,7 @@ private fun PostWellnessScreen(
             ) {
                 DarkButton(
                     text = stringResource(R.string.post),
-                    enabled = buttonEnabled,
+                    enabled = isLoading.not() && uiModel.validate(),
                     onClick = onPost,
                 )
             }
