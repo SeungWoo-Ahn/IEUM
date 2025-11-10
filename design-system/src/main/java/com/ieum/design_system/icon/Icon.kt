@@ -310,3 +310,43 @@ fun RightIcon() {
     )
 }
 
+@Composable
+fun CommentIcon() {
+    Icon(
+        modifier = Modifier.size(24.dp),
+        painter = painterResource(R.drawable.ic_comment),
+        tint = White,
+        contentDescription = "ic-comment",
+    )
+}
+
+@Composable
+fun HeartIcon() {
+    Icon(
+        modifier = Modifier.size(24.dp),
+        painter = painterResource(R.drawable.ic_heart),
+        tint = White,
+        contentDescription = "ic-heart",
+    )
+}
+
+@Composable
+fun MenuIcon() {
+    Icon(
+        modifier = Modifier.size(24.dp),
+        painter = painterResource(R.drawable.ic_menu),
+        tint = White,
+        contentDescription = "ic-menu",
+    )
+}
+
+@Composable
+fun PenIcon() {
+    Icon(
+        modifier = Modifier.size(24.dp),
+        painter = painterResource(R.drawable.ic_pen),
+        tint = White,
+        contentDescription = "ic-pen",
+    )
+}
+
