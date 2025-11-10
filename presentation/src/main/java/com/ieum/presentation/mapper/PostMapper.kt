@@ -75,6 +75,6 @@ fun PostWellnessUiModel.toRequest(): PostWellnessRequest =
         medicationTaken = medicationTaken ?: false,
         diet = diet?.toDomain(),
         memo = memo.ifEmpty { null },
-        imageList = imageList.filterIsInstance<ImageSource.Local>().ifEmpty { null }, // TODO: 이미지 삭제 추가 후 수정
+        imageList = imageList.filterIsInstance<ImageSource.Local>(), // TODO: 이미지 삭제 추가 후 수정
         shared = shared,
     )

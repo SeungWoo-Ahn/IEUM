@@ -10,6 +10,6 @@ data class PostWellnessRequest(
     val medicationTaken: Boolean,
     val diet: Diet?,
     val memo: String?,
-    val imageList: List<ImageSource.Local>?,
+    val imageList: List<ImageSource.Local>,
     val shared: Boolean,
 )

@@ -24,7 +24,7 @@ suspend fun PostWellnessRequest.asBody(): PostWellnessRequestBody =
         medicationTaken = medicationTaken,
         diet = diet?.toDto(),
         memo = memo,
-        images = imageList?.mapNotNull { it.toDto() }?.ifEmpty { null },
+        images = imageList.mapNotNull { it.toDto() }.ifEmpty { null },
         shared = shared,
     )
 

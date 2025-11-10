@@ -13,6 +13,7 @@ import com.ieum.domain.model.post.PostWellnessRequest
 import com.ieum.domain.usecase.post.GetWellnessUseCase
 import com.ieum.domain.usecase.post.PatchWellnessUseCase
 import com.ieum.domain.usecase.post.PostWellnessUseCase
+import com.ieum.presentation.mapper.toRequest
 import com.ieum.presentation.mapper.toUiModel
 import com.ieum.presentation.model.post.PostWellnessUiModel
 import com.ieum.presentation.navigation.MainScreen
@@ -44,9 +45,9 @@ class PostWellnessViewModel @Inject constructor(
     val event: Flow<PostWellnessEvent> = _event.receiveAsFlow()
 
     init {
-/*        if (id != null) {
+        if (id != null) {
             loadWellness(id)
-        }*/
+        }
     }
 
     private fun loadWellness(id: Int) {
@@ -122,12 +123,12 @@ class PostWellnessViewModel @Inject constructor(
     fun onPost() {
         viewModelScope.launch {
             uiState = PostWellnessUiState.Loading
-            /*val request = uiModel.toRequest()
+            val request = uiModel.toRequest()
             if (id == null) {
                 postWellness(request)
             } else {
                 patchWellness(id, request)
-            }*/
+            }
         }
     }
 
