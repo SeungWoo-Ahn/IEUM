@@ -4,5 +4,5 @@ import com.ieum.data.network.model.auth.OAuthRequestBody
 import com.ieum.data.network.model.auth.OAuthResponse
 
 interface AuthDataSource {
-    suspend fun login(oAuthRequestBody: OAuthRequestBody): OAuthResponse
+    suspend fun login(provider: String, requestBody: OAuthRequestBody): OAuthResponse
 }

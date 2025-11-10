@@ -8,9 +8,9 @@ import androidx.lifecycle.viewModelScope
 import com.ieum.domain.model.auth.OAuthRequest
 import com.ieum.domain.usecase.auth.LoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -22,8 +22,8 @@ class LoginViewModel @Inject constructor(
     var uiState by mutableStateOf<LoginUiState>(LoginUiState.Idle)
         private set
 
-    private val _event = MutableSharedFlow<LoginEvent>()
-    val event: SharedFlow<LoginEvent> = _event.asSharedFlow()
+    private val _event = Channel<LoginEvent>()
+    val event: Flow<LoginEvent> = _event.receiveAsFlow()
 
     fun onLogin(strategy: LoginStrategy) {
         viewModelScope.launch {
@@ -44,9 +44,9 @@ class LoginViewModel @Inject constructor(
         loginUseCase(oAuthRequest)
             .onSuccess { isRegistered ->
                 if (isRegistered) {
-                    _event.emit(LoginEvent.MoveMain)
+                    _event.send(LoginEvent.MoveMain)
                 } else {
-                    _event.emit(LoginEvent.MoveRegister)
+                    _event.send(LoginEvent.MoveRegister)
                 }
             }
             .onFailure { t ->
