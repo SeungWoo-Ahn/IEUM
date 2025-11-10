@@ -7,7 +7,7 @@ import javax.inject.Inject
 class PostDailyUseCase @Inject constructor(
     private val postRepository: PostRepository
 ) {
-    suspend operator fun invoke(request: PostDailyRequest): Result<Int> = runCatching {
+    suspend operator fun invoke(request: PostDailyRequest): Result<Unit> = runCatching {
         postRepository.postDaily(request)
     }
 }

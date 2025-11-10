@@ -16,6 +16,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -51,6 +52,14 @@ fun PostDailyRoute(
         contract = ActivityResultContracts.PickMultipleVisualMedia(MAX_IMAGE_COUNT),
         onResult = viewModel::onPhotoPickerResult,
     )
+
+    LaunchedEffect(Unit) {
+        viewModel.event.collect { event ->
+            when (event) {
+                PostDailyEvent.MoveBack -> onBack()
+            }
+        }
+    }
 
     PostDailyScreen(
         modifier = modifier,
