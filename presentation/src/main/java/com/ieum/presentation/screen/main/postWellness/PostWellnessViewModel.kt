@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.ieum.domain.model.image.ImageSource
+import com.ieum.domain.model.post.PostWellnessRequest
 import com.ieum.domain.usecase.post.GetWellnessUseCase
 import com.ieum.domain.usecase.post.PatchWellnessUseCase
 import com.ieum.domain.usecase.post.PostWellnessUseCase
@@ -17,6 +18,9 @@ import com.ieum.presentation.model.post.PostWellnessUiModel
 import com.ieum.presentation.navigation.MainScreen
 import com.ieum.presentation.util.ImageUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -36,6 +40,9 @@ class PostWellnessViewModel @Inject constructor(
     var uiModel by mutableStateOf(PostWellnessUiModel.EMPTY)
         private set
 
+    private val _event = Channel<PostWellnessEvent>()
+    val event: Flow<PostWellnessEvent> = _event.receiveAsFlow()
+
     init {
 /*        if (id != null) {
             loadWellness(id)
@@ -50,6 +57,7 @@ class PostWellnessViewModel @Inject constructor(
                 }
                 .onFailure {
                     // TODO: 로드 실패
+                    _event.send(PostWellnessEvent.MoveBack)
                 }
         }
     }
@@ -114,7 +122,32 @@ class PostWellnessViewModel @Inject constructor(
     fun onPost() {
         viewModelScope.launch {
             uiState = PostWellnessUiState.Loading
-            // TODO: 비즈니스 로직 추가
+            /*val request = uiModel.toRequest()
+            if (id == null) {
+                postWellness(request)
+            } else {
+                patchWellness(id, request)
+            }*/
         }
+    }
+
+    private suspend fun postWellness(request: PostWellnessRequest) {
+        postWellnessUseCase(request)
+            .onSuccess {
+                _event.send(PostWellnessEvent.MoveBack)
+            }
+            .onFailure {
+                // 치료 기록 게시 실패
+            }
+    }
+
+    private suspend fun patchWellness(id: Int, request: PostWellnessRequest) {
+        patchWellnessUseCase(id, request)
+            .onSuccess {
+                _event.send(PostWellnessEvent.MoveBack)
+            }
+            .onFailure {
+                // 치료 기록 수정 실패
+            }
     }
 }

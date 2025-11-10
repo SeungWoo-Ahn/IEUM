@@ -7,7 +7,7 @@ import javax.inject.Inject
 class PostWellnessUseCase @Inject constructor(
     private val postRepository: PostRepository,
 ) {
-    suspend operator fun invoke(request: PostWellnessRequest): Result<Int> = runCatching {
+    suspend operator fun invoke(request: PostWellnessRequest): Result<Unit> = runCatching {
         postRepository.postWellness(request)
     }
 }
