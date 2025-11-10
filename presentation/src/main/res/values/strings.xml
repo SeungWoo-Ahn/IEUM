@@ -86,4 +86,6 @@
     <string name="placeholder_memo">추가로 남기고 싶은 글을 자유롭게 적어주세요.</string>
     <string name="placeholder_title">제목을 입력해 주세요</string>
     <string name="placeholder_story">자유롭게 이야기를 기록해 보세요</string>
+
+    <string name="write">글쓰기</string>
 </resources>

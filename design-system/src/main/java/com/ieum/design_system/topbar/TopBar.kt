@@ -68,7 +68,7 @@ fun TopBarForClose(
 }
 
 @Composable
-fun PostListTopBar(
+fun FeedTopBar(
     modifier: Modifier = Modifier
 ) {
     Box(
