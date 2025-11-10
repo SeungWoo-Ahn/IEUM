@@ -30,7 +30,6 @@ private fun Diagnose.toDto(): DiagnoseDto =
         )
         else -> DiagnoseDto(
             diagnosis = name.key,
-            cancerStage = null,
         )
     }
 
