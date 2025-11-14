@@ -13,8 +13,9 @@ enum class DiagnoseUiKey(@StringRes override val displayName: Int) : DiagnoseUiK
 }
 
 enum class CancerDiagnoseUiKey(@StringRes override val displayName: Int) : DiagnoseUiKeys {
-    RECTAL_CANCER(displayName = R.string.rectal_cancer),
     COLON_CANCER(displayName = R.string.colon_cancer),
+    RECTAL_CANCER(displayName = R.string.rectal_cancer),
+
 }
 
 data class CancerDiagnoseUiModel(

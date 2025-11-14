@@ -5,12 +5,16 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ieum.design_system.theme.screenPadding
 import com.ieum.design_system.topbar.FeedTopBar
+import com.ieum.presentation.model.post.DiagnoseFilterUiModel
 import com.ieum.presentation.screen.component.AddPostDialog
+import com.ieum.presentation.screen.component.DiagnoseFilterArea
 import com.ieum.presentation.screen.component.WriteFAB
 
 @Composable
@@ -21,12 +25,15 @@ fun FeedRoute(
     viewModel: FeedViewModel = hiltViewModel(),
 ) {
     val uiState = viewModel.uiState
+    val selectedFilter by viewModel.selectedFilter.collectAsStateWithLifecycle()
 
     FeedScreen(
         modifier = modifier,
+        selectedFilter = selectedFilter,
+        onFilter = viewModel::onFilter,
         showAddPostDialog = viewModel::showAddPostDialog
     )
-    if (uiState == FeedUiState.ShowAddPostDialog) {
+    if (uiState is FeedUiState.ShowAddPostDialog) {
         AddPostDialog(
             movePostWellness = movePostWellness,
             movePostDaily = movePostDaily,
@@ -38,6 +45,8 @@ fun FeedRoute(
 @Composable
 private fun FeedScreen(
     modifier: Modifier,
+    selectedFilter: DiagnoseFilterUiModel,
+    onFilter: (DiagnoseFilterUiModel) -> Unit,
     showAddPostDialog: () -> Unit,
 ) {
     Box(
@@ -47,6 +56,10 @@ private fun FeedScreen(
             modifier = Modifier.fillMaxSize()
         ) {
             FeedTopBar()
+            DiagnoseFilterArea(
+                selectedFilter = selectedFilter,
+                onFilter = onFilter,
+            )
         }
         WriteFAB(
             modifier = Modifier

@@ -15,7 +15,7 @@ fun IEUMNavHost(
     NavHost(
         modifier = modifier,
         navController = appState.navController,
-        startDestination = ScreenGraph.Auth,
+        startDestination = ScreenGraph.Main,
     ) {
         nestedAuthGraph(appState)
         nestedMainGraph(appState)
