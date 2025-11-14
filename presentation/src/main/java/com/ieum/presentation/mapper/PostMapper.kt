@@ -8,6 +8,7 @@ import com.ieum.domain.model.post.Post
 import com.ieum.domain.model.post.PostWellnessRequest
 import com.ieum.domain.model.user.Diagnosis
 import com.ieum.presentation.model.post.AmountEatenUiModel
+import com.ieum.presentation.model.post.DiagnoseFilterUiModel
 import com.ieum.presentation.model.post.DietUiModel
 import com.ieum.presentation.model.post.MoodUiModel
 import com.ieum.presentation.model.post.PostWellnessUiModel
@@ -78,3 +79,12 @@ fun PostWellnessUiModel.toRequest(): PostWellnessRequest =
         imageList = imageList.filterIsInstance<ImageSource.Local>(), // TODO: 이미지 삭제 추가 후 수정
         shared = shared,
     )
+
+fun DiagnoseFilterUiModel.toDomain(): Diagnosis? =
+    when (this) {
+        DiagnoseFilterUiModel.ENTIRE -> null
+        DiagnoseFilterUiModel.COLON_CANCER -> Diagnosis.COLON_CANCER
+        DiagnoseFilterUiModel.RECTAL_CANCER -> Diagnosis.RECTAL_CANCER
+        DiagnoseFilterUiModel.LIVER_TRANSPLANT -> Diagnosis.LIVER_TRANSPLANT
+        DiagnoseFilterUiModel.OTHERS -> Diagnosis.OTHERS
+    }

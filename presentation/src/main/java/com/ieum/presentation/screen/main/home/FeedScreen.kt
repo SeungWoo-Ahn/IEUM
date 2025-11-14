@@ -10,8 +10,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.ieum.design_system.theme.screenPadding
 import com.ieum.design_system.topbar.FeedTopBar
+import com.ieum.domain.model.post.Post
 import com.ieum.presentation.model.post.DiagnoseFilterUiModel
 import com.ieum.presentation.screen.component.AddPostDialog
 import com.ieum.presentation.screen.component.DiagnoseFilterArea
@@ -26,10 +30,12 @@ fun FeedRoute(
 ) {
     val uiState = viewModel.uiState
     val selectedFilter by viewModel.selectedFilter.collectAsStateWithLifecycle()
+    val postList = viewModel.postList.collectAsLazyPagingItems()
 
     FeedScreen(
         modifier = modifier,
         selectedFilter = selectedFilter,
+        postList = postList,
         onFilter = viewModel::onFilter,
         showAddPostDialog = viewModel::showAddPostDialog
     )
@@ -46,6 +52,7 @@ fun FeedRoute(
 private fun FeedScreen(
     modifier: Modifier,
     selectedFilter: DiagnoseFilterUiModel,
+    postList: LazyPagingItems<Post>,
     onFilter: (DiagnoseFilterUiModel) -> Unit,
     showAddPostDialog: () -> Unit,
 ) {
@@ -60,6 +67,11 @@ private fun FeedScreen(
                 selectedFilter = selectedFilter,
                 onFilter = onFilter,
             )
+            when (postList.loadState.refresh) {
+                LoadState.Loading -> TODO()
+                is LoadState.Error -> TODO()
+                is LoadState.NotLoading -> TODO()
+            }
         }
         WriteFAB(
             modifier = Modifier
