@@ -15,8 +15,8 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ieum.design_system.theme.screenPadding
 import com.ieum.design_system.topbar.FeedTopBar
-import com.ieum.domain.model.post.Post
 import com.ieum.presentation.model.post.DiagnoseFilterUiModel
+import com.ieum.presentation.model.post.PostUiModel
 import com.ieum.presentation.screen.component.AddPostDialog
 import com.ieum.presentation.screen.component.DiagnoseFilterArea
 import com.ieum.presentation.screen.component.WriteFAB
@@ -52,7 +52,7 @@ fun FeedRoute(
 private fun FeedScreen(
     modifier: Modifier,
     selectedFilter: DiagnoseFilterUiModel,
-    postList: LazyPagingItems<Post>,
+    postList: LazyPagingItems<PostUiModel>,
     onFilter: (DiagnoseFilterUiModel) -> Unit,
     showAddPostDialog: () -> Unit,
 ) {

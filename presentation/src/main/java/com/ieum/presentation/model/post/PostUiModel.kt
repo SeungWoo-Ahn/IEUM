@@ -1,26 +1,26 @@
-package com.ieum.domain.model.post
+package com.ieum.presentation.model.post
 
-sealed class Post {
+import com.ieum.domain.model.post.PostUserInfo
+
+sealed class PostUiModel {
     abstract val id: Int
     abstract val userInfo: PostUserInfo?
     abstract val imageList: List<String>?
     abstract val shared: Boolean
-    abstract val createdAt: Int
-    abstract val updatedAt: Int
+    abstract val createdAt: String
 
     data class Wellness(
         override val id: Int,
         override val userInfo: PostUserInfo?,
-        val mood: Mood,
+        val mood: MoodUiModel,
         val unusualSymptoms: String?,
         val medicationTaken: Boolean,
-        val diet: Diet?,
+        val diet: DietUiModel?,
         val memo: String?,
         override val imageList: List<String>?,
         override val shared: Boolean,
-        override val createdAt: Int,
-        override val updatedAt: Int,
-    ) : Post()
+        override val createdAt: String
+    ) : PostUiModel()
 
     data class Daily(
         override val id: Int,
@@ -29,7 +29,6 @@ sealed class Post {
         val content: String,
         override val imageList: List<String>?,
         override val shared: Boolean,
-        override val createdAt: Int,
-        override val updatedAt: Int,
-    ) : Post()
+        override val createdAt: String
+    ) : PostUiModel()
 }

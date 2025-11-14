@@ -14,6 +14,7 @@ import com.ieum.domain.model.post.Mood
 import com.ieum.domain.model.post.Post
 import com.ieum.domain.model.post.PostDailyRequest
 import com.ieum.domain.model.post.PostType
+import com.ieum.domain.model.post.PostUserInfo
 import com.ieum.domain.model.post.PostWellnessRequest
 
 suspend fun PostWellnessRequest.asBody(): PostWellnessRequestBody =
@@ -48,9 +49,6 @@ private suspend fun ImageSource.Local.toDto(): PostImageDto.ForRequest? {
     )
 }
 
-private fun PostImageDto.ForResponse.toDomain(): ImageSource.Remote =
-    ImageSource.Remote(url = url)
-
 suspend fun PostDailyRequest.asBody(): PostDailyRequestBody =
     PostDailyRequestBody(
         title = title,
@@ -63,25 +61,23 @@ fun AllPostDto.toDomain(): Post =
     when (type) {
         PostType.WELLNESS.key -> Post.Wellness(
             id = id,
-            userId = userId,
-            userNickname = userNickname,
+            userInfo = PostUserInfo(userId, userNickname),
             mood = Mood.fromKey(requireNotNull(mood)),
             unusualSymptoms = unusualSymptoms,
             medicationTaken = requireNotNull(medicationTaken),
             diet = requireNotNull(diet).toDomain(),
             memo = memo,
-            imageList = images?.map(PostImageDto.ForResponse::toDomain),
+            imageList = images?.map(PostImageDto.ForResponse::url),
             shared = true,
             createdAt = createdAt,
             updatedAt = updatedAt,
         )
         PostType.DAILY.key -> Post.Daily(
             id = id,
-            userId = userId,
-            userNickname = userNickname,
+            userInfo = PostUserInfo(userId, userNickname),
             title = requireNotNull(title),
             content = requireNotNull(content),
-            imageList = images?.map(PostImageDto.ForResponse::toDomain),
+            imageList = images?.map(PostImageDto.ForResponse::url),
             shared = true,
             createdAt = createdAt,
             updatedAt = updatedAt,
@@ -93,25 +89,23 @@ fun MyPostDto.toDomain(): Post =
     when (type) {
         PostType.WELLNESS.key -> Post.Wellness(
             id = id,
-            userId = null,
-            userNickname = null,
+            userInfo = null,
             mood = Mood.fromKey(requireNotNull(mood)),
             unusualSymptoms = unusualSymptoms,
             medicationTaken = requireNotNull(medicationTaken),
             diet = requireNotNull(diet).toDomain(),
             memo = memo,
-            imageList = images?.map(PostImageDto.ForResponse::toDomain),
+            imageList = images?.map(PostImageDto.ForResponse::url),
             shared = shared,
             createdAt = createdAt,
             updatedAt = updatedAt,
         )
         PostType.DAILY.key -> Post.Daily(
             id = id,
-            userId = null,
-            userNickname = null,
+            userInfo = null,
             title = requireNotNull(title),
             content = requireNotNull(content),
-            imageList = images?.map(PostImageDto.ForResponse::toDomain),
+            imageList = images?.map(PostImageDto.ForResponse::url),
             shared = shared,
             createdAt = createdAt,
             updatedAt = updatedAt,
@@ -123,25 +117,23 @@ fun OtherPostDto.toDomain(): Post =
     when (type) {
         PostType.WELLNESS.key -> Post.Wellness(
             id = id,
-            userId = null,
-            userNickname = null,
+            userInfo = null,
             mood = Mood.fromKey(requireNotNull(mood)),
             unusualSymptoms = unusualSymptoms,
             medicationTaken = requireNotNull(medicationTaken),
             diet = requireNotNull(diet).toDomain(),
             memo = memo,
-            imageList = images?.map(PostImageDto.ForResponse::toDomain),
+            imageList = images?.map(PostImageDto.ForResponse::url),
             shared = true,
             createdAt = createdAt,
             updatedAt = updatedAt,
         )
         PostType.DAILY.key -> Post.Daily(
             id = id,
-            userId = null,
-            userNickname = null,
+            userInfo = null,
             title = requireNotNull(title),
             content = requireNotNull(content),
-            imageList = images?.map(PostImageDto.ForResponse::toDomain),
+            imageList = images?.map(PostImageDto.ForResponse::url),
             shared = true,
             createdAt = createdAt,
             updatedAt = updatedAt,

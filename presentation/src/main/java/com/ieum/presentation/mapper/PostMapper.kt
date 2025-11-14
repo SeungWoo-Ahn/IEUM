@@ -11,6 +11,7 @@ import com.ieum.presentation.model.post.AmountEatenUiModel
 import com.ieum.presentation.model.post.DiagnoseFilterUiModel
 import com.ieum.presentation.model.post.DietUiModel
 import com.ieum.presentation.model.post.MoodUiModel
+import com.ieum.presentation.model.post.PostUiModel
 import com.ieum.presentation.model.post.PostWellnessUiModel
 
 private fun Mood.toUiModel(): MoodUiModel =
@@ -79,6 +80,31 @@ fun PostWellnessUiModel.toRequest(): PostWellnessRequest =
         imageList = imageList.filterIsInstance<ImageSource.Local>(), // TODO: 이미지 삭제 추가 후 수정
         shared = shared,
     )
+
+fun Post.toUiModel(): PostUiModel =
+    when (this) {
+        is Post.Wellness -> PostUiModel.Wellness(
+            id = id,
+            userInfo = userInfo,
+            mood = mood.toUiModel(),
+            unusualSymptoms = unusualSymptoms,
+            medicationTaken = medicationTaken,
+            diet = diet?.toUiModel(),
+            memo = memo,
+            imageList = imageList,
+            shared = shared,
+            createdAt = formatDate(DateFormatStrategy.FullDate(createdAt))
+        )
+        is Post.Daily -> PostUiModel.Daily(
+            id = id,
+            userInfo = userInfo,
+            title = title,
+            content = content,
+            imageList = imageList,
+            shared = shared,
+            createdAt = formatDate(DateFormatStrategy.FullDate(createdAt))
+        )
+    }
 
 fun DiagnoseFilterUiModel.toDomain(): Diagnosis? =
     when (this) {

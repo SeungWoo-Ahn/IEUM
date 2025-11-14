@@ -9,15 +9,19 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import androidx.paging.map
 import com.ieum.domain.model.post.Post
 import com.ieum.domain.usecase.post.GetAllPostListUseCase
 import com.ieum.presentation.mapper.toDomain
+import com.ieum.presentation.mapper.toUiModel
 import com.ieum.presentation.model.post.DiagnoseFilterUiModel
+import com.ieum.presentation.model.post.PostUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
@@ -31,7 +35,7 @@ class FeedViewModel @Inject constructor(
     private val _selectedFilter = MutableStateFlow(DiagnoseFilterUiModel.ENTIRE)
     val selectedFilter: StateFlow<DiagnoseFilterUiModel> get() = _selectedFilter
 
-    val postList: Flow<PagingData<Post>> =
+    val postList: Flow<PagingData<PostUiModel>> =
         selectedFilter
             .flatMapLatest { filter ->
                 Pager(
@@ -42,6 +46,9 @@ class FeedViewModel @Inject constructor(
                     ) }
                 )
                     .flow
+            }
+            .map { pagingData ->
+                pagingData.map(Post::toUiModel)
             }
             .cachedIn(viewModelScope)
 
