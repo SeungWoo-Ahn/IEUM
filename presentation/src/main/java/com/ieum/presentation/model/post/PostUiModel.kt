@@ -1,11 +1,12 @@
 package com.ieum.presentation.model.post
 
+import com.ieum.domain.model.image.ImageSource
 import com.ieum.domain.model.post.PostUserInfo
 
 sealed class PostUiModel {
     abstract val id: Int
     abstract val userInfo: PostUserInfo?
-    abstract val imageList: List<String>?
+    abstract val imageList: List<ImageSource.Remote>?
     abstract val shared: Boolean
     abstract val createdAt: String
 
@@ -17,7 +18,7 @@ sealed class PostUiModel {
         val medicationTaken: Boolean,
         val diet: DietUiModel?,
         val memo: String?,
-        override val imageList: List<String>?,
+        override val imageList: List<ImageSource.Remote>?,
         override val shared: Boolean,
         override val createdAt: String
     ) : PostUiModel()
@@ -27,7 +28,7 @@ sealed class PostUiModel {
         override val userInfo: PostUserInfo?,
         val title: String,
         val content: String,
-        override val imageList: List<String>?,
+        override val imageList: List<ImageSource.Remote>?,
         override val shared: Boolean,
         override val createdAt: String
     ) : PostUiModel()

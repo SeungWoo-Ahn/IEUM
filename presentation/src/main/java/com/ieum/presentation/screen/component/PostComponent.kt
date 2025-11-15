@@ -46,6 +46,7 @@ import com.ieum.design_system.theme.White
 import com.ieum.design_system.util.noRippleClickable
 import com.ieum.domain.model.image.ImageSource
 import com.ieum.presentation.R
+import com.ieum.presentation.model.post.AmountEatenUiModel
 import com.ieum.presentation.model.post.DietUiModel
 import com.ieum.presentation.model.post.MoodUiModel
 import com.ieum.presentation.screen.main.postWellness.MAX_IMAGE_COUNT
@@ -178,7 +179,7 @@ fun UnusualSymptomsBox(
 }
 
 @Composable
-private fun MedicationTakenInfo(data: Boolean) {
+fun MedicationTakenInfo(data: Boolean) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(2.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -229,6 +230,21 @@ fun TakingMedicineBox(
 }
 
 @Composable
+fun AmountEatenInfo(data: AmountEatenUiModel) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(2.dp),
+        verticalAlignment = Alignment.Bottom,
+    ) {
+        data.icon()
+        Text(
+            text = stringResource(data.description),
+            style = MaterialTheme.typography.bodySmall,
+            color = Slate700,
+        )
+    }
+}
+
+@Composable
 fun DietBox(
     data: DietUiModel?,
     onClick: () -> Unit,
@@ -246,17 +262,7 @@ fun DietBox(
             if (data == null) {
                 PlusCircleIcon()
             } else {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(2.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    data.amountEaten.icon()
-                    Text(
-                        text = stringResource(data.amountEaten.description),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = Slate700,
-                    )
-                }
+                AmountEatenInfo(data = data.amountEaten)
             }
         }
         if (data == null) {

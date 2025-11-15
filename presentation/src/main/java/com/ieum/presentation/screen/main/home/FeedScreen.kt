@@ -13,12 +13,15 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.ieum.design_system.progressbar.IEUMLoadingComponent
 import com.ieum.design_system.theme.screenPadding
 import com.ieum.design_system.topbar.FeedTopBar
 import com.ieum.presentation.model.post.DiagnoseFilterUiModel
 import com.ieum.presentation.model.post.PostUiModel
 import com.ieum.presentation.screen.component.AddPostDialog
 import com.ieum.presentation.screen.component.DiagnoseFilterArea
+import com.ieum.presentation.screen.component.ErrorComponent
+import com.ieum.presentation.screen.component.PostListArea
 import com.ieum.presentation.screen.component.WriteFAB
 
 @Composable
@@ -37,6 +40,10 @@ fun FeedRoute(
         selectedFilter = selectedFilter,
         postList = postList,
         onFilter = viewModel::onFilter,
+        onNickname = {},
+        onMenu = {},
+        onLike = {},
+        onComment = {},
         showAddPostDialog = viewModel::showAddPostDialog
     )
     if (uiState is FeedUiState.ShowAddPostDialog) {
@@ -54,6 +61,10 @@ private fun FeedScreen(
     selectedFilter: DiagnoseFilterUiModel,
     postList: LazyPagingItems<PostUiModel>,
     onFilter: (DiagnoseFilterUiModel) -> Unit,
+    onNickname: (Int) -> Unit,
+    onMenu: (Int) -> Unit,
+    onLike: (Int) -> Unit,
+    onComment: (Int) -> Unit,
     showAddPostDialog: () -> Unit,
 ) {
     Box(
@@ -68,9 +79,15 @@ private fun FeedScreen(
                 onFilter = onFilter,
             )
             when (postList.loadState.refresh) {
-                LoadState.Loading -> TODO()
-                is LoadState.Error -> TODO()
-                is LoadState.NotLoading -> TODO()
+                LoadState.Loading -> IEUMLoadingComponent()
+                is LoadState.Error -> ErrorComponent(onRetry = postList::retry)
+                is LoadState.NotLoading -> PostListArea(
+                    postList = postList,
+                    onNickname = onNickname,
+                    onMenu = onMenu,
+                    onLike = onLike,
+                    onComment = onComment,
+                )
             }
         }
         WriteFAB(

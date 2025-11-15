@@ -49,6 +49,10 @@ private suspend fun ImageSource.Local.toDto(): PostImageDto.ForRequest? {
     )
 }
 
+private fun PostImageDto.ForResponse.toDomain(): ImageSource.Remote =
+    ImageSource.Remote(url)
+
+
 suspend fun PostDailyRequest.asBody(): PostDailyRequestBody =
     PostDailyRequestBody(
         title = title,
@@ -67,7 +71,7 @@ fun AllPostDto.toDomain(): Post =
             medicationTaken = requireNotNull(medicationTaken),
             diet = requireNotNull(diet).toDomain(),
             memo = memo,
-            imageList = images?.map(PostImageDto.ForResponse::url),
+            imageList = images?.map(PostImageDto.ForResponse::toDomain),
             shared = true,
             createdAt = createdAt,
             updatedAt = updatedAt,
@@ -77,7 +81,7 @@ fun AllPostDto.toDomain(): Post =
             userInfo = PostUserInfo(userId, userNickname),
             title = requireNotNull(title),
             content = requireNotNull(content),
-            imageList = images?.map(PostImageDto.ForResponse::url),
+            imageList = images?.map(PostImageDto.ForResponse::toDomain),
             shared = true,
             createdAt = createdAt,
             updatedAt = updatedAt,
@@ -95,7 +99,7 @@ fun MyPostDto.toDomain(): Post =
             medicationTaken = requireNotNull(medicationTaken),
             diet = requireNotNull(diet).toDomain(),
             memo = memo,
-            imageList = images?.map(PostImageDto.ForResponse::url),
+            imageList = images?.map(PostImageDto.ForResponse::toDomain),
             shared = shared,
             createdAt = createdAt,
             updatedAt = updatedAt,
@@ -105,7 +109,7 @@ fun MyPostDto.toDomain(): Post =
             userInfo = null,
             title = requireNotNull(title),
             content = requireNotNull(content),
-            imageList = images?.map(PostImageDto.ForResponse::url),
+            imageList = images?.map(PostImageDto.ForResponse::toDomain),
             shared = shared,
             createdAt = createdAt,
             updatedAt = updatedAt,
@@ -123,7 +127,7 @@ fun OtherPostDto.toDomain(): Post =
             medicationTaken = requireNotNull(medicationTaken),
             diet = requireNotNull(diet).toDomain(),
             memo = memo,
-            imageList = images?.map(PostImageDto.ForResponse::url),
+            imageList = images?.map(PostImageDto.ForResponse::toDomain),
             shared = true,
             createdAt = createdAt,
             updatedAt = updatedAt,
@@ -133,7 +137,7 @@ fun OtherPostDto.toDomain(): Post =
             userInfo = null,
             title = requireNotNull(title),
             content = requireNotNull(content),
-            imageList = images?.map(PostImageDto.ForResponse::url),
+            imageList = images?.map(PostImageDto.ForResponse::toDomain),
             shared = true,
             createdAt = createdAt,
             updatedAt = updatedAt,
