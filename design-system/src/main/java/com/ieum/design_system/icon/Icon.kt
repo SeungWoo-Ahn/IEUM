@@ -349,3 +349,56 @@ fun PenIcon() {
     )
 }
 
+@Composable
+fun FeedLightIcon() {
+    Icon(
+        modifier = Modifier.size(32.dp),
+        painter = painterResource(R.drawable.ic_feed_light),
+        contentDescription = "ic-feed-light",
+    )
+}
+
+@Composable
+fun FeedDarkIcon() {
+    Icon(
+        modifier = Modifier.size(32.dp),
+        painter = painterResource(R.drawable.ic_feed_dark),
+        contentDescription = "ic-feed-dark",
+    )
+}
+
+@Composable
+fun CalendarLightIcon() {
+    Icon(
+        modifier = Modifier.size(32.dp),
+        painter = painterResource(R.drawable.ic_calendar_light),
+        contentDescription = "ic-calendar-light",
+    )
+}
+
+@Composable
+fun CalendarDarkIcon() {
+    Icon(
+        modifier = Modifier.size(32.dp),
+        painter = painterResource(R.drawable.ic_calendar_dark),
+        contentDescription = "ic-calendar-dark",
+    )
+}
+
+@Composable
+fun ProfileLightIcon() {
+    Icon(
+        modifier = Modifier.size(32.dp),
+        painter = painterResource(R.drawable.ic_profile_light),
+        contentDescription = "ic-profile-light",
+    )
+}
+
+@Composable
+fun ProfileDarkIcon() {
+    Icon(
+        modifier = Modifier.size(32.dp),
+        painter = painterResource(R.drawable.ic_profile_dark),
+        contentDescription = "ic-profile-dark",
+    )
+}
