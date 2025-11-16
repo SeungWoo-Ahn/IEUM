@@ -8,6 +8,7 @@ import com.ieum.presentation.navigation.MainScreen
 import com.ieum.presentation.navigation.ScreenGraph
 import com.ieum.presentation.screen.IEUMAppState
 import com.ieum.presentation.screen.main.home.HomeRoute
+import com.ieum.presentation.screen.main.othersProfile.OthersProfileRoute
 import com.ieum.presentation.screen.main.postDaily.PostDailyRoute
 import com.ieum.presentation.screen.main.postWellness.PostWellnessRoute
 
@@ -29,6 +30,11 @@ fun NavGraphBuilder.nestedMainGraph(appState: IEUMAppState) {
         }
         composable<MainScreen.PostDaily> {
             PostDailyRoute(
+                onBack = navController::popBackStack,
+            )
+        }
+        composable<MainScreen.OthersProfile> {
+            OthersProfileRoute(
                 onBack = navController::popBackStack,
             )
         }

@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,13 +47,8 @@ fun BottomNavigation(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .background(
-                color = White,
-                shape = MaterialTheme.shapes.medium,
-            )
-            .dropShadow(
-                offsetY = (-4).dp
-            )
+            .background(color = White)
+            .dropShadow(offsetY = (-4).dp)
             .padding(
                 horizontal = 24.dp,
                 vertical = 14.dp,
