@@ -78,9 +78,13 @@ fun Modifier.topBorder(
     )
 }
 
-fun Modifier.noRippleClickable(onClick: () -> Unit) = composed {
+fun Modifier.noRippleClickable(
+    enabled: Boolean = true,
+    onClick: () -> Unit
+) = composed {
     this.clickable(
         indication = null,
+        enabled = enabled,
         interactionSource = remember { MutableInteractionSource() },
         onClick = onClick,
     )

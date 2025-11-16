@@ -16,10 +16,10 @@ class AuthRemoteDataSource @Inject constructor(
     @NetworkSource(IEUMNetwork.Default)
     private val ktorClient: HttpClient,
 ) : AuthDataSource {
-    override suspend fun login(oAuthRequestBody: OAuthRequestBody): OAuthResponse =
+    override suspend fun login(provider: String, requestBody: OAuthRequestBody): OAuthResponse =
         ktorClient
-            .post("api/v1/auth/oauth/callback") {
-                setBody(oAuthRequestBody)
+            .post("api/v1/auth/oauth/${provider}") {
+                setBody(requestBody)
             }
             .body<OAuthResponse>()
 }

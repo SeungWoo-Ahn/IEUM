@@ -1,4 +1,4 @@
-package com.ieum.presentation.screen.main.postTreatmentRecords
+package com.ieum.presentation.screen.main.postWellness
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -14,42 +14,43 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ieum.design_system.button.DarkButton
+import com.ieum.design_system.spacer.IEUMSpacer
 import com.ieum.design_system.theme.Slate100
 import com.ieum.design_system.theme.screenPadding
 import com.ieum.design_system.topbar.TopBarForClose
 import com.ieum.domain.model.image.ImageSource
 import com.ieum.presentation.R
-import com.ieum.presentation.model.post.PostTreatmentRecordsUiModel
+import com.ieum.presentation.model.post.PostWellnessUiModel
 import com.ieum.presentation.screen.component.AddImageBox
-import com.ieum.presentation.screen.component.DietaryStatusBox
-import com.ieum.presentation.screen.component.DietaryStatusSheet
+import com.ieum.presentation.screen.component.DietBox
+import com.ieum.presentation.screen.component.DietSheet
+import com.ieum.presentation.screen.component.MedicationTakenDialog
 import com.ieum.presentation.screen.component.MemoBox
 import com.ieum.presentation.screen.component.MemoSheet
+import com.ieum.presentation.screen.component.MoodBox
+import com.ieum.presentation.screen.component.MoodDialog
 import com.ieum.presentation.screen.component.ShareCommunityBox
-import com.ieum.presentation.screen.component.SpecificSymptomsBox
-import com.ieum.presentation.screen.component.SpecificSymptomsSheet
 import com.ieum.presentation.screen.component.TakingMedicineBox
-import com.ieum.presentation.screen.component.TakingMedicineDialog
+import com.ieum.presentation.screen.component.UnusualSymptomsBox
+import com.ieum.presentation.screen.component.UnusualSymptomsSheet
 import kotlinx.coroutines.CoroutineScope
 
 internal const val MAX_IMAGE_COUNT = 3
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PostTreatmentRecordsRoute(
+fun PostWellnessRoute(
     modifier: Modifier = Modifier,
     scope: CoroutineScope,
     onBack: () -> Unit,
-    viewModel: PostTreatmentRecordsViewModel = hiltViewModel(),
+    viewModel: PostWellnessViewModel = hiltViewModel(),
 ) {
     val uiState = viewModel.uiState
     val uiModel = viewModel.uiModel
@@ -59,13 +60,22 @@ fun PostTreatmentRecordsRoute(
         onResult = viewModel::onPhotoPickerResult,
     )
 
-    PostTreatmentRecordsScreen(
+    LaunchedEffect(Unit) {
+        viewModel.event.collect { event ->
+            when (event) {
+                PostWellnessEvent.MoveBack -> onBack()
+            }
+        }
+    }
+
+    PostWellnessScreen(
         modifier = modifier,
-        isLoading = uiState == PostTreatmentRecordsUiState.Loading,
+        isLoading = uiState == PostWellnessUiState.Loading,
         uiModel = uiModel,
-        showSpecificSymptomsSheet = viewModel::showSpecificSymptomsSheet,
-        showTakingMedicineDialog = viewModel::showTakingMedicineDialog,
-        showDietaryStatusSheet = viewModel::showDietaryStatusSheet,
+        showMoodDialog = viewModel::showMoodDialog,
+        showUnusualSymptomsSheet = viewModel::showUnusualSymptomsSheet,
+        showMedicationTakenDialog = viewModel::showMedicationTakenDialog,
+        showDietSheet = viewModel::showDietSheet,
         showMemoSheet = viewModel::showMemoSheet,
         showAddImageSheet = {
             if (uiModel.imageList.size < MAX_IMAGE_COUNT) {
@@ -79,32 +89,40 @@ fun PostTreatmentRecordsRoute(
         onPost = viewModel::onPost,
         onBack = onBack,
     )
-    if (uiState is PostTreatmentRecordsUiState.ShowSpecificSymptomsSheet) {
-        SpecificSymptomsSheet(
+    if (uiState is PostWellnessUiState.ShowMoodDialog) {
+        MoodDialog(
+            scope = scope,
+            data = uiModel.mood,
+            callback = uiState.callback,
+            onDismissRequest = viewModel::resetUiState,
+        )
+    }
+    if (uiState is PostWellnessUiState.ShowUnusualSymptomsSheet) {
+        UnusualSymptomsSheet(
             scope = scope,
             sheetState = sheetState,
-            data = uiModel.specificSymptoms,
+            data = uiModel.unusualSymptoms,
             callback = uiState.callback,
             onDismissRequest = viewModel::resetUiState,
         )
     }
-    if (uiState is PostTreatmentRecordsUiState.ShowTakingMedicineDialog) {
-        TakingMedicineDialog(
-            data = uiModel.takingMedicine,
+    if (uiState is PostWellnessUiState.ShowMedicationTakenDialog) {
+        MedicationTakenDialog(
+            data = uiModel.medicationTaken,
             callback = uiState.callback,
             onDismissRequest = viewModel::resetUiState,
         )
     }
-    if (uiState is PostTreatmentRecordsUiState.ShowDietaryStatusSheet) {
-        DietaryStatusSheet(
+    if (uiState is PostWellnessUiState.ShowDietSheet) {
+        DietSheet(
             scope = scope,
             sheetState = sheetState,
-            data = uiModel.dietaryStatus,
+            data = uiModel.diet,
             callback = uiState.callback,
             onDismissRequest = viewModel::resetUiState,
         )
     }
-    if (uiState is PostTreatmentRecordsUiState.ShowMemoSheet) {
+    if (uiState is PostWellnessUiState.ShowMemoSheet) {
         MemoSheet(
             scope = scope,
             sheetState = sheetState,
@@ -116,13 +134,14 @@ fun PostTreatmentRecordsRoute(
 }
 
 @Composable
-private fun PostTreatmentRecordsScreen(
+private fun PostWellnessScreen(
     modifier: Modifier,
     isLoading: Boolean,
-    uiModel: PostTreatmentRecordsUiModel,
-    showSpecificSymptomsSheet: () -> Unit,
-    showTakingMedicineDialog: () -> Unit,
-    showDietaryStatusSheet: () -> Unit,
+    uiModel: PostWellnessUiModel,
+    showMoodDialog: () -> Unit,
+    showUnusualSymptomsSheet: () -> Unit,
+    showMedicationTakenDialog: () -> Unit,
+    showDietSheet: () -> Unit,
     showMemoSheet: () -> Unit,
     showAddImageSheet: () -> Unit,
     onDeleteImage: (ImageSource) -> Unit,
@@ -130,38 +149,43 @@ private fun PostTreatmentRecordsScreen(
     onPost: () -> Unit,
     onBack: () -> Unit,
 ) {
-    val buttonEnabled by remember { derivedStateOf { isLoading.not() && uiModel.validate() } }
-
     Column(
         modifier = modifier
             .fillMaxSize()
             .background(color = Slate100)
     ) {
         TopBarForClose(
-            title = stringResource(R.string.treatment_records),
+            title = stringResource(R.string.wellness_records),
             onClose = onBack,
         )
         Box(
-            modifier = Modifier
-                .weight(1f)
-                .verticalScroll(state = rememberScrollState())
-                .padding(all = screenPadding)
+            modifier = Modifier.weight(1f)
         ) {
             Column(
-                modifier = Modifier.padding(bottom = 100.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(state = rememberScrollState())
+                    .padding(all = screenPadding)
+                    .padding(bottom = 100.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                SpecificSymptomsBox(
-                    data = uiModel.specificSymptoms,
-                    onClick = showSpecificSymptomsSheet,
+                MoodBox(
+                    data = uiModel.mood,
+                    onClick = showMoodDialog,
+                )
+                IEUMSpacer(size = 12)
+                UnusualSymptomsBox(
+                    data = uiModel.unusualSymptoms,
+                    onClick = showUnusualSymptomsSheet,
                 )
                 TakingMedicineBox(
-                    data = uiModel.takingMedicine,
-                    onClick = showTakingMedicineDialog,
+                    data = uiModel.medicationTaken,
+                    onClick = showMedicationTakenDialog,
                 )
-                DietaryStatusBox(
-                    data = uiModel.dietaryStatus,
-                    onClick = showDietaryStatusSheet,
+                DietBox(
+                    data = uiModel.diet,
+                    onClick = showDietSheet,
                 )
                 MemoBox(
                     data = uiModel.memo,
@@ -174,16 +198,22 @@ private fun PostTreatmentRecordsScreen(
                     onClick = showAddImageSheet,
                 )
                 ShareCommunityBox(
-                    data = uiModel.shareCommunity,
+                    data = uiModel.shared,
                     onClick = toggleShareCommunity,
                 )
             }
-            DarkButton(
-                modifier = Modifier.align(Alignment.BottomCenter),
-                text = stringResource(R.string.post),
-                enabled = buttonEnabled,
-                onClick = onPost,
-            )
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(all = screenPadding)
+                    .padding(top = 8.dp)
+            ) {
+                DarkButton(
+                    text = stringResource(R.string.post),
+                    enabled = isLoading.not() && uiModel.validate(),
+                    onClick = onPost,
+                )
+            }
         }
     }
 }

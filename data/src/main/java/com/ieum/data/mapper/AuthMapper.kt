@@ -1,21 +1,13 @@
 package com.ieum.data.mapper
 
 import com.ieum.data.TokenEntity
-import com.ieum.data.network.model.auth.OAuthRequestBody
 import com.ieum.data.network.model.auth.OAuthResponse
 import com.ieum.data.network.model.auth.OAuthUserDto
 import com.ieum.data.network.model.auth.RefreshTokenResponse
 import com.ieum.domain.model.auth.OAuthProvider
-import com.ieum.domain.model.auth.OAuthRequest
 import com.ieum.domain.model.auth.OAuthResult
 import com.ieum.domain.model.auth.OAuthUser
 import com.ieum.domain.model.auth.Token
-
-fun OAuthRequest.asBody(): OAuthRequestBody =
-    OAuthRequestBody(
-        provider = provider.key,
-        authorizationCode = code,
-    )
 
 fun OAuthUserDto.toDomain(): OAuthUser =
     OAuthUser(

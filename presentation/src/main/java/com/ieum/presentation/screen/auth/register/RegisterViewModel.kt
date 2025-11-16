@@ -18,10 +18,11 @@ import com.ieum.presentation.model.user.UserTypeUiModel
 import com.ieum.presentation.state.AddressState
 import com.ieum.presentation.state.DiagnoseState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,8 +33,8 @@ class RegisterViewModel @Inject constructor(
     var uiState by mutableStateOf<RegisterUiState>(RegisterUiState.Idle)
         private set
 
-    private val _event = MutableSharedFlow<RegisterEvent>()
-    val event: SharedFlow<RegisterEvent> = _event.asSharedFlow()
+    private val _event = Channel<RegisterEvent>()
+    val event: Flow<RegisterEvent> = _event.receiveAsFlow()
 
     var currentStage by mutableStateOf(RegisterStage.SelectUserType)
         private set
@@ -56,7 +57,7 @@ class RegisterViewModel @Inject constructor(
     fun onPrevStep() {
         if (currentStage == RegisterStage.entries.first()) {
             viewModelScope.launch {
-                _event.emit(RegisterEvent.MoveBack)
+                _event.send(RegisterEvent.MoveBack)
             }
         } else {
             val prevIdx = RegisterStage.entries.indexOf(currentStage) - 1
@@ -106,15 +107,15 @@ class RegisterViewModel @Inject constructor(
                 residenceArea = residenceState.getSelectedProvince()?.fullName,
                 hospitalArea = hospitalState.getSelectedProvince()?.fullName,
             )
-            _event.emit(RegisterEvent.MoveWelcome)
-/*            registerUseCase(registerRequest)
+            registerUseCase(registerRequest)
                 .onSuccess {
-                    _event.emit(RegisterEvent.MoveWelcome)
+                    _event.send(RegisterEvent.MoveWelcome)
                 }
-                .onFailure {
+                .onFailure { t ->
                     // 회원 가입 실패
                     uiState = RegisterUiState.Idle
-                }*/
+                    Timber.e(t)
+                }
         }
     }
 }

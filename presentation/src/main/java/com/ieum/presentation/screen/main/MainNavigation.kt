@@ -8,8 +8,8 @@ import com.ieum.presentation.navigation.MainScreen
 import com.ieum.presentation.navigation.ScreenGraph
 import com.ieum.presentation.screen.IEUMAppState
 import com.ieum.presentation.screen.main.home.HomeRoute
-import com.ieum.presentation.screen.main.postDailyRecords.PostDailyRecordsRoute
-import com.ieum.presentation.screen.main.postTreatmentRecords.PostTreatmentRecordsRoute
+import com.ieum.presentation.screen.main.postDaily.PostDailyRoute
+import com.ieum.presentation.screen.main.postWellness.PostWellnessRoute
 
 fun NavGraphBuilder.nestedMainGraph(appState: IEUMAppState) {
     val navController = appState.navController
@@ -17,18 +17,18 @@ fun NavGraphBuilder.nestedMainGraph(appState: IEUMAppState) {
     navigation<ScreenGraph.Main>(startDestination = MainScreen.Home) {
         composable<MainScreen.Home> {
             HomeRoute(
-                movePostTreatmentRecords = navController::navigateToPostTreatmentRecordsScreen,
-                movePostDailyRecords = navController::navigateToPostDailyRecordsScreen,
+                movePostWellness = navController::navigateToPostWellnessScreen,
+                movePostDaily = navController::navigateToPostDailyScreen,
             )
         }
-        composable<MainScreen.PostTreatmentRecords> {
-            PostTreatmentRecordsRoute(
+        composable<MainScreen.PostWellness> {
+            PostWellnessRoute(
                 scope = appState.coroutineScope,
                 onBack = navController::popBackStack,
             )
         }
-        composable<MainScreen.PostDailyRecords> {
-            PostDailyRecordsRoute(
+        composable<MainScreen.PostDaily> {
+            PostDailyRoute(
                 onBack = navController::popBackStack,
             )
         }
@@ -39,8 +39,8 @@ fun NavController.navigateToMainGraph() = navigate(ScreenGraph.Main) {
     popUpTo(graph.id) { inclusive = true }
 }
 
-fun NavController.navigateToPostTreatmentRecordsScreen(id: String? = null) =
-    navigate(MainScreen.PostTreatmentRecords(id))
+fun NavController.navigateToPostWellnessScreen(id: Int? = null) =
+    navigate(MainScreen.PostWellness(id))
 
-fun NavController.navigateToPostDailyRecordsScreen(id: String? = null) =
-    navigate(MainScreen.PostDailyRecords(id))
+fun NavController.navigateToPostDailyScreen(id: Int? = null) =
+    navigate(MainScreen.PostDaily(id))

@@ -4,8 +4,7 @@ import com.ieum.domain.model.image.ImageSource
 
 sealed class Post {
     abstract val id: Int
-    abstract val userId: Int?
-    abstract val userNickname: String?
+    abstract val userInfo: PostUserInfo?
     abstract val imageList: List<ImageSource.Remote>?
     abstract val shared: Boolean
     abstract val createdAt: Int
@@ -13,8 +12,7 @@ sealed class Post {
 
     data class Wellness(
         override val id: Int,
-        override val userId: Int?,
-        override val userNickname: String?,
+        override val userInfo: PostUserInfo?,
         val mood: Mood,
         val unusualSymptoms: String?,
         val medicationTaken: Boolean,
@@ -28,8 +26,7 @@ sealed class Post {
 
     data class Daily(
         override val id: Int,
-        override val userId: Int?,
-        override val userNickname: String?,
+        override val userInfo: PostUserInfo?,
         val title: String,
         val content: String,
         override val imageList: List<ImageSource.Remote>?,

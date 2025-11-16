@@ -14,6 +14,7 @@ import com.ieum.domain.model.post.Mood
 import com.ieum.domain.model.post.Post
 import com.ieum.domain.model.post.PostDailyRequest
 import com.ieum.domain.model.post.PostType
+import com.ieum.domain.model.post.PostUserInfo
 import com.ieum.domain.model.post.PostWellnessRequest
 
 suspend fun PostWellnessRequest.asBody(): PostWellnessRequestBody =
@@ -21,8 +22,8 @@ suspend fun PostWellnessRequest.asBody(): PostWellnessRequestBody =
         diagnosis = diagnosis.key,
         mood = mood.key,
         unusualSymptoms = unusualSymptoms,
-        medicationTaken = medicationTaken ?: false,
-        diet = (diet ?: Diet.DEFAULT).toDto(),
+        medicationTaken = medicationTaken,
+        diet = diet?.toDto(),
         memo = memo,
         images = imageList.mapNotNull { it.toDto() }.ifEmpty { null },
         shared = shared,
@@ -49,7 +50,8 @@ private suspend fun ImageSource.Local.toDto(): PostImageDto.ForRequest? {
 }
 
 private fun PostImageDto.ForResponse.toDomain(): ImageSource.Remote =
-    ImageSource.Remote(url = url)
+    ImageSource.Remote(url)
+
 
 suspend fun PostDailyRequest.asBody(): PostDailyRequestBody =
     PostDailyRequestBody(
@@ -63,8 +65,7 @@ fun AllPostDto.toDomain(): Post =
     when (type) {
         PostType.WELLNESS.key -> Post.Wellness(
             id = id,
-            userId = userId,
-            userNickname = userNickname,
+            userInfo = PostUserInfo(userId, userNickname),
             mood = Mood.fromKey(requireNotNull(mood)),
             unusualSymptoms = unusualSymptoms,
             medicationTaken = requireNotNull(medicationTaken),
@@ -77,8 +78,7 @@ fun AllPostDto.toDomain(): Post =
         )
         PostType.DAILY.key -> Post.Daily(
             id = id,
-            userId = userId,
-            userNickname = userNickname,
+            userInfo = PostUserInfo(userId, userNickname),
             title = requireNotNull(title),
             content = requireNotNull(content),
             imageList = images?.map(PostImageDto.ForResponse::toDomain),
@@ -93,8 +93,7 @@ fun MyPostDto.toDomain(): Post =
     when (type) {
         PostType.WELLNESS.key -> Post.Wellness(
             id = id,
-            userId = null,
-            userNickname = null,
+            userInfo = null,
             mood = Mood.fromKey(requireNotNull(mood)),
             unusualSymptoms = unusualSymptoms,
             medicationTaken = requireNotNull(medicationTaken),
@@ -107,8 +106,7 @@ fun MyPostDto.toDomain(): Post =
         )
         PostType.DAILY.key -> Post.Daily(
             id = id,
-            userId = null,
-            userNickname = null,
+            userInfo = null,
             title = requireNotNull(title),
             content = requireNotNull(content),
             imageList = images?.map(PostImageDto.ForResponse::toDomain),
@@ -123,8 +121,7 @@ fun OtherPostDto.toDomain(): Post =
     when (type) {
         PostType.WELLNESS.key -> Post.Wellness(
             id = id,
-            userId = null,
-            userNickname = null,
+            userInfo = null,
             mood = Mood.fromKey(requireNotNull(mood)),
             unusualSymptoms = unusualSymptoms,
             medicationTaken = requireNotNull(medicationTaken),
@@ -137,8 +134,7 @@ fun OtherPostDto.toDomain(): Post =
         )
         PostType.DAILY.key -> Post.Daily(
             id = id,
-            userId = null,
-            userNickname = null,
+            userInfo = null,
             title = requireNotNull(title),
             content = requireNotNull(content),
             imageList = images?.map(PostImageDto.ForResponse::toDomain),

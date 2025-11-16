@@ -4,5 +4,5 @@ import com.ieum.domain.model.auth.OAuthRequest
 import com.ieum.domain.model.auth.OAuthResult
 
 interface AuthRepository {
-    suspend fun login(oAuthRequest: OAuthRequest): OAuthResult
+    suspend fun login(request: OAuthRequest): OAuthResult
 }

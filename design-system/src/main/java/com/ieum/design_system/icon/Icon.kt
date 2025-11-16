@@ -1,5 +1,6 @@
 package com.ieum.design_system.icon
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -9,11 +10,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.ieum.design_system.R
+import com.ieum.design_system.theme.White
 
 @Composable
-fun IEUMIcon() {
+fun IEUMIcon(
+    modifier: Modifier = Modifier
+) {
     Icon(
-        modifier = Modifier.size(
+        modifier = modifier.size(
             width = 50.dp,
             height = 26.dp,
         ),
@@ -73,22 +77,22 @@ fun CloseCircleIcon() {
 }
 
 @Composable
-fun TreatmentRecordsIcon() {
+fun WellnessIcon() {
     Icon(
         modifier = Modifier.size(24.dp),
-        painter = painterResource(R.drawable.ic_treatment_records),
+        painter = painterResource(R.drawable.ic_wellness),
         tint = Color.Unspecified,
-        contentDescription = "ic-treatment-records",
+        contentDescription = "ic-wellness",
     )
 }
 
 @Composable
-fun DailyRecordsIcon() {
+fun DailyIcon() {
     Icon(
         modifier = Modifier.size(24.dp),
-        painter = painterResource(R.drawable.ic_daily_records),
+        painter = painterResource(R.drawable.ic_daily),
         tint = Color.Unspecified,
-        contentDescription = "ic-daily-records",
+        contentDescription = "ic-daily",
     )
 }
 
@@ -173,12 +177,12 @@ fun EatSmallAmountsIcon() {
 }
 
 @Composable
-fun EatNothingIcon() {
+fun EatBarelyIcon() {
     Icon(
         modifier = Modifier.size(24.dp),
-        painter = painterResource(R.drawable.ic_eat_nothing),
+        painter = painterResource(R.drawable.ic_eat_barely),
         tint = Color.Unspecified,
-        contentDescription = "ic-eat-nothing",
+        contentDescription = "ic-eat-barely",
     )
 }
 
@@ -217,3 +221,131 @@ fun PlusCircleIcon(
         contentDescription = "ic-plus-circle",
     )
 }
+
+@Composable
+fun MoodHappyIcon() {
+    Icon(
+        modifier = Modifier.fillMaxSize(),
+        painter = painterResource(R.drawable.ic_mood_happy),
+        tint = Color.Unspecified,
+        contentDescription = "ic-mood-happy",
+    )
+}
+
+@Composable
+fun MoodGoodIcon() {
+    Icon(
+        modifier = Modifier.fillMaxSize(),
+        painter = painterResource(R.drawable.ic_mood_good),
+        tint = Color.Unspecified,
+        contentDescription = "ic-mood-good",
+    )
+}
+
+@Composable
+fun MoodNormalIcon() {
+    Icon(
+        modifier = Modifier.fillMaxSize(),
+        painter = painterResource(R.drawable.ic_mood_normal),
+        tint = Color.Unspecified,
+        contentDescription = "ic-mood-normal",
+    )
+}
+
+@Composable
+fun MoodBadIcon() {
+    Icon(
+        modifier = Modifier.fillMaxSize(),
+        painter = painterResource(R.drawable.ic_mood_bad),
+        tint = Color.Unspecified,
+        contentDescription = "ic-mood-bad",
+    )
+}
+
+@Composable
+fun MoodWorstIcon() {
+    Icon(
+        modifier = Modifier.fillMaxSize(),
+        painter = painterResource(R.drawable.ic_mood_worst),
+        tint = Color.Unspecified,
+        contentDescription = "ic-mood-worst",
+    )
+}
+
+@Composable
+fun MoodSelectIcon() {
+    Icon(
+        modifier = Modifier.fillMaxSize(),
+        painter = painterResource(R.drawable.ic_mood_select),
+        tint = Color.Unspecified,
+        contentDescription = "ic-mood-select",
+    )
+}
+
+@Composable
+fun RefreshBlackIcon(modifier: Modifier) {
+    Icon(
+        modifier = modifier.size(32.dp),
+        painter = painterResource(R.drawable.ic_refresh_black),
+        tint = Color.Unspecified,
+        contentDescription = "ic-refresh-black",
+    )
+}
+
+@Composable
+fun LeftIcon() {
+    Icon(
+        modifier = Modifier.size(24.dp),
+        painter = painterResource(R.drawable.ic_left),
+        tint = White,
+        contentDescription = "ic-left",
+    )
+}
+
+@Composable
+fun RightIcon() {
+    Icon(
+        modifier = Modifier.size(24.dp),
+        painter = painterResource(R.drawable.ic_right),
+        tint = White,
+        contentDescription = "ic-right",
+    )
+}
+
+@Composable
+fun CommentIcon() {
+    Icon(
+        modifier = Modifier.size(28.dp),
+        painter = painterResource(R.drawable.ic_comment),
+        contentDescription = "ic-comment",
+    )
+}
+
+@Composable
+fun HeartIcon() {
+    Icon(
+        modifier = Modifier.size(28.dp),
+        painter = painterResource(R.drawable.ic_heart),
+        contentDescription = "ic-heart",
+    )
+}
+
+@Composable
+fun MenuIcon() {
+    Icon(
+        modifier = Modifier.size(24.dp),
+        painter = painterResource(R.drawable.ic_menu),
+        contentDescription = "ic-menu",
+    )
+}
+
+@Composable
+fun PenIcon() {
+    Icon(
+        modifier = Modifier.size(24.dp),
+        painter = painterResource(R.drawable.ic_pen),
+        tint = White,
+        contentDescription = "ic-pen",
+    )
+}
+

@@ -81,5 +81,13 @@ internal val IEUMTypography = Typography(
         fontWeight = FontWeight.Medium,
         fontSize = 15.sp,
         color = Gray950,
+    ),
+    labelSmall = TextStyle(
+        fontFamily = Pretendard,
+        fontWeight = FontWeight.Medium,
+        fontSize = 13.sp,
+        lineHeight = 13.sp * 1.4f,
+        letterSpacing = (-0.01).em,
+        color = Gray950,
     )
 )

@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class DiagnoseDto(
     val diagnosis: String,
-    val cancerStage: Int?,
+    val cancerStage: Int? = null,
 )

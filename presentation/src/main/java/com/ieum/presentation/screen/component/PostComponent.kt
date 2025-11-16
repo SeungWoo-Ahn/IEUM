@@ -33,7 +33,9 @@ import com.ieum.design_system.icon.IncompleteIcon
 import com.ieum.design_system.icon.MealIcon
 import com.ieum.design_system.icon.MedicineIcon
 import com.ieum.design_system.icon.MemoIcon
+import com.ieum.design_system.icon.MoodSelectIcon
 import com.ieum.design_system.icon.PlusCircleIcon
+import com.ieum.design_system.icon.RefreshBlackIcon
 import com.ieum.design_system.icon.ThunderIcon
 import com.ieum.design_system.spacer.IEUMSpacer
 import com.ieum.design_system.theme.Slate100
@@ -41,10 +43,13 @@ import com.ieum.design_system.theme.Slate200
 import com.ieum.design_system.theme.Slate500
 import com.ieum.design_system.theme.Slate700
 import com.ieum.design_system.theme.White
+import com.ieum.design_system.util.noRippleClickable
 import com.ieum.domain.model.image.ImageSource
 import com.ieum.presentation.R
-import com.ieum.presentation.model.post.DietaryStatusUiModel
-import com.ieum.presentation.screen.main.postTreatmentRecords.MAX_IMAGE_COUNT
+import com.ieum.presentation.model.post.AmountEatenUiModel
+import com.ieum.presentation.model.post.DietUiModel
+import com.ieum.presentation.model.post.MoodUiModel
+import com.ieum.presentation.screen.main.postWellness.MAX_IMAGE_COUNT
 
 @Composable
 private fun PostBox(
@@ -123,8 +128,30 @@ private fun PostSeparator() {
     )
 }
 
+
 @Composable
-fun SpecificSymptomsBox(
+fun MoodBox(
+    data: MoodUiModel?,
+    onClick: () -> Unit,
+) {
+    Box(
+        modifier = Modifier
+            .size(108.dp)
+            .noRippleClickable(onClick = onClick)
+    ) {
+        if (data == null) {
+            MoodSelectIcon()
+        } else {
+            data.icon()
+        }
+        RefreshBlackIcon(
+            modifier = Modifier.align(Alignment.TopEnd)
+        )
+    }
+}
+
+@Composable
+fun UnusualSymptomsBox(
     data: String,
     onClick: () -> Unit,
 ) {
@@ -135,7 +162,7 @@ fun SpecificSymptomsBox(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             PostInfo(
-                name = stringResource(R.string.specific_symptoms),
+                name = stringResource(R.string.unusual_symptoms),
                 icon = { ThunderIcon() },
             )
             if (data.isBlank()) {
@@ -143,7 +170,7 @@ fun SpecificSymptomsBox(
             }
         }
         if (data.isBlank()) {
-            PostGuide(guide = stringResource(R.string.guide_specific_symptoms))
+            PostGuide(guide = stringResource(R.string.guide_unusual_symptoms))
         } else {
             PostSeparator()
             PostText(text = data)
@@ -152,7 +179,7 @@ fun SpecificSymptomsBox(
 }
 
 @Composable
-private fun TakingMedicineInfo(data: Boolean) {
+fun MedicationTakenInfo(data: Boolean) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(2.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -187,24 +214,39 @@ fun TakingMedicineBox(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             PostInfo(
-                name = stringResource(R.string.taking_medicine),
+                name = stringResource(R.string.medication_taken),
                 icon = { MedicineIcon() },
             )
             if (data == null) {
                 PlusCircleIcon()
             } else {
-                TakingMedicineInfo(data = data)
+                MedicationTakenInfo(data = data)
             }
         }
         if (data == null) {
-            PostGuide(guide = stringResource(R.string.guide_taking_medicine))
+            PostGuide(guide = stringResource(R.string.guide_medication_taken))
         }
     }
 }
 
 @Composable
-fun DietaryStatusBox(
-    data: DietaryStatusUiModel?,
+fun AmountEatenInfo(data: AmountEatenUiModel) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(2.dp),
+        verticalAlignment = Alignment.Bottom,
+    ) {
+        data.icon()
+        Text(
+            text = stringResource(data.description),
+            style = MaterialTheme.typography.bodySmall,
+            color = Slate700,
+        )
+    }
+}
+
+@Composable
+fun DietBox(
+    data: DietUiModel?,
     onClick: () -> Unit,
 ) {
     PostBox(onClick) {
@@ -214,30 +256,20 @@ fun DietaryStatusBox(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             PostInfo(
-                name = stringResource(R.string.dietary_status),
+                name = stringResource(R.string.diet),
                 icon = { MealIcon() }
             )
             if (data == null) {
                 PlusCircleIcon()
             } else {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(2.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    data.info.icon()
-                    Text(
-                        text = stringResource(data.info.description),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = Slate700,
-                    )
-                }
+                AmountEatenInfo(data = data.amountEaten)
             }
         }
         if (data == null) {
-            PostGuide(guide = stringResource(R.string.guide_dietary_status))
+            PostGuide(guide = stringResource(R.string.guide_diet))
         } else {
             PostSeparator()
-            PostText(text = data.content)
+            PostText(text = data.mealContent)
         }
     }
 }

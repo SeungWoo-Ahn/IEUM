@@ -111,7 +111,7 @@ fun TypeTitle(state: ITextFieldState) {
 }
 
 @Composable
-fun TypeStory(state: ITextFieldState) {
+fun TypeContent(state: ITextFieldState) {
     StylelessTextField(
         modifier = Modifier
             .height(394.dp)

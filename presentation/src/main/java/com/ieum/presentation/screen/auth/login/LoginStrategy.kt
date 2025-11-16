@@ -23,7 +23,10 @@ sealed interface LoginStrategy {
 
         override suspend fun proceed(): Result<OAuthRequest> = runCatching {
             val accessToken = loginWithTalk()
-            OAuthRequest(provider, accessToken)
+            OAuthRequest(
+                provider = provider,
+                accessToken = accessToken,
+            )
         }
 
         private suspend fun loginWithTalk(): String =
