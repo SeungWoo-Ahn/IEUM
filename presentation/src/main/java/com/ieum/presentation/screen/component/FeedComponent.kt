@@ -314,6 +314,7 @@ private fun PostItemContent(
     post: PostUiModel,
 ) {
     var expanded by remember { mutableStateOf(false) }
+    var showSeeMore by remember { mutableStateOf(true) }
 
     Column(
         modifier = modifier
@@ -334,9 +335,10 @@ private fun PostItemContent(
                 expanded = expanded,
                 title = post.title,
                 content = post.content,
+                getVisualOverflow = { showSeeMore = it }
             )
         }
-        if (expanded.not()) {
+        if (showSeeMore && expanded.not()) {
             Text(
                 modifier = Modifier.noRippleClickable { expanded = true },
                 text = stringResource(R.string.see_more),
@@ -477,6 +479,7 @@ private fun DailyContent(
     expanded: Boolean,
     title: String,
     content: String,
+    getVisualOverflow: (Boolean) -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -493,7 +496,8 @@ private fun DailyContent(
             style = MaterialTheme.typography.bodySmall,
             color = Slate600,
             maxLines = if (expanded) Int.MAX_VALUE else 2,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
+            onTextLayout = { result -> getVisualOverflow(result.hasVisualOverflow) }
         )
     }
 }
