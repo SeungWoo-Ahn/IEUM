@@ -256,11 +256,10 @@ fun AddPostDialog(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = Black.copy(alpha = 0.4f))
             .noRippleClickable(onClick = onDismissRequest)
             .padding(
                 horizontal = screenPadding,
-                vertical = 24.dp
+                vertical = 90.dp
             ),
         contentAlignment = Alignment.BottomCenter,
     ) {
@@ -279,13 +278,19 @@ fun AddPostDialog(
                 name = stringResource(R.string.wellness_records),
                 guide = stringResource(R.string.guide_wellness_records),
                 icon = { WellnessIcon() },
-                onClick = movePostWellness
+                onClick = {
+                    movePostWellness()
+                    onDismissRequest()
+                }
             )
             AddPostItem(
                 name = stringResource(R.string.daily_records),
                 guide = stringResource(R.string.guide_daily_records),
                 icon = { DailyIcon() },
-                onClick = movePostDaily
+                onClick = {
+                    movePostDaily()
+                    onDismissRequest()
+                }
             )
         }
     }

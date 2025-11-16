@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
@@ -93,7 +94,10 @@ private fun FeedScreen(
         WriteFAB(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(all = screenPadding),
+                .padding(
+                    end = screenPadding,
+                    bottom = 90.dp,
+                ),
             onClick = showAddPostDialog,
         )
     }
