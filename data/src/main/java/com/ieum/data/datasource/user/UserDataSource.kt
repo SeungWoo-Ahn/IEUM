@@ -19,10 +19,5 @@ interface UserDataSource {
 
     suspend fun getMyPostList(page: Int, size: Int, type: String): GetPostListResponse<MyPostDto>
 
-    suspend fun getOtherPostList(
-        page: Int,
-        size: Int,
-        id: Int,
-        type: String
-    ): GetPostListResponse<OtherPostDto>
+    suspend fun getOtherPostList(page: Int, size: Int, id: Int): GetPostListResponse<OtherPostDto>
 }

@@ -63,13 +63,11 @@ class UserRemoteDataSource @Inject constructor(
         page: Int,
         size: Int,
         id: Int,
-        type: String
     ): GetPostListResponse<OtherPostDto> =
         ktorClient
             .get("api/v1/users/${id}/posts") {
                 parameter("page", page)
                 parameter("pageSize", size)
-                parameter("type", type)
             }
             .body<GetPostListResponse<OtherPostDto>>()
 }

@@ -7,6 +7,7 @@ import com.ieum.data.network.model.post.MyPostDto
 import com.ieum.data.network.model.post.OtherPostDto
 import com.ieum.domain.model.post.Post
 import com.ieum.domain.model.post.PostType
+import com.ieum.domain.model.user.OthersProfile
 import com.ieum.domain.model.user.PatchProfileRequest
 import com.ieum.domain.model.user.Profile
 import com.ieum.domain.model.user.RegisterRequest
@@ -31,7 +32,7 @@ class UserRepositoryImpl @Inject constructor(
         userDataSource
             .patchMyProfile(request.asBody())
 
-    override suspend fun getOthersProfile(id: Int): Profile =
+    override suspend fun getOthersProfile(id: Int): OthersProfile =
         userDataSource
             .getOthersProfile(id)
             .toDomain()
@@ -42,14 +43,9 @@ class UserRepositoryImpl @Inject constructor(
             .posts
             .map(MyPostDto::toDomain)
 
-    override suspend fun getOthersPostList(
-        page: Int,
-        size: Int,
-        id: Int,
-        type: PostType
-    ): List<Post> =
+    override suspend fun getOthersPostList(page: Int, size: Int, id: Int): List<Post> =
         userDataSource
-            .getOtherPostList(page = page, size = size, id = id, type = type.key)
+            .getOtherPostList(page = page, size = size, id = id)
             .posts
             .map(OtherPostDto::toDomain)
 }

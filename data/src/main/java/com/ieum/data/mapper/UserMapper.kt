@@ -15,6 +15,7 @@ import com.ieum.domain.model.user.Chemotherapy
 import com.ieum.domain.model.user.DataStatus
 import com.ieum.domain.model.user.Diagnose
 import com.ieum.domain.model.user.Diagnosis
+import com.ieum.domain.model.user.OthersProfile
 import com.ieum.domain.model.user.PatchProfileRequest
 import com.ieum.domain.model.user.Profile
 import com.ieum.domain.model.user.RadiationTherapy
@@ -114,52 +115,31 @@ fun MyProfileDto.toDomain(): Profile =
         },
     )
 
-fun OthersProfileDto.toDomain(): Profile =
-    Profile(
+fun OthersProfileDto.toDomain(): OthersProfile =
+    OthersProfile(
         id = id,
         oAuthProvider = OAuthProvider.fromKey(oauthProvider),
-        email = null,
         userType = UserType.fromKey(userType),
         nickname = nickname,
-        sex = if (sexVisible) {
-            DataStatus.Open(
-                Sex.fromKey(requireNotNull(sex))
-            )
+        sex = if (sexVisible && sex != null) Sex.fromKey(sex) else null,
+        diagnoses = if (diagnosesVisible && diagnoses != null) {
+            diagnoses.map(DiagnoseDto::toDomain)
         } else {
-            DataStatus.None
+            null
         },
-        diagnoses = if (diagnosesVisible) {
-            DataStatus.Open(
-                requireNotNull(diagnoses).map(DiagnoseDto::toDomain)
-            )
+        chemotherapy = if (chemotherapyVisible && chemotherapy != null) {
+            chemotherapy.toDomain()
         } else {
-            DataStatus.None
+            null
         },
-        chemotherapy = if (chemotherapy == null || chemotherapyVisible.not()) {
-            DataStatus.None
+        radiationTherapy = if (radiationTherapyVisible && radiationTherapy != null) {
+            radiationTherapy.toDomain()
         } else {
-            DataStatus.Open(chemotherapy.toDomain())
+            null
         },
-        radiationTherapy = if (radiationTherapy == null || radiationTherapyVisible.not()) {
-            DataStatus.None
-        } else {
-            DataStatus.Open(radiationTherapy.toDomain())
-        },
-        ageGroup = if (ageGroup == null || ageGroupVisible.not()) {
-            DataStatus.None
-        } else {
-            DataStatus.Open(AgeGroup.fromKey(ageGroup))
-        },
-        residenceArea = if (residenceArea == null || residenceAreaVisible.not()) {
-            DataStatus.None
-        } else {
-            DataStatus.Open(residenceArea)
-        },
-        hospitalArea = if (hospitalArea == null || hospitalAreaVisible.not()) {
-            DataStatus.None
-        } else {
-            DataStatus.Open(hospitalArea)
-        },
+        ageGroup = if (ageGroupVisible && ageGroup != null) AgeGroup.fromKey(ageGroup) else null,
+        residenceArea = if (residenceAreaVisible && residenceArea != null) residenceArea else null,
+        hospitalArea = if (hospitalAreaVisible && hospitalArea != null) hospitalArea else null,
     )
 
 private fun <T> DataStatus<T>?.split(): Pair<T?, Boolean?> = when (this) {
