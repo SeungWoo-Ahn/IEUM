@@ -17,14 +17,9 @@ import com.ieum.design_system.icon.FeedDarkIcon
 import com.ieum.design_system.icon.FeedLightIcon
 import com.ieum.design_system.icon.ProfileDarkIcon
 import com.ieum.design_system.icon.ProfileLightIcon
-import com.ieum.design_system.theme.Slate100
-import com.ieum.design_system.theme.Slate200
-import com.ieum.design_system.theme.Slate300
-import com.ieum.design_system.theme.Slate700
 import com.ieum.design_system.theme.White
 import com.ieum.design_system.util.dropShadow
 import com.ieum.design_system.util.noRippleClickable
-import com.ieum.design_system.util.topBorder
 
 enum class BottomNavigationItem(
     val unselectedIcon: @Composable () -> Unit,

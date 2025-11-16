@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.ieum.presentation.screen.component.BottomNavigation
 import com.ieum.presentation.screen.component.BottomNavigationItem
 
@@ -13,11 +14,12 @@ fun HomeRoute(
     modifier: Modifier = Modifier,
     movePostWellness: () -> Unit,
     movePostDaily: () -> Unit,
+    viewModel: HomeViewModel = hiltViewModel(),
 ) {
     HomeScreen(
         modifier = modifier,
-        selectedBottomNavigationItem = BottomNavigationItem.Feed,
-        onBottomNavigationItemClick = {},
+        selectedBottomNavigationItem = viewModel.selectedBottomNavigationItem,
+        onBottomNavigationItemClick = viewModel::onBottomNavigationItemClick,
         movePostWellness = movePostWellness,
         movePostDaily = movePostDaily,
     )
