@@ -15,13 +15,14 @@ sealed interface DateFormatStrategy {
         private val pattern = "yyyy년 MM월 dd일"
 
         override fun format(): String {
+            val seconds = timestamp.toLong()
             return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val instant = Instant.ofEpochMilli(timestamp.toLong())
+                val instant = Instant.ofEpochSecond(seconds)
                 val dateTime = instant.atZone(ZoneId.systemDefault())
                 val formatter = DateTimeFormatter.ofPattern(pattern, Locale.KOREA)
                 dateTime.format(formatter)
             } else {
-                val milliseconds = timestamp.toLong() * 1_000
+                val milliseconds = seconds * 1_000
                 val date = Date(milliseconds)
                 val formatter = SimpleDateFormat(pattern, Locale.KOREA)
                 formatter.format(date)
