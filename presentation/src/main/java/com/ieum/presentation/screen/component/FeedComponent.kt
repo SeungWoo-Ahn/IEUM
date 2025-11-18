@@ -32,6 +32,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
 import com.ieum.design_system.icon.CommentIcon
@@ -42,6 +43,7 @@ import com.ieum.design_system.icon.MemoIcon
 import com.ieum.design_system.icon.MenuIcon
 import com.ieum.design_system.icon.PenIcon
 import com.ieum.design_system.icon.ThunderIcon
+import com.ieum.design_system.progressbar.IEUMLoadingComponent
 import com.ieum.design_system.theme.Slate100
 import com.ieum.design_system.theme.Slate400
 import com.ieum.design_system.theme.Slate600
@@ -147,21 +149,25 @@ fun PostListArea(
     onLike: (Int) -> Unit,
     onComment: (Int) -> Unit,
 ) {
-    LazyColumn(
-        modifier = modifier.fillMaxSize(),
-    ) {
-        items(
-            count = postList.itemCount,
-            key = postList.itemKey { it.id }
-        ) { index ->
-            postList[index]?.let { post ->
-                PostItem(
-                    post = post,
-                    onNickname = onNickname,
-                    onMenu = { onMenu(post.id) },
-                    onLike = { onLike(post.id) },
-                    onComment = { onComment(post.id) }
-                )
+    when (postList.loadState.refresh) {
+        LoadState.Loading -> IEUMLoadingComponent()
+        is LoadState.Error -> ErrorComponent(onRetry = postList::retry)
+        is LoadState.NotLoading -> LazyColumn(
+            modifier = modifier.fillMaxSize(),
+        ) {
+            items(
+                count = postList.itemCount,
+                key = postList.itemKey { it.id }
+            ) { index ->
+                postList[index]?.let { post ->
+                    PostItem(
+                        post = post,
+                        onNickname = onNickname,
+                        onMenu = { onMenu(post.id) },
+                        onLike = { onLike(post.id) },
+                        onComment = { onComment(post.id) }
+                    )
+                }
             }
         }
     }

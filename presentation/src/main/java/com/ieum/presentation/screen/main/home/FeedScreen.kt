@@ -11,17 +11,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.ieum.design_system.progressbar.IEUMLoadingComponent
 import com.ieum.design_system.theme.screenPadding
 import com.ieum.design_system.topbar.FeedTopBar
 import com.ieum.presentation.model.post.DiagnoseFilterUiModel
 import com.ieum.presentation.model.post.PostUiModel
 import com.ieum.presentation.screen.component.AddPostDialog
 import com.ieum.presentation.screen.component.DiagnoseFilterArea
-import com.ieum.presentation.screen.component.ErrorComponent
 import com.ieum.presentation.screen.component.PostListArea
 import com.ieum.presentation.screen.component.WriteFAB
 
@@ -79,17 +76,13 @@ private fun FeedScreen(
                 selectedFilter = selectedFilter,
                 onFilter = onFilter,
             )
-            when (postList.loadState.refresh) {
-                LoadState.Loading -> IEUMLoadingComponent()
-                is LoadState.Error -> ErrorComponent(onRetry = postList::retry)
-                is LoadState.NotLoading -> PostListArea(
-                    postList = postList,
-                    onNickname = onNickname,
-                    onMenu = onMenu,
-                    onLike = onLike,
-                    onComment = onComment,
-                )
-            }
+            PostListArea(
+                postList = postList,
+                onNickname = onNickname,
+                onMenu = onMenu,
+                onLike = onLike,
+                onComment = onComment,
+            )
         }
         WriteFAB(
             modifier = Modifier

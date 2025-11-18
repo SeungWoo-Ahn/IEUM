@@ -6,11 +6,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.PagingData
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.ieum.design_system.progressbar.IEUMLoadingComponent
 import com.ieum.design_system.theme.Slate50
 import com.ieum.design_system.topbar.TopBarForBack
+import com.ieum.presentation.model.post.PostUiModel
 import com.ieum.presentation.screen.component.OthersProfileSection
 import com.ieum.presentation.screen.component.OthersProfileTabArea
+import com.ieum.presentation.screen.component.PostListArea
+import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun OthersProfileRoute(
@@ -22,7 +27,11 @@ fun OthersProfileRoute(
         modifier = modifier,
         uiState = viewModel.uiState,
         currentTab = viewModel.currentTab,
+        postListFlow = viewModel.postListFlow,
         onTabClick = viewModel::selectTab,
+        onMenu = {},
+        onLike = {},
+        onComment = {},
         onBack = onBack,
     )
 }
@@ -30,9 +39,13 @@ fun OthersProfileRoute(
 @Composable
 private fun OthersProfileScreen(
     modifier: Modifier,
-    currentTab: OthersProfileTab,
     uiState: OthersProfileUiState,
+    currentTab: OthersProfileTab,
+    postListFlow: Flow<PagingData<PostUiModel>>,
     onTabClick: (OthersProfileTab) -> Unit,
+    onMenu: (Int) -> Unit,
+    onLike: (Int) -> Unit,
+    onComment: (Int) -> Unit,
     onBack: () -> Unit,
 ) {
     Column(
@@ -47,7 +60,16 @@ private fun OthersProfileScreen(
                 OthersProfileTabArea(currentTab = currentTab, onTabClick = onTabClick)
                 when (currentTab) {
                     OthersProfileTab.PROFILE -> OthersProfileSection(profile = uiState.profile)
-                    OthersProfileTab.POST_LIST -> {}
+                    OthersProfileTab.POST_LIST -> {
+                        val postList = postListFlow.collectAsLazyPagingItems()
+                        PostListArea(
+                            postList = postList,
+                            onNickname = {},
+                            onMenu = onMenu,
+                            onLike = onLike,
+                            onComment = onComment,
+                        )
+                    }
                 }
             }
         }
