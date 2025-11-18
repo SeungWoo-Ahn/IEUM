@@ -24,8 +24,8 @@ import com.ieum.domain.model.user.Sex
 import com.ieum.domain.model.user.UserType
 
 private fun Diagnose.toDto(): DiagnoseDto =
-    when {
-        this is CancerDiagnose -> DiagnoseDto(
+    when(this) {
+        is CancerDiagnose -> DiagnoseDto(
             diagnosis = name.key,
             cancerStage = cancerStage.key,
         )
