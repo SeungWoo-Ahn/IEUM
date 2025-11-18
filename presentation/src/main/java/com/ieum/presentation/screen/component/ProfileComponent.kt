@@ -162,7 +162,9 @@ fun OthersProfileSection(
                         title = stringResource(R.string.diagnose)
                     ) {
                         FlowRow(
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(6.dp),
+                            verticalArrangement = Arrangement.spacedBy(6.dp),
                         ) {
                             it.forEach { data -> ProfileChip(text = data) }
                         }
@@ -198,7 +200,8 @@ fun OthersProfileSection(
                 }
                 profile.hospitalArea?.let {
                     OthersProfileItem(
-                        title = stringResource(R.string.hospital_area)
+                        title = stringResource(R.string.hospital_area),
+                        needDivider = false
                     ) {
                         ProfileChip(text = it)
                     }
