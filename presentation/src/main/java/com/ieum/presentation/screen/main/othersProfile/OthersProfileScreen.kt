@@ -6,8 +6,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.ieum.design_system.progressbar.IEUMLoadingComponent
 import com.ieum.design_system.theme.Slate50
 import com.ieum.design_system.topbar.TopBarForBack
+import com.ieum.presentation.screen.component.OthersProfileSection
 import com.ieum.presentation.screen.component.OthersProfileTabArea
 
 @Composable
@@ -18,6 +20,7 @@ fun OthersProfileRoute(
 ) {
     OthersProfileScreen(
         modifier = modifier,
+        uiState = viewModel.uiState,
         currentTab = viewModel.currentTab,
         onTabClick = viewModel::selectTab,
         onBack = onBack,
@@ -28,6 +31,7 @@ fun OthersProfileRoute(
 private fun OthersProfileScreen(
     modifier: Modifier,
     currentTab: OthersProfileTab,
+    uiState: OthersProfileUiState,
     onTabClick: (OthersProfileTab) -> Unit,
     onBack: () -> Unit,
 ) {
@@ -37,13 +41,15 @@ private fun OthersProfileScreen(
             .background(color = Slate50),
     ) {
         TopBarForBack(onBack = onBack)
-        OthersProfileTabArea(
-            currentTab = currentTab,
-            onTabClick = onTabClick,
-        )
-        when (currentTab) {
-            OthersProfileTab.PROFILE -> {}
-            OthersProfileTab.POST_LIST -> {}
+        when (uiState) {
+            OthersProfileUiState.Loading -> IEUMLoadingComponent()
+            is OthersProfileUiState.Success -> {
+                OthersProfileTabArea(currentTab = currentTab, onTabClick = onTabClick)
+                when (currentTab) {
+                    OthersProfileTab.PROFILE -> OthersProfileSection(profile = uiState.profile)
+                    OthersProfileTab.POST_LIST -> {}
+                }
+            }
         }
     }
 }

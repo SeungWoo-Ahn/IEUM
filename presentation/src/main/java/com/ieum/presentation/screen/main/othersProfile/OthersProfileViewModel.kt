@@ -10,6 +10,9 @@ import javax.inject.Inject
 @HiltViewModel
 class OthersProfileViewModel @Inject constructor() : ViewModel() {
 
+    var uiState by mutableStateOf(OthersProfileUiState.Loading)
+        private set
+
     var currentTab by mutableStateOf(OthersProfileTab.PROFILE)
         private set
 
