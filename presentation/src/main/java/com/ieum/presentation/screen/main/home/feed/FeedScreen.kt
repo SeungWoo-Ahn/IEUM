@@ -1,4 +1,4 @@
-package com.ieum.presentation.screen.main.home
+package com.ieum.presentation.screen.main.home.feed
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column

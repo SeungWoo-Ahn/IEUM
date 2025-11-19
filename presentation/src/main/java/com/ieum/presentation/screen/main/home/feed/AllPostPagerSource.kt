@@ -1,4 +1,4 @@
-package com.ieum.presentation.screen.main.home
+package com.ieum.presentation.screen.main.home.feed
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
