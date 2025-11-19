@@ -4,7 +4,7 @@ import com.ieum.domain.model.post.Post
 import com.ieum.domain.repository.UserRepository
 import javax.inject.Inject
 
-class GetOtherPostListUseCase @Inject constructor(
+class GetOthersPostListUseCase @Inject constructor(
     private val userRepository: UserRepository
 ) {
     suspend operator fun invoke(page: Int, size: Int, id: Int): Result<List<Post>> =
