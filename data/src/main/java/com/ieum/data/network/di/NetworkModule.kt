@@ -11,14 +11,11 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
-import io.ktor.client.call.NoTransformationFoundException
 import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
-import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.HttpResponseValidator
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.ResponseException
-import io.ktor.client.plugins.ServerResponseException
 import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.plugins.auth.providers.BearerTokens
 import io.ktor.client.plugins.auth.providers.bearer
@@ -32,6 +29,7 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import okio.IOException
 import timber.log.Timber
 import javax.inject.Singleton
 
@@ -47,8 +45,8 @@ internal object NetworkModule {
     private fun createKtorClient(): HttpClient =
         HttpClient(CIO) {
             install(HttpTimeout) {
-                connectTimeoutMillis = 5_000
-                requestTimeoutMillis = 5_000
+                connectTimeoutMillis = 10_000
+                requestTimeoutMillis = 10_000
             }
             install(Logging) {
                 logger = object : Logger {
@@ -76,21 +74,14 @@ internal object NetworkModule {
                 header(HttpHeaders.ContentType, ContentType.Application.Json)
             }
             HttpResponseValidator {
-                handleResponseExceptionWithRequest { exception, _ ->
-                    if (exception !is ResponseException) {
-                        return@handleResponseExceptionWithRequest
-                    }
-                    try {
-                        val errorResponse = exception.response.body<ErrorResponse>()
-                        when (exception) {
-                            is ClientRequestException -> throw NetworkException.ClientSide(errorResponse.message)
-                            is ServerResponseException -> throw NetworkException.ServerSide(errorResponse.message)
-                            else -> throw NetworkException.Unknown(errorResponse.message)
+                handleResponseException { cause, _ ->
+                    when (cause) {
+                        is IOException -> throw NetworkException.ConnectionException()
+                        is ResponseException -> {
+                            val errorResponse = cause.response.body<ErrorResponse>()
+                            throw NetworkException.ResponseException(errorResponse.message)
                         }
-                    } catch (e: NoTransformationFoundException) {
-                        throw NetworkException.Unknown("error response 직렬화 실패: ${e.message}")
-                    } catch (e: Exception) {
-                        throw NetworkException.Unknown("알 수 없는 예외 발생: ${e.message}")
+                        else -> throw NetworkException.UnknownException(cause)
                     }
                 }
             }
@@ -132,9 +123,9 @@ internal object NetworkModule {
                     val errorResponse = response.body<SGISErrorResponse>()
                     if (errorResponse.code != 0) {
                         if (errorResponse.code == -401) {
-                            throw SGISException.UnAuthorized(errorResponse.message)
+                            throw SGISException.UnAuthorized()
                         } else {
-                            throw SGISException.Unknown(errorResponse.message)
+                            throw SGISException.Unknown()
                         }
                     }
                 }
