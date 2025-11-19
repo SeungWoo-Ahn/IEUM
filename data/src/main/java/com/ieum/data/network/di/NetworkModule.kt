@@ -102,8 +102,9 @@ internal object NetworkModule {
                             }
                     }
                     sendWithoutRequest { request ->
-                        // TODO: Authorization 필요 없는 api 제외
-                        true
+                        val sendWithoutAuthorization =
+                            request.url.encodedPathSegments.contains("auth")
+                        sendWithoutAuthorization.not()
                     }
                 }
             }
