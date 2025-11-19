@@ -92,7 +92,9 @@
     <string name="see_more">더보기</string>
 
     <string name="profile">프로필</string>
-    <string name="postList">게시글</string>
+    <string name="post_list">게시글</string>
+    <string name="my_profile">내 프로필</string>
+    <string name="my_post_list">내가 쓴 글</string>
     <string name="opened_profile_data_empty">공개된 프로필 정보가 없습니다</string>
     <string name="diagnose">진단명</string>
     <string name="chemotherapy">항암 이력</string>
