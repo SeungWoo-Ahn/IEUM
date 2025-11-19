@@ -7,9 +7,9 @@ import com.ieum.data.network.model.post.MyPostDto
 import com.ieum.data.network.model.post.OtherPostDto
 import com.ieum.domain.model.post.Post
 import com.ieum.domain.model.post.PostType
+import com.ieum.domain.model.user.MyProfile
 import com.ieum.domain.model.user.OthersProfile
 import com.ieum.domain.model.user.PatchProfileRequest
-import com.ieum.domain.model.user.Profile
 import com.ieum.domain.model.user.RegisterRequest
 import com.ieum.domain.repository.UserRepository
 import javax.inject.Inject
@@ -23,7 +23,7 @@ class UserRepositoryImpl @Inject constructor(
         userDataSource
             .register(request.asBody())
 
-    override suspend fun getMyProfile(): Profile =
+    override suspend fun getMyProfile(): MyProfile =
         userDataSource
             .getMyProfile()
             .toDomain()

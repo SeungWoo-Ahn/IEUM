@@ -12,12 +12,12 @@ import com.ieum.domain.model.user.AgeGroup
 import com.ieum.domain.model.user.CancerDiagnose
 import com.ieum.domain.model.user.CancerStage
 import com.ieum.domain.model.user.Chemotherapy
-import com.ieum.domain.model.user.DataStatus
 import com.ieum.domain.model.user.Diagnose
 import com.ieum.domain.model.user.Diagnosis
+import com.ieum.domain.model.user.MyProfile
 import com.ieum.domain.model.user.OthersProfile
 import com.ieum.domain.model.user.PatchProfileRequest
-import com.ieum.domain.model.user.Profile
+import com.ieum.domain.model.user.ProfileProperty
 import com.ieum.domain.model.user.RadiationTherapy
 import com.ieum.domain.model.user.RegisterRequest
 import com.ieum.domain.model.user.Sex
@@ -77,43 +77,34 @@ private fun RadiationTherapyDto.toDomain(): RadiationTherapy =
         endDate = endDate,
     )
 
-fun MyProfileDto.toDomain(): Profile =
-    Profile(
+fun MyProfileDto.toDomain(): MyProfile =
+    MyProfile(
         id = id,
         oAuthProvider = OAuthProvider.fromKey(oauthProvider),
         email = email,
         userType = UserType.fromKey(userType),
         nickname = nickname,
-        sex = Sex.fromKey(sex)
-            .let { if (sexVisible) DataStatus.Open(it) else DataStatus.Hide(it) },
-        diagnoses = diagnoses.map(DiagnoseDto::toDomain)
-            .let { if (diagnosesVisible) DataStatus.Open(it) else DataStatus.Hide(it) },
-        chemotherapy = when {
-            chemotherapy == null -> DataStatus.None
-            chemotherapyVisible -> DataStatus.Open(chemotherapy.toDomain())
-            else -> DataStatus.Hide(chemotherapy.toDomain())
-        },
-        radiationTherapy = when {
-            radiationTherapy == null -> DataStatus.None
-            radiationTherapyVisible -> DataStatus.Open(radiationTherapy.toDomain())
-            else -> DataStatus.Hide(radiationTherapy.toDomain())
-        },
-        ageGroup = when {
-            ageGroup == null -> DataStatus.None
-            ageGroupVisible -> DataStatus.Open(AgeGroup.fromKey(ageGroup))
-            else -> DataStatus.Hide(AgeGroup.fromKey(ageGroup))
-        },
-        residenceArea = when {
-            residenceArea == null -> DataStatus.None
-            residenceAreaVisible -> DataStatus.Open(residenceArea)
-            else -> DataStatus.Hide(residenceArea)
-        },
-        hospitalArea = when {
-            hospitalArea == null -> DataStatus.None
-            hospitalAreaVisible -> DataStatus.Open(hospitalArea)
-            else -> DataStatus.Hide(hospitalArea)
-        },
+        sex = ProfileProperty(data = Sex.fromKey(sex), open = sexVisible),
+        diagnoses = ProfileProperty(
+            data = diagnoses.map(DiagnoseDto::toDomain),
+            open = diagnosesVisible
+        ),
+        chemotherapy = ProfileProperty(
+            data = chemotherapy?.toDomain(),
+            open = chemotherapyVisible
+        ),
+        radiationTherapy = ProfileProperty(
+            data = radiationTherapy?.toDomain(),
+            open = radiationTherapyVisible
+        ),
+        ageGroup = ProfileProperty(
+            data = ageGroup?.let { AgeGroup.fromKey(it) },
+            open = ageGroupVisible
+        ),
+        residenceArea = ProfileProperty(data = residenceArea, open = residenceAreaVisible),
+        hospitalArea = ProfileProperty(data = hospitalArea, open = hospitalAreaVisible),
     )
+
 
 fun OthersProfileDto.toDomain(): OthersProfile =
     OthersProfile(
@@ -142,32 +133,20 @@ fun OthersProfileDto.toDomain(): OthersProfile =
         hospitalArea = if (hospitalAreaVisible && hospitalArea != null) hospitalArea else null,
     )
 
-private fun <T> DataStatus<T>?.split(): Pair<T?, Boolean?> = when (this) {
-    null, DataStatus.None -> null to null
-    is DataStatus.Open<T> -> data to true
-    is DataStatus.Hide<T> -> data to false
-}
-
 fun PatchProfileRequest.asBody(): PatchProfileRequestBody {
-    val (diagnoses, diagnosesVisible) = diagnoses.split()
-    val (chemotherapy, chemotherapyVisible) = chemotherapy.split()
-    val (radiationTherapy, radiationTherapyVisible) = radiationTherapy.split()
-    val (ageGroup, ageGroupVisible) = ageGroup.split()
-    val (residenceArea, residenceAreaVisible) = residenceArea.split()
-    val (hospitalArea, hospitalAreaVisible) = hospitalArea.split()
     return PatchProfileRequestBody(
-        diagnoses = diagnoses?.map(Diagnose::toDto),
-        diagnosesVisible = diagnosesVisible,
-        chemotherapy = chemotherapy?.toDto(),
-        chemotherapyVisible = chemotherapyVisible,
-        radiationTherapy = radiationTherapy?.toDto(),
-        radiationTherapyVisible = radiationTherapyVisible,
-        ageGroup = ageGroup?.key,
-        ageGroupVisible = ageGroupVisible,
-        residenceArea = residenceArea,
-        residenceAreaVisible = residenceAreaVisible,
-        hospitalArea = hospitalArea,
-        hospitalAreaVisible = hospitalAreaVisible,
+        diagnoses = diagnoses.data?.map(Diagnose::toDto),
+        diagnosesVisible = diagnoses.open,
+        chemotherapy = chemotherapy.data?.toDto(),
+        chemotherapyVisible = chemotherapy.open,
+        radiationTherapy = radiationTherapy.data?.toDto(),
+        radiationTherapyVisible = radiationTherapy.open,
+        ageGroup = ageGroup.data?.key,
+        ageGroupVisible = ageGroup.open,
+        residenceArea = residenceArea.data,
+        residenceAreaVisible = residenceArea.open,
+        hospitalArea = hospitalArea.data,
+        hospitalAreaVisible = hospitalArea.open,
     )
 }
 
