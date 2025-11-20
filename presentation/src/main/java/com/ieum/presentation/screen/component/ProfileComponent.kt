@@ -14,6 +14,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,6 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ieum.design_system.icon.SettingIcon
 import com.ieum.design_system.theme.Slate100
 import com.ieum.design_system.theme.Slate200
 import com.ieum.design_system.theme.Slate300
@@ -32,6 +34,7 @@ import com.ieum.design_system.theme.screenPadding
 import com.ieum.design_system.util.noRippleClickable
 import com.ieum.presentation.R
 import com.ieum.presentation.model.user.OthersProfileUiModel
+import com.ieum.presentation.screen.main.home.myProfile.MyProfileTab
 import com.ieum.presentation.screen.main.othersProfile.OthersProfileTab
 
 @Composable
@@ -106,6 +109,52 @@ private fun ProfileChip(text: String) {
             text = text,
             style = MaterialTheme.typography.labelMedium,
         )
+    }
+}
+
+@Composable
+fun MyProfileTobBar(
+    modifier: Modifier = Modifier,
+    currentTab: MyProfileTab,
+    onTabClick: (MyProfileTab) -> Unit,
+    onSettingClick: () -> Unit,
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(
+                horizontal = screenPadding,
+                vertical = 12.dp,
+            ),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        MyProfileTabArea(
+            currentTab = currentTab,
+            onTabClick = onTabClick,
+        )
+        IconButton(onSettingClick) {
+            SettingIcon()
+        }
+    }
+}
+
+@Composable
+private fun MyProfileTabArea(
+    currentTab: MyProfileTab,
+    onTabClick: (MyProfileTab) -> Unit,
+) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(20.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        MyProfileTab.entries.forEach { tab ->
+            ProfileTabItem(
+                name = stringResource(tab.displayName),
+                selected = tab == currentTab,
+                onClick = { onTabClick(tab) }
+            )
+        }
     }
 }
 

@@ -8,12 +8,15 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ieum.presentation.screen.component.BottomNavigation
 import com.ieum.presentation.screen.component.BottomNavigationItem
+import com.ieum.presentation.screen.main.home.feed.FeedRoute
+import com.ieum.presentation.screen.main.home.myProfile.MyProfileRoute
 
 @Composable
 fun HomeRoute(
     modifier: Modifier = Modifier,
     movePostWellness: () -> Unit,
     movePostDaily: () -> Unit,
+    moveSetting: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     HomeScreen(
@@ -22,6 +25,7 @@ fun HomeRoute(
         onBottomNavigationItemClick = viewModel::onBottomNavigationItemClick,
         movePostWellness = movePostWellness,
         movePostDaily = movePostDaily,
+        moveSetting = moveSetting,
     )
 }
 
@@ -32,6 +36,7 @@ private fun HomeScreen(
     onBottomNavigationItemClick: (BottomNavigationItem) -> Unit,
     movePostWellness: () -> Unit,
     movePostDaily: () -> Unit,
+    moveSetting: () -> Unit,
 ) {
     Box(
         modifier = modifier.fillMaxSize()
@@ -42,7 +47,9 @@ private fun HomeScreen(
                 movePostDaily = movePostDaily,
             )
             BottomNavigationItem.Calendar -> {}
-            BottomNavigationItem.Profile -> {}
+            BottomNavigationItem.Profile -> MyProfileRoute(
+                moveSetting = moveSetting,
+            )
         }
         BottomNavigation(
             modifier = Modifier.align(Alignment.BottomCenter),

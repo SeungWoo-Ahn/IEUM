@@ -402,3 +402,12 @@ fun ProfileDarkIcon() {
         contentDescription = "ic-profile-dark",
     )
 }
+
+@Composable
+fun SettingIcon() {
+    Icon(
+        modifier = Modifier.size(24.dp),
+        painter = painterResource(R.drawable.ic_setting),
+        contentDescription = "ic-setting",
+    )
+}
