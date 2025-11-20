@@ -303,11 +303,13 @@ fun LeftIcon() {
 }
 
 @Composable
-fun RightIcon() {
+fun RightIcon(
+    color: Color = White,
+) {
     Icon(
         modifier = Modifier.size(24.dp),
         painter = painterResource(R.drawable.ic_right),
-        tint = White,
+        tint = color,
         contentDescription = "ic-right",
     )
 }
@@ -408,6 +410,17 @@ fun SettingIcon() {
     Icon(
         modifier = Modifier.size(24.dp),
         painter = painterResource(R.drawable.ic_setting),
+        tint = Color.Unspecified,
         contentDescription = "ic-setting",
+    )
+}
+
+@Composable
+fun LockIcon() {
+    Icon(
+        modifier = Modifier.size(16.dp),
+        painter = painterResource(R.drawable.ic_lock),
+        tint = Color.Unspecified,
+        contentDescription = "ic-lock",
     )
 }

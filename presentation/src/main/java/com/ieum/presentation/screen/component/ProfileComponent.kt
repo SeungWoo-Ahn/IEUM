@@ -11,11 +11,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -24,15 +24,21 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ieum.design_system.icon.LockIcon
+import com.ieum.design_system.icon.RightIcon
 import com.ieum.design_system.icon.SettingIcon
 import com.ieum.design_system.theme.Slate100
 import com.ieum.design_system.theme.Slate200
 import com.ieum.design_system.theme.Slate300
+import com.ieum.design_system.theme.Slate400
+import com.ieum.design_system.theme.Slate500
 import com.ieum.design_system.theme.Slate900
 import com.ieum.design_system.theme.White
 import com.ieum.design_system.theme.screenPadding
 import com.ieum.design_system.util.noRippleClickable
+import com.ieum.domain.model.user.ProfileProperty
 import com.ieum.presentation.R
+import com.ieum.presentation.model.user.MyProfileUiModel
 import com.ieum.presentation.model.user.OthersProfileUiModel
 import com.ieum.presentation.screen.main.home.myProfile.MyProfileTab
 import com.ieum.presentation.screen.main.othersProfile.OthersProfileTab
@@ -51,65 +57,6 @@ private fun ProfileTabItem(
         color = if (selected) Slate900 else Slate300,
         textDecoration = if (selected) TextDecoration.Underline else TextDecoration.None,
     )
-}
-
-@Composable
-private fun ProfileBox(
-    modifier: Modifier = Modifier,
-    content: @Composable (ColumnScope.() -> Unit),
-) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(
-                color = White,
-                shape = MaterialTheme.shapes.medium,
-            )
-            .border(
-                width = 1.dp,
-                color = Slate200,
-                shape = MaterialTheme.shapes.medium,
-            ),
-        content = content,
-    )
-}
-
-@Composable
-private fun ProfileDivider() {
-    HorizontalDivider(
-        modifier = Modifier.fillMaxWidth(),
-        thickness = 1.dp,
-        color = Slate200,
-    )
-}
-
-@Composable
-private fun ProfileTitle(text: String) {
-    Text(
-        text = text,
-        style = MaterialTheme.typography.titleMedium,
-    )
-}
-
-@Composable
-private fun ProfileChip(text: String) {
-    Box(
-        modifier = Modifier
-            .background(
-                color = Slate100,
-                shape = RoundedCornerShape(size = 30.dp),
-            )
-            .padding(
-                horizontal = 12.dp,
-                vertical = 10.dp,
-            ),
-        contentAlignment = Alignment.Center,
-    ) {
-        Text(
-            text = text,
-            style = MaterialTheme.typography.labelMedium,
-        )
-    }
 }
 
 @Composable
@@ -133,7 +80,10 @@ fun MyProfileTobBar(
             currentTab = currentTab,
             onTabClick = onTabClick,
         )
-        IconButton(onSettingClick) {
+        Surface(
+            shape = CircleShape,
+            onClick = onSettingClick
+        ) {
             SettingIcon()
         }
     }
@@ -182,6 +132,141 @@ fun OthersProfileTabArea(
 }
 
 @Composable
+private fun ProfileBox(
+    modifier: Modifier = Modifier,
+    content: @Composable (ColumnScope.() -> Unit),
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(
+                color = White,
+                shape = MaterialTheme.shapes.medium,
+            )
+            .border(
+                width = 1.dp,
+                color = Slate200,
+                shape = MaterialTheme.shapes.medium,
+            ),
+        content = content,
+    )
+}
+
+@Composable
+private fun ProfileDivider() {
+    HorizontalDivider(
+        modifier = Modifier.fillMaxWidth(),
+        thickness = 1.dp,
+        color = Slate200,
+    )
+}
+
+@Composable
+private fun ProfileTitle(text: String) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.titleMedium,
+    )
+}
+
+@Composable
+private fun ProfileChip(text: String) {
+    Box(
+        modifier = Modifier
+            .background(
+                color = Slate100,
+                shape = MaterialTheme.shapes.large,
+            )
+            .padding(
+                horizontal = 12.dp,
+                vertical = 10.dp,
+            ),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.labelMedium,
+        )
+    }
+}
+
+@Composable
+fun MyProfileSection(
+    modifier: Modifier = Modifier,
+    profile: MyProfileUiModel,
+    patchDiagnose: () -> Unit,
+    patchChemotherapy: () -> Unit,
+    patchRadiationTherapy: () -> Unit,
+    patchAgeGroup: () -> Unit,
+    patchResidenceArea: () -> Unit,
+    patchHospitalArea: () -> Unit,
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .verticalScroll(state = rememberScrollState())
+            .padding(all = screenPadding)
+    ) {
+        ProfileBox {
+            MyProfileItem(
+                title = stringResource(R.string.diagnose),
+                profileProperty = profile.diagnoses,
+                onClick = patchDiagnose,
+            ) {
+                FlowRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    verticalArrangement = Arrangement.spacedBy(6.dp),
+                ) {
+                    it.forEach { data -> ProfileChip(text = data) }
+                }
+            }
+            MyProfileItem(
+                title = stringResource(R.string.chemotherapy),
+                profileProperty = profile.chemotherapy,
+                emptyDescription = stringResource(R.string.empty_chemotherapy_description),
+                onClick = patchChemotherapy,
+            ) {
+                ProfileChip(text = it)
+            }
+            MyProfileItem(
+                title = stringResource(R.string.radiation_therapy),
+                profileProperty = profile.radiationTherapy,
+                emptyDescription = stringResource(R.string.empty_radiation_therapy_description),
+                onClick = patchRadiationTherapy,
+            ) {
+                ProfileChip(text = it)
+            }
+            MyProfileItem(
+                title = stringResource(R.string.age_group),
+                profileProperty = profile.ageGroup,
+                emptyDescription = stringResource(R.string.empty_age_group_description),
+                onClick = patchAgeGroup,
+            ) {
+                ProfileChip(text = stringResource(it.description))
+            }
+            MyProfileItem(
+                title = stringResource(R.string.residence_area),
+                profileProperty = profile.residenceArea,
+                emptyDescription = stringResource(R.string.empty_residence_area_description),
+                onClick = patchResidenceArea,
+            ) {
+                ProfileChip(text = it)
+            }
+            MyProfileItem(
+                title = stringResource(R.string.hospital_area),
+                profileProperty = profile.hospitalArea,
+                emptyDescription = stringResource(R.string.empty_hospital_area_description),
+                needDivider = false,
+                onClick = patchHospitalArea,
+            ) {
+                ProfileChip(text = it)
+            }
+        }
+    }
+}
+
+@Composable
 fun OthersProfileSection(
     modifier: Modifier = Modifier,
     profile: OthersProfileUiModel,
@@ -206,54 +291,48 @@ fun OthersProfileSection(
                     )
                 }
             } else {
-                profile.diagnoses?.let {
-                    OthersProfileItem(
-                        title = stringResource(R.string.diagnose)
+                OthersProfileItem(
+                    title = stringResource(R.string.diagnose),
+                    data = profile.diagnoses
+                ) {
+                    FlowRow(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        verticalArrangement = Arrangement.spacedBy(6.dp),
                     ) {
-                        FlowRow(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(6.dp),
-                            verticalArrangement = Arrangement.spacedBy(6.dp),
-                        ) {
-                            it.forEach { data -> ProfileChip(text = data) }
-                        }
+                        it.forEach { data -> ProfileChip(text = data) }
                     }
                 }
-                profile.chemotherapy?.let {
-                    OthersProfileItem(
-                        title = stringResource(R.string.chemotherapy)
-                    ) {
-                        ProfileChip(text = it)
-                    }
+                OthersProfileItem(
+                    title = stringResource(R.string.chemotherapy),
+                    data = profile.chemotherapy,
+                ) {
+                    ProfileChip(text = it)
                 }
-                profile.radiationTherapy?.let {
-                    OthersProfileItem(
-                        title = stringResource(R.string.radiationTherapy)
-                    ) {
-                        ProfileChip(text = it)
-                    }
+                OthersProfileItem(
+                    title = stringResource(R.string.radiation_therapy),
+                    data = profile.radiationTherapy,
+                ) {
+                    ProfileChip(text = it)
                 }
-                profile.ageGroup?.let {
-                    OthersProfileItem(
-                        title = stringResource(R.string.age_group)
-                    ) {
-                        ProfileChip(text = stringResource(it.description))
-                    }
+                OthersProfileItem(
+                    title = stringResource(R.string.age_group),
+                    data = profile.ageGroup,
+                ) {
+                    ProfileChip(text = stringResource(it.description))
                 }
-                profile.residenceArea?.let {
-                    OthersProfileItem(
-                        title = stringResource(R.string.residence_area)
-                    ) {
-                        ProfileChip(text = it)
-                    }
+                OthersProfileItem(
+                    title = stringResource(R.string.residence_area),
+                    data = profile.residenceArea,
+                ) {
+                    ProfileChip(text = it)
                 }
-                profile.hospitalArea?.let {
-                    OthersProfileItem(
-                        title = stringResource(R.string.hospital_area),
-                        needDivider = false
-                    ) {
-                        ProfileChip(text = it)
-                    }
+                OthersProfileItem(
+                    title = stringResource(R.string.hospital_area),
+                    data = profile.hospitalArea,
+                    needDivider = false,
+                ) {
+                    ProfileChip(text = it)
                 }
             }
         }
@@ -261,11 +340,38 @@ fun OthersProfileSection(
 }
 
 @Composable
-private fun OthersProfileItem(
+private fun ProfileLockChip() {
+    Row(
+        modifier = Modifier
+            .background(
+                color = Slate100,
+                shape = MaterialTheme.shapes.large,
+            )
+            .padding(
+                horizontal = 8.dp,
+                vertical = 4.dp,
+            ),
+        horizontalArrangement = Arrangement.spacedBy(2.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        LockIcon()
+        Text(
+            text = stringResource(R.string.not_opened),
+            style = MaterialTheme.typography.labelSmall,
+            color = Slate400,
+        )
+    }
+}
+
+@Composable
+private fun <T> MyProfileItem(
     modifier: Modifier = Modifier,
     title: String,
+    profileProperty: ProfileProperty<T>,
+    emptyDescription: String = "",
     needDivider: Boolean = true,
-    content: @Composable () -> Unit,
+    onClick: () -> Unit,
+    content: @Composable (T) -> Unit,
 ) {
     Column(
         modifier = modifier.fillMaxWidth()
@@ -273,14 +379,70 @@ private fun OthersProfileItem(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(all = 18.dp),
-            verticalArrangement = Arrangement.spacedBy(18.dp)
+                .noRippleClickable(onClick = onClick)
+                .padding(
+                    horizontal = screenPadding,
+                    vertical = 16.dp,
+                ),
+            verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
-            ProfileTitle(text = title)
-            content()
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    ProfileTitle(text = title)
+                    if (profileProperty.open.not()) {
+                        ProfileLockChip()
+                    }
+                }
+                RightIcon(color = Slate900)
+            }
+            val data = profileProperty.data
+            if (data != null) {
+                content(data)
+            } else {
+                Text(
+                    text = emptyDescription,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Slate500,
+                )
+            }
         }
         if (needDivider) {
             ProfileDivider()
+        }
+    }
+}
+
+@Composable
+private fun <T> OthersProfileItem(
+    modifier: Modifier = Modifier,
+    title: String,
+    data: T?,
+    needDivider: Boolean = true,
+    content: @Composable (T) -> Unit,
+) {
+    if (data != null) {
+        Column(
+            modifier = modifier.fillMaxWidth()
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(all = 18.dp),
+                verticalArrangement = Arrangement.spacedBy(18.dp)
+            ) {
+                ProfileTitle(text = title)
+                content(data)
+            }
+            if (needDivider) {
+                ProfileDivider()
+            }
         }
     }
 }
