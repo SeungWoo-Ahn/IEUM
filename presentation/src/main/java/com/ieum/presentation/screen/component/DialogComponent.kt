@@ -24,11 +24,9 @@ import androidx.compose.ui.unit.dp
 import com.ieum.design_system.button.DarkButton
 import com.ieum.design_system.dialog.IEUMDialog
 import com.ieum.design_system.icon.CompleteIcon
-import com.ieum.design_system.icon.DailyIcon
 import com.ieum.design_system.icon.IncompleteIcon
 import com.ieum.design_system.icon.LeftIcon
 import com.ieum.design_system.icon.RightIcon
-import com.ieum.design_system.icon.WellnessIcon
 import com.ieum.design_system.spacer.IEUMSpacer
 import com.ieum.design_system.theme.Black
 import com.ieum.design_system.theme.Lime500
@@ -40,6 +38,7 @@ import com.ieum.design_system.util.dropShadow
 import com.ieum.design_system.util.noRippleClickable
 import com.ieum.presentation.R
 import com.ieum.presentation.model.post.MoodUiModel
+import com.ieum.presentation.model.post.PostTypeUiModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -274,33 +273,26 @@ fun AddPostDialog(
                 .padding(all = screenPadding),
             verticalArrangement = Arrangement.spacedBy(28.dp),
         ) {
-            AddPostItem(
-                name = stringResource(R.string.wellness_records),
-                guide = stringResource(R.string.guide_wellness_records),
-                icon = { WellnessIcon(24) },
-                onClick = {
-                    movePostWellness()
-                    onDismissRequest()
+            PostTypeUiModel.entries.forEach { type ->
+                val movePage = when (type) {
+                    PostTypeUiModel.WELLNESS -> movePostWellness
+                    PostTypeUiModel.DAILY -> movePostDaily
                 }
-            )
-            AddPostItem(
-                name = stringResource(R.string.daily_records),
-                guide = stringResource(R.string.guide_daily_records),
-                icon = { DailyIcon(24) },
-                onClick = {
-                    movePostDaily()
-                    onDismissRequest()
-                }
-            )
+                AddPostItem(
+                    postType = type,
+                    onClick = {
+                        movePage()
+                        onDismissRequest()
+                    }
+                )
+            }
         }
     }
 }
 
 @Composable
 private fun AddPostItem(
-    name: String,
-    guide: String,
-    icon: @Composable () -> Unit,
+    postType: PostTypeUiModel,
     onClick: () -> Unit,
 ) {
     Column(
@@ -313,15 +305,15 @@ private fun AddPostItem(
             horizontalArrangement = Arrangement.spacedBy(4.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            icon()
+            postType.icon(24)
             Text(
-                text = name,
+                text = stringResource(postType.displayName),
                 style = MaterialTheme.typography.headlineSmall,
             )
         }
         Text(
             modifier = Modifier.padding(start = 28.dp),
-            text = guide,
+            text = stringResource(postType.guide),
             style = MaterialTheme.typography.bodyMedium,
             color = Slate500,
         )
