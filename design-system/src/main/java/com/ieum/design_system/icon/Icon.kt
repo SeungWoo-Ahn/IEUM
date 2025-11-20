@@ -77,9 +77,9 @@ fun CloseCircleIcon() {
 }
 
 @Composable
-fun WellnessIcon() {
+fun WellnessIcon(size: Int) {
     Icon(
-        modifier = Modifier.size(24.dp),
+        modifier = Modifier.size(size.dp),
         painter = painterResource(R.drawable.ic_wellness),
         tint = Color.Unspecified,
         contentDescription = "ic-wellness",
@@ -87,9 +87,9 @@ fun WellnessIcon() {
 }
 
 @Composable
-fun DailyIcon() {
+fun DailyIcon(size: Int) {
     Icon(
-        modifier = Modifier.size(24.dp),
+        modifier = Modifier.size(size.dp),
         painter = painterResource(R.drawable.ic_daily),
         tint = Color.Unspecified,
         contentDescription = "ic-daily",

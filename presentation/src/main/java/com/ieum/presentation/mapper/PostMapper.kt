@@ -5,12 +5,14 @@ import com.ieum.domain.model.post.AmountEaten
 import com.ieum.domain.model.post.Diet
 import com.ieum.domain.model.post.Mood
 import com.ieum.domain.model.post.Post
+import com.ieum.domain.model.post.PostType
 import com.ieum.domain.model.post.PostWellnessRequest
 import com.ieum.domain.model.user.Diagnosis
 import com.ieum.presentation.model.post.AmountEatenUiModel
 import com.ieum.presentation.model.post.DiagnoseFilterUiModel
 import com.ieum.presentation.model.post.DietUiModel
 import com.ieum.presentation.model.post.MoodUiModel
+import com.ieum.presentation.model.post.PostTypeUiModel
 import com.ieum.presentation.model.post.PostUiModel
 import com.ieum.presentation.model.post.PostWellnessUiModel
 
@@ -113,4 +115,10 @@ fun DiagnoseFilterUiModel.toDomain(): Diagnosis? =
         DiagnoseFilterUiModel.RECTAL_CANCER -> Diagnosis.RECTAL_CANCER
         DiagnoseFilterUiModel.LIVER_TRANSPLANT -> Diagnosis.LIVER_TRANSPLANT
         DiagnoseFilterUiModel.OTHERS -> Diagnosis.OTHERS
+    }
+
+fun PostTypeUiModel.toDomain(): PostType =
+    when (this) {
+        PostTypeUiModel.WELLNESS -> PostType.WELLNESS
+        PostTypeUiModel.DAILY -> PostType.DAILY
     }

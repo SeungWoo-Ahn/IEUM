@@ -35,7 +35,7 @@ class FeedViewModel @Inject constructor(
     private val _selectedFilter = MutableStateFlow(DiagnoseFilterUiModel.ENTIRE)
     val selectedFilter: StateFlow<DiagnoseFilterUiModel> get() = _selectedFilter
 
-    val postList: Flow<PagingData<PostUiModel>> =
+    val postListFlow: Flow<PagingData<PostUiModel>> =
         selectedFilter
             .flatMapLatest { filter ->
                 Pager(

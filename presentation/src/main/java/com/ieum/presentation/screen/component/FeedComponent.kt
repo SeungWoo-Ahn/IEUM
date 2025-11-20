@@ -144,7 +144,7 @@ private fun DiagnoseFilter(
 fun PostListArea(
     modifier: Modifier = Modifier,
     postList: LazyPagingItems<PostUiModel>,
-    onNickname: (Int) -> Unit,
+    onNickname: ((Int) -> Unit)? = null,
     onMenu: (Int) -> Unit,
     onLike: (Int) -> Unit,
     onComment: (Int) -> Unit,
@@ -177,7 +177,7 @@ fun PostListArea(
 private fun PostItem(
     modifier: Modifier = Modifier,
     post: PostUiModel,
-    onNickname: (Int) -> Unit,
+    onNickname: ((Int) -> Unit)?,
     onMenu: () -> Unit,
     onLike: () -> Unit,
     onComment: () -> Unit,
@@ -208,7 +208,7 @@ private fun PostItem(
 private fun PostItemTopBar(
     modifier: Modifier = Modifier,
     userInfo: PostUserInfo?,
-    onNickname: (Int) -> Unit,
+    onNickname: ((Int) -> Unit)?,
     onMenu: () -> Unit,
 ) {
     Row(
@@ -224,7 +224,7 @@ private fun PostItemTopBar(
             modifier = Modifier
                 .weight(1f)
                 .noRippleClickable {
-                    if (userInfo != null) onNickname(userInfo.id)
+                    if (userInfo != null) onNickname?.invoke(userInfo.id)
                 },
             contentAlignment = Alignment.CenterStart,
         ) {

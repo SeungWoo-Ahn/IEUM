@@ -28,7 +28,7 @@ fun OthersProfileRoute(
         uiState = viewModel.uiState,
         currentTab = viewModel.currentTab,
         postListFlow = viewModel.postListFlow,
-        onTabClick = viewModel::selectTab,
+        onTabClick = viewModel::onTab,
         onMenu = {},
         onLike = {},
         onComment = {},
@@ -64,7 +64,6 @@ private fun OthersProfileScreen(
                         val postList = postListFlow.collectAsLazyPagingItems()
                         PostListArea(
                             postList = postList,
-                            onNickname = {},
                             onMenu = onMenu,
                             onLike = onLike,
                             onComment = onComment,

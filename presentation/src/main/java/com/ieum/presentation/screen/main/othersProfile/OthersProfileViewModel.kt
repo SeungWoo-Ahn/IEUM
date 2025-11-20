@@ -73,7 +73,7 @@ class OthersProfileViewModel @Inject constructor(
         }
     }
 
-    fun selectTab(tab: OthersProfileTab) {
+    fun onTab(tab: OthersProfileTab) {
         currentTab = tab
     }
 }

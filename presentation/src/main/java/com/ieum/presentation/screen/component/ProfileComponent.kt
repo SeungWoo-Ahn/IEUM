@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import com.ieum.design_system.icon.LockIcon
 import com.ieum.design_system.icon.RightIcon
 import com.ieum.design_system.icon.SettingIcon
+import com.ieum.design_system.theme.Lime500
 import com.ieum.design_system.theme.Slate100
 import com.ieum.design_system.theme.Slate200
 import com.ieum.design_system.theme.Slate300
@@ -38,6 +39,7 @@ import com.ieum.design_system.theme.screenPadding
 import com.ieum.design_system.util.noRippleClickable
 import com.ieum.domain.model.user.ProfileProperty
 import com.ieum.presentation.R
+import com.ieum.presentation.model.post.PostTypeUiModel
 import com.ieum.presentation.model.user.MyProfileUiModel
 import com.ieum.presentation.model.user.OthersProfileUiModel
 import com.ieum.presentation.screen.main.home.myProfile.MyProfileTab
@@ -105,6 +107,65 @@ private fun MyProfileTabArea(
                 onClick = { onTabClick(tab) }
             )
         }
+    }
+}
+
+@Composable
+fun MyProfilePostTypeArea(
+    modifier: Modifier = Modifier,
+    currentType: PostTypeUiModel,
+    onPostType: (PostTypeUiModel) -> Unit,
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(
+                horizontal = screenPadding,
+                vertical = 8.dp,
+            ),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        PostTypeUiModel.entries.forEach { type ->
+            PostTypeChip(
+                postType = type,
+                selected = type == currentType,
+                onClick = { onPostType(type) }
+            )
+        }
+    }
+}
+
+@Composable
+private fun PostTypeChip(
+    postType: PostTypeUiModel,
+    selected: Boolean,
+    onClick: () -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .background(
+                color = White,
+                shape = MaterialTheme.shapes.large,
+            )
+            .border(
+                width = 1.dp,
+                color = if (selected) Lime500 else White,
+                shape = MaterialTheme.shapes.large,
+            )
+            .noRippleClickable(onClick = onClick)
+            .padding(
+                horizontal = 12.dp,
+                vertical = 10.dp,
+            ),
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        postType.icon(20)
+        Text(
+            text = stringResource(postType.displayName),
+            style = MaterialTheme.typography.labelMedium,
+            color = if (selected) Slate900 else Slate500,
+        )
     }
 }
 

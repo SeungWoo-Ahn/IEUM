@@ -31,7 +31,7 @@ fun FeedRoute(
 ) {
     val uiState = viewModel.uiState
     val selectedFilter by viewModel.selectedFilter.collectAsStateWithLifecycle()
-    val postList = viewModel.postList.collectAsLazyPagingItems()
+    val postList = viewModel.postListFlow.collectAsLazyPagingItems()
 
     FeedScreen(
         modifier = modifier,

@@ -277,7 +277,7 @@ fun AddPostDialog(
             AddPostItem(
                 name = stringResource(R.string.wellness_records),
                 guide = stringResource(R.string.guide_wellness_records),
-                icon = { WellnessIcon() },
+                icon = { WellnessIcon(24) },
                 onClick = {
                     movePostWellness()
                     onDismissRequest()
@@ -286,7 +286,7 @@ fun AddPostDialog(
             AddPostItem(
                 name = stringResource(R.string.daily_records),
                 guide = stringResource(R.string.guide_daily_records),
-                icon = { DailyIcon() },
+                icon = { DailyIcon(24) },
                 onClick = {
                     movePostDaily()
                     onDismissRequest()
