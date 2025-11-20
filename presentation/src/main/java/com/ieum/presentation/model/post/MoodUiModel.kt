@@ -14,36 +14,36 @@ enum class MoodUiModel(
     @StringRes val description: Int,
     val strokeColor: Color,
     val backGroundColor: Color,
-    val icon: @Composable () -> Unit,
+    val icon: @Composable (Int) -> Unit,
 ) {
     WORST(
         description = R.string.mood_worst,
         strokeColor = Color(0x8051A2FF),
         backGroundColor = Color(0x3351A2FF),
-        icon = { MoodWorstIcon() }
+        icon = { MoodWorstIcon(size = it) }
     ),
     BAD(
         description = R.string.mood_bad,
         strokeColor = Color(0x8000D3F3),
         backGroundColor = Color(0x3300D3F3),
-        icon = { MoodBadIcon() }
+        icon = { MoodBadIcon(size = it) }
     ),
     NORMAL(
         description = R.string.mood_normal,
         strokeColor = Color(0x8000BBA7),
         backGroundColor = Color(0x3300D5BE),
-        icon = { MoodNormalIcon() }
+        icon = { MoodNormalIcon(size = it) }
     ),
     GOOD(
         description = R.string.mood_good,
         strokeColor = Color(0x809AE600),
         backGroundColor = Color(0x339AE600),
-        icon = { MoodGoodIcon() }
+        icon = { MoodGoodIcon(size = it) }
     ),
     HAPPY(
         description = R.string.mood_happy,
         strokeColor = Color(0x80F0B100),
         backGroundColor = Color(0x33FDC700),
-        icon = { MoodHappyIcon() }
+        icon = { MoodHappyIcon(size = it) }
     ),
 }

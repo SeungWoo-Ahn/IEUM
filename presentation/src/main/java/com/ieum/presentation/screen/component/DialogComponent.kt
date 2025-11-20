@@ -122,11 +122,7 @@ private fun MoodPagerItem(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(14.dp),
     ) {
-        Box(
-            modifier = Modifier.size(140.dp)
-        ) {
-            mood.icon()
-        }
+        mood.icon(140)
         Box(
             modifier = Modifier
                 .background(

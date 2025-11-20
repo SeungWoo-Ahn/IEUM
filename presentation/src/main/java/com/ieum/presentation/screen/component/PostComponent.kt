@@ -142,7 +142,7 @@ fun MoodBox(
         if (data == null) {
             MoodSelectIcon()
         } else {
-            data.icon()
+            data.icon(108)
         }
         RefreshBlackIcon(
             modifier = Modifier.align(Alignment.TopEnd)

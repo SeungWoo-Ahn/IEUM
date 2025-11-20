@@ -398,11 +398,7 @@ private fun WellnessContent(
             horizontalArrangement = Arrangement.spacedBy(6.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Box(
-                modifier = Modifier.size(24.dp)
-            ) {
-                mood.icon()
-            }
+            mood.icon(24)
             Text(
                 text = stringResource(mood.description),
                 style = MaterialTheme.typography.headlineSmall,
