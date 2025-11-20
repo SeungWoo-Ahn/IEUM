@@ -13,6 +13,7 @@ data class OthersProfileUiModel(
     val openedDataEmpty: Boolean get() = diagnoses.isNullOrEmpty() &&
             chemotherapy.isNullOrEmpty() &&
             radiationTherapy.isNullOrEmpty() &&
-            ageGroup == null && residenceArea.isNullOrEmpty() &&
+            ageGroup == null &&
+            residenceArea.isNullOrEmpty() &&
             hospitalArea.isNullOrEmpty()
 }
