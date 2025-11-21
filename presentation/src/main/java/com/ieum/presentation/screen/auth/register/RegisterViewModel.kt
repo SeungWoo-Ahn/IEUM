@@ -82,7 +82,7 @@ class RegisterViewModel @Inject constructor(
             RegisterStage.SelectAgeGroup -> ageGroupState.validate()
             RegisterStage.SelectResidence -> residenceState.validate()
             RegisterStage.SelectHospital -> hospitalState.validate()
-            RegisterStage.TypeInterest -> interestState.validate()
+            RegisterStage.TypeInterest -> interestState.validate() && uiState != RegisterUiState.Loading
         }
 
     fun showCancerStageSheet(cancerDiagnose: CancerDiagnoseUiModel) {

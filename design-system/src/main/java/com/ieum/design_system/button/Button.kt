@@ -1,30 +1,22 @@
 package com.ieum.design_system.button
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.ieum.design_system.R
 import com.ieum.design_system.theme.Gray100
 import com.ieum.design_system.theme.Gray200
 import com.ieum.design_system.theme.Gray300
 import com.ieum.design_system.theme.Gray50
-import com.ieum.design_system.theme.Gray500
 import com.ieum.design_system.theme.Gray950
 import com.ieum.design_system.theme.Lime100
 import com.ieum.design_system.theme.Lime200
@@ -90,17 +82,20 @@ fun DarkButton(
 }
 
 @Composable
-internal fun SkipButton(
+fun Gray50Button(
     modifier: Modifier = Modifier,
+    text: String,
+    enabled: Boolean,
     onClick: () -> Unit,
 ) {
     IEUMButton(
         modifier = modifier.fillMaxWidth(),
-        text = stringResource(R.string.skip),
+        text = text,
         colors = ButtonDefaults.buttonColors(
             containerColor = Gray50,
             contentColor = Gray950,
         ),
+        enabled = enabled,
         border = BorderStroke(
             width = 1.dp,
             color = Gray100,
@@ -110,14 +105,15 @@ internal fun SkipButton(
 }
 
 @Composable
-fun NextButton(
+fun Lime400Button(
     modifier: Modifier = Modifier,
+    text: String,
     enabled: Boolean,
     onClick: () -> Unit,
 ) {
     IEUMButton(
         modifier = modifier.fillMaxWidth(),
-        text = stringResource(R.string.next),
+        text = text,
         colors = ButtonDefaults.buttonColors(
             containerColor = Lime400,
             contentColor = Gray950,
@@ -134,14 +130,15 @@ fun NextButton(
 }
 
 @Composable
-internal fun LightNextButton(
+fun Lime100Button(
     modifier: Modifier = Modifier,
+    text: String,
     enabled: Boolean,
     onClick: () -> Unit,
 ) {
     IEUMButton(
         modifier = modifier.fillMaxWidth(),
-        text = stringResource(R.string.next),
+        text = text,
         colors = ButtonDefaults.buttonColors(
             containerColor = Lime100,
             contentColor = Gray950,
@@ -155,63 +152,4 @@ internal fun LightNextButton(
         ),
         onClick = onClick,
     )
-}
-
-@Composable
-fun SkipOrNextButton(
-    modifier: Modifier = Modifier,
-    enabled: Boolean,
-    onNext: () -> Unit,
-) {
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(10.dp),
-    ) {
-        if (enabled.not()) {
-            SkipButton(
-                modifier = Modifier.weight(1f),
-                onClick = onNext
-            )
-        }
-        LightNextButton(
-            modifier = Modifier.weight(1f),
-            enabled = enabled,
-            onClick = onNext
-        )
-    }
-}
-
-@Composable
-fun SelectedCountButton(
-    modifier: Modifier = Modifier,
-    enabled: Boolean,
-    selectedCount: Int,
-    onClick: () -> Unit,
-) {
-    Column(
-        modifier = modifier.fillMaxWidth()
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 8.dp),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                text = "$selectedCount",
-                style = MaterialTheme.typography.labelMedium,
-                color = Lime500,
-            )
-            Text(
-                text = stringResource(R.string.selected_n_completed),
-                style = MaterialTheme.typography.labelMedium,
-                color = Gray500,
-            )
-        }
-        NextButton(
-            enabled = enabled,
-            onClick = onClick,
-        )
-    }
 }
