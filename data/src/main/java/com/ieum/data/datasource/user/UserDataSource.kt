@@ -13,7 +13,7 @@ interface UserDataSource {
 
     suspend fun getMyProfile(): MyProfileDto
 
-    suspend fun patchMyProfile(requestBody: PatchProfileRequestBody)
+    suspend fun patchMyProfile(requestBody: PatchProfileRequestBody): MyProfileDto
 
     suspend fun getOthersProfile(id: Int): OthersProfileDto
 

@@ -34,12 +34,12 @@ class UserRemoteDataSource @Inject constructor(
             .get("api/v1/users/profile")
             .body<MyProfileDto>()
 
-    override suspend fun patchMyProfile(requestBody: PatchProfileRequestBody) {
+    override suspend fun patchMyProfile(requestBody: PatchProfileRequestBody): MyProfileDto =
         ktorClient
             .patch("api/v1/users/profile") {
                 setBody(requestBody)
             }
-    }
+            .body<MyProfileDto>()
 
     override suspend fun getOthersProfile(id: Int): OthersProfileDto =
         ktorClient

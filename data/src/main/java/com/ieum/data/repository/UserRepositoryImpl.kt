@@ -28,9 +28,10 @@ class UserRepositoryImpl @Inject constructor(
             .getMyProfile()
             .toDomain()
 
-    override suspend fun patchMyProfile(request: PatchProfileRequest) =
+    override suspend fun patchMyProfile(request: PatchProfileRequest): MyProfile =
         userDataSource
             .patchMyProfile(request.asBody())
+            .toDomain()
 
     override suspend fun getOthersProfile(id: Int): OthersProfile =
         userDataSource

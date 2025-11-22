@@ -8,6 +8,7 @@ import com.ieum.domain.model.user.Diagnose
 import com.ieum.domain.model.user.Diagnosis
 import com.ieum.domain.model.user.MyProfile
 import com.ieum.domain.model.user.OthersProfile
+import com.ieum.domain.model.user.PatchProfileRequest
 import com.ieum.domain.model.user.ProfileProperty
 import com.ieum.domain.model.user.RadiationTherapy
 import com.ieum.domain.model.user.Sex
@@ -85,7 +86,13 @@ fun CancerDiagnoseUiModel.toDomain(): CancerDiagnose? =
         }
     }
 
-private fun Diagnosis.toUiKey(): DiagnoseUiKeys =
+fun CancerDiagnose.toUiModel(): CancerDiagnoseUiModel =
+    CancerDiagnoseUiModel(
+        key = name.toUiKey() as CancerDiagnoseUiKey,
+        stage = cancerStage.toUiModel(),
+    )
+
+fun Diagnosis.toUiKey(): DiagnoseUiKeys =
     when (this) {
         Diagnosis.COLON_CANCER -> CancerDiagnoseUiKey.COLON_CANCER
         Diagnosis.RECTAL_CANCER -> CancerDiagnoseUiKey.RECTAL_CANCER
@@ -141,6 +148,16 @@ fun MyProfile.toUiModel(valueModel: GlobalValueModel): MyProfileUiModel =
         chemotherapy = chemotherapy.map(Chemotherapy::toUiModel),
         radiationTherapy = radiationTherapy.map(RadiationTherapy::toUiModel),
         ageGroup = ageGroup.map(AgeGroup::toUiModel),
+        residenceArea = residenceArea,
+        hospitalArea = hospitalArea,
+    )
+
+fun MyProfile.toRequest(): PatchProfileRequest =
+    PatchProfileRequest(
+        diagnoses = diagnoses,
+        chemotherapy = chemotherapy,
+        radiationTherapy = radiationTherapy,
+        ageGroup = ageGroup,
         residenceArea = residenceArea,
         hospitalArea = hospitalArea,
     )

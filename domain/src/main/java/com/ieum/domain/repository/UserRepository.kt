@@ -12,7 +12,7 @@ interface UserRepository {
 
     suspend fun getMyProfile(): MyProfile
 
-    suspend fun patchMyProfile(request: PatchProfileRequest)
+    suspend fun patchMyProfile(request: PatchProfileRequest): MyProfile
 
     suspend fun getOthersProfile(id: Int): OthersProfile
 
