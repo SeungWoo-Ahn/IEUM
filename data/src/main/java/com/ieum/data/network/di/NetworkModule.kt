@@ -1,22 +1,27 @@
 package com.ieum.data.network.di
 
 import com.ieum.data.BuildConfig
+import com.ieum.data.mapper.toDomain
+import com.ieum.data.network.model.auth.RefreshTokenRequestBody
+import com.ieum.data.network.model.auth.RefreshTokenResponse
 import com.ieum.data.network.model.base.ErrorResponse
 import com.ieum.data.network.model.base.SGISErrorResponse
-import com.ieum.data.network.util.TokenManager
 import com.ieum.domain.exception.NetworkException
 import com.ieum.domain.exception.SGISException
+import com.ieum.domain.repository.PreferenceRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.engine.cio.CIO
+import io.ktor.client.engine.android.Android
 import io.ktor.client.plugins.HttpResponseValidator
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.ResponseException
 import io.ktor.client.plugins.auth.Auth
+import io.ktor.client.plugins.auth.authProvider
+import io.ktor.client.plugins.auth.providers.BearerAuthProvider
 import io.ktor.client.plugins.auth.providers.BearerTokens
 import io.ktor.client.plugins.auth.providers.bearer
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -25,9 +30,12 @@ import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.header
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.flow.first
 import kotlinx.serialization.json.Json
 import okio.IOException
 import timber.log.Timber
@@ -43,7 +51,7 @@ internal object NetworkModule {
     }
 
     private fun createKtorClient(): HttpClient =
-        HttpClient(CIO) {
+        HttpClient(Android) {
             install(HttpTimeout) {
                 connectTimeoutMillis = 10_000
                 requestTimeoutMillis = 10_000
@@ -65,7 +73,7 @@ internal object NetworkModule {
     @Singleton
     @NetworkSource(IEUMNetwork.Default)
     fun providesDefaultClient(
-        tokenManager: TokenManager,
+        preferenceRepository: PreferenceRepository,
     ): HttpClient =
         createKtorClient().config {
             expectSuccess = true
@@ -88,18 +96,30 @@ internal object NetworkModule {
             install(Auth) {
                 bearer {
                     loadTokens {
-                        tokenManager
-                            .getSavedToken()
-                            ?.let { token ->
-                                BearerTokens(token.accessToken, token.refreshToken)
-                            }
+                        val savedToken = preferenceRepository.tokenFlow.first()
+                        savedToken?.let {
+                            BearerTokens(it.accessToken, it.refreshToken)
+                        }
                     }
                     refreshTokens {
-                        tokenManager
-                            .refreshToken(oldTokens?.refreshToken, client)
-                            ?.let { token ->
-                                BearerTokens(token.accessToken, token.refreshToken)
+                        oldTokens?.refreshToken?.let {
+                            try {
+                                val requestBody = RefreshTokenRequestBody(it)
+                                val newToken =
+                                    client
+                                        .post("api/v1/auth/refresh") {
+                                            setBody(requestBody)
+                                            markAsRefreshTokenRequest()
+                                        }
+                                        .body<RefreshTokenResponse>()
+                                        .toDomain(it)
+                                preferenceRepository.saveToken(newToken)
+                                BearerTokens(newToken.accessToken, newToken.refreshToken)
+                            } catch (_: Exception) {
+                                client.authProvider<BearerAuthProvider>()?.clearToken()
+                                null
                             }
+                        }
                     }
                     sendWithoutRequest { request ->
                         val sendWithoutAuthorization =

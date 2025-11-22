@@ -20,10 +20,9 @@ internal object DataStoreModule {
     @Singleton
     fun providesTokenDataStore(
         @ApplicationContext context: Context,
-        tokenSerializer: TokenSerializer,
     ): DataStore<Token?> =
         DataStoreFactory.create(
-            serializer = tokenSerializer,
+            serializer = TokenSerializer,
             produceFile = { context.dataStoreFile("token.pb") }
         )
 }
