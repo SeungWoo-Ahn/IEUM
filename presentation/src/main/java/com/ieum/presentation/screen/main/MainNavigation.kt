@@ -18,9 +18,10 @@ fun NavGraphBuilder.nestedMainGraph(appState: IEUMAppState) {
     navigation<ScreenGraph.Main>(startDestination = MainScreen.Home) {
         composable<MainScreen.Home> {
             HomeRoute(
+                scope = appState.coroutineScope,
                 movePostWellness = navController::navigateToPostWellnessScreen,
                 movePostDaily = navController::navigateToPostDailyScreen,
-                moveSetting = {}
+                moveSetting = {},
             )
         }
         composable<MainScreen.PostWellness> {

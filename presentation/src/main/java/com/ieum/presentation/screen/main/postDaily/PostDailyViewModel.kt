@@ -110,6 +110,7 @@ class PostDailyViewModel @Inject constructor(
             } else {
                 patchDaily(id, request)
             }
+            uiState = PostDailyUiState.Idle
         }
     }
 

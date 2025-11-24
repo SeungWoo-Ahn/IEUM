@@ -1,5 +1,6 @@
 package com.ieum.design_system.dialog
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -30,6 +31,27 @@ fun IEUMDialog(
                 .padding(screenPadding),
             color = White,
             shape = MaterialTheme.shapes.medium,
+            content = content,
+        )
+    }
+}
+
+@Composable
+fun FullScreenDialog(
+    onDismissRequest: () -> Unit,
+    content: @Composable () -> Unit,
+) {
+    Dialog(
+        properties = DialogProperties(
+            dismissOnBackPress = true,
+            dismissOnClickOutside = true,
+            usePlatformDefaultWidth = false,
+        ),
+        onDismissRequest = onDismissRequest,
+    ) {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = White,
             content = content,
         )
     }

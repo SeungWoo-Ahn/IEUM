@@ -10,10 +10,12 @@ import com.ieum.presentation.screen.component.BottomNavigation
 import com.ieum.presentation.screen.component.BottomNavigationItem
 import com.ieum.presentation.screen.main.home.feed.FeedRoute
 import com.ieum.presentation.screen.main.home.myProfile.MyProfileRoute
+import kotlinx.coroutines.CoroutineScope
 
 @Composable
 fun HomeRoute(
     modifier: Modifier = Modifier,
+    scope: CoroutineScope,
     movePostWellness: () -> Unit,
     movePostDaily: () -> Unit,
     moveSetting: () -> Unit,
@@ -21,6 +23,7 @@ fun HomeRoute(
 ) {
     HomeScreen(
         modifier = modifier,
+        scope = scope,
         selectedBottomNavigationItem = viewModel.selectedBottomNavigationItem,
         onBottomNavigationItemClick = viewModel::onBottomNavigationItemClick,
         movePostWellness = movePostWellness,
@@ -32,6 +35,7 @@ fun HomeRoute(
 @Composable
 private fun HomeScreen(
     modifier: Modifier,
+    scope: CoroutineScope,
     selectedBottomNavigationItem: BottomNavigationItem,
     onBottomNavigationItemClick: (BottomNavigationItem) -> Unit,
     movePostWellness: () -> Unit,
@@ -48,6 +52,7 @@ private fun HomeScreen(
             )
             BottomNavigationItem.Calendar -> {}
             BottomNavigationItem.Profile -> MyProfileRoute(
+                scope = scope,
                 moveSetting = moveSetting,
             )
         }
