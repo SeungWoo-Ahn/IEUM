@@ -23,6 +23,7 @@ import com.ieum.presentation.screen.component.MyProfileSection
 import com.ieum.presentation.screen.component.MyProfileTobBar
 import com.ieum.presentation.screen.component.PatchAgeGroupDialog
 import com.ieum.presentation.screen.component.PatchDiagnoseDialog
+import com.ieum.presentation.screen.component.PatchResidenceDialog
 import com.ieum.presentation.screen.component.PostListArea
 import com.ieum.presentation.util.GlobalValueModel
 import kotlinx.coroutines.CoroutineScope
@@ -51,7 +52,7 @@ fun MyProfileRoute(
         patchChemotherapy = {},
         patchRadiationTherapy = {},
         patchAgeGroup = viewModel::showPatchAgeGroupDialog,
-        patchResidenceArea = {},
+        patchResidenceArea = viewModel::showPatchResidenceDialog,
         patchHospitalArea = {},
         onMenu = {},
         onLike = {},
@@ -74,6 +75,14 @@ fun MyProfileRoute(
             onDismissRequest = viewModel::dismissDialog,
         )
     }
+    if (dialogState is MyProfileDialogState.ShowPatchResidenceDialog) {
+        PatchResidenceDialog(
+            profile = dialogState.profile,
+            state = dialogState.state,
+            patch = dialogState.patch,
+            onDismissRequest = viewModel::dismissDialog,
+        )
+    }
 }
 
 @Composable
@@ -90,7 +99,7 @@ private fun MyProfileScreen(
     patchChemotherapy: () -> Unit,
     patchRadiationTherapy: () -> Unit,
     patchAgeGroup: (MyProfile) -> Unit,
-    patchResidenceArea: () -> Unit,
+    patchResidenceArea: (MyProfile) -> Unit,
     patchHospitalArea: () -> Unit,
     onMenu: (Int) -> Unit,
     onLike: (Int) -> Unit,
@@ -119,7 +128,7 @@ private fun MyProfileScreen(
                         patchChemotherapy = patchChemotherapy,
                         patchRadiationTherapy = patchRadiationTherapy,
                         patchAgeGroup = { patchAgeGroup(uiState.profile) },
-                        patchResidenceArea = patchResidenceArea,
+                        patchResidenceArea = { patchResidenceArea(uiState.profile) },
                         patchHospitalArea = patchHospitalArea,
                     )
                 }

@@ -1,6 +1,7 @@
 package com.ieum.presentation.screen.main.home.myProfile
 
 import com.ieum.domain.model.user.MyProfile
+import com.ieum.presentation.state.AddressState
 
 sealed class MyProfileUiState {
     data object Loading : MyProfileUiState()
@@ -22,6 +23,12 @@ sealed class MyProfileDialogState {
 
     data class ShowPatchAgeGroupDialog(
         val profile: MyProfile,
+        val patch: PatchMyProfile,
+    ) : MyProfileDialogState()
+
+    data class ShowPatchResidenceDialog(
+        val profile: MyProfile,
+        val state: AddressState,
         val patch: PatchMyProfile,
     ) : MyProfileDialogState()
 }

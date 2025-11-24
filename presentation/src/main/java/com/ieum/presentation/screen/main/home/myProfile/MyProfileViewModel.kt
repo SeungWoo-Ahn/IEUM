@@ -12,6 +12,7 @@ import androidx.paging.cachedIn
 import androidx.paging.map
 import com.ieum.domain.model.post.Post
 import com.ieum.domain.model.user.MyProfile
+import com.ieum.domain.usecase.address.GetAddressListUseCase
 import com.ieum.domain.usecase.user.GetMyPostListUseCase
 import com.ieum.domain.usecase.user.GetMyProfileUseCase
 import com.ieum.domain.usecase.user.PatchMyProfileUseCase
@@ -20,6 +21,7 @@ import com.ieum.presentation.mapper.toRequest
 import com.ieum.presentation.mapper.toUiModel
 import com.ieum.presentation.model.post.PostTypeUiModel
 import com.ieum.presentation.model.post.PostUiModel
+import com.ieum.presentation.state.AddressState
 import com.ieum.presentation.util.GlobalValueModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -36,6 +38,7 @@ class MyProfileViewModel @Inject constructor(
     private val getMyProfileUseCase: GetMyProfileUseCase,
     private val getMyPostListUseCase: GetMyPostListUseCase,
     private val patchMyProfileUseCase: PatchMyProfileUseCase,
+    private val getAddressListUseCase: GetAddressListUseCase,
     val valueModel: GlobalValueModel,
 ) : ViewModel() {
     var currentTab by mutableStateOf(MyProfileTab.PROFILE)
@@ -101,6 +104,17 @@ class MyProfileViewModel @Inject constructor(
     fun showPatchAgeGroupDialog(profile: MyProfile) {
         dialogState = MyProfileDialogState.ShowPatchAgeGroupDialog(
             profile = profile,
+            patch = ::patchMyProfile,
+        )
+    }
+
+    fun showPatchResidenceDialog(profile: MyProfile) {
+        dialogState = MyProfileDialogState.ShowPatchResidenceDialog(
+            profile = profile,
+            state = AddressState(
+                getAddressListUseCase = getAddressListUseCase,
+                coroutineScope = viewModelScope,
+            ),
             patch = ::patchMyProfile,
         )
     }

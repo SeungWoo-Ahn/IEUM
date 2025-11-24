@@ -29,7 +29,6 @@ import com.ieum.design_system.spacer.IEUMSpacer
 import com.ieum.design_system.theme.Slate100
 import com.ieum.design_system.theme.Slate200
 import com.ieum.design_system.theme.Slate400
-import com.ieum.design_system.theme.White
 import com.ieum.design_system.theme.screenPadding
 import com.ieum.design_system.topbar.TopBarForBack
 import com.ieum.design_system.util.noRippleClickable
@@ -42,6 +41,7 @@ import com.ieum.presentation.model.user.AgeGroupUiModel
 import com.ieum.presentation.model.user.CancerDiagnoseUiModel
 import com.ieum.presentation.model.user.CancerStageUiModel
 import com.ieum.presentation.screen.main.home.myProfile.PatchMyProfile
+import com.ieum.presentation.state.AddressState
 import com.ieum.presentation.state.DiagnoseState
 import kotlinx.coroutines.CoroutineScope
 
@@ -138,9 +138,7 @@ fun PatchDiagnoseDialog(
 
     FullScreenDialog(onDismissRequest) {
         Column(
-            modifier = modifier
-                .fillMaxWidth()
-                .background(color = White),
+            modifier = modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             TopBarForBack(onBack = onDismissRequest)
@@ -213,9 +211,7 @@ fun PatchAgeGroupDialog(
 
     FullScreenDialog(onDismissRequest) {
         Column(
-            modifier = modifier
-                .fillMaxWidth()
-                .background(color = White),
+            modifier = modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             TopBarForBack(onBack = onDismissRequest)
@@ -239,6 +235,68 @@ fun PatchAgeGroupDialog(
                     enabled = isLoading.not(),
                     onClick = ::patchAgeGroup,
                 )
+            }
+        }
+    }
+}
+
+@Composable
+fun PatchResidenceDialog(
+    modifier: Modifier = Modifier,
+    profile: MyProfile,
+    state: AddressState,
+    patch: PatchMyProfile,
+    onDismissRequest: () -> Unit,
+) {
+    var isLoading by remember { mutableStateOf(false) }
+    var isOpened by remember { mutableStateOf(profile.residenceArea.open) }
+
+    fun patchResidence() {
+        val residenceArea = ProfileProperty(
+            data = state.getSelectedProvince()?.fullName,
+            open = isOpened,
+        )
+        if (residenceArea != profile.residenceArea) {
+            val patchedProfile = profile.copy(residenceArea = residenceArea)
+            isLoading = true
+            patch(patchedProfile) { isLoading = false }
+        } else {
+            onDismissRequest()
+        }
+    }
+
+    FullScreenDialog(onDismissRequest) {
+        Column(
+            modifier = modifier.fillMaxWidth(),
+        ) {
+            TopBarForBack(onBack = onDismissRequest)
+            IEUMSpacer(size = 12)
+            UserGuideArea(
+                modifier = Modifier.padding(horizontal = screenPadding),
+                guide = stringResource(R.string.guide_select_residence),
+            )
+            IEUMSpacer(size = 40)
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                AddressComponent(state = state)
+                Column(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(horizontal = screenPadding)
+                        .padding(bottom = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(14.dp),
+                ) {
+                    PatchLockCheckBox(
+                        isLocked = isOpened.not(),
+                        onClick = { isOpened = isOpened.not() },
+                    )
+                    Lime400Button(
+                        text = stringResource(R.string.complete),
+                        enabled = isLoading.not(),
+                        onClick = ::patchResidence,
+                    )
+                }
             }
         }
     }
