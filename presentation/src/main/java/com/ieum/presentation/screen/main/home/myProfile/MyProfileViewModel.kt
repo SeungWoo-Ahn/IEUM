@@ -119,6 +119,17 @@ class MyProfileViewModel @Inject constructor(
         )
     }
 
+    fun showPatchHospitalDialog(profile: MyProfile) {
+        dialogState = MyProfileDialogState.ShowPatchHospitalDialog(
+            profile = profile,
+            state = AddressState(
+                getAddressListUseCase = getAddressListUseCase,
+                coroutineScope = viewModelScope,
+            ),
+            patch = ::patchMyProfile,
+        )
+    }
+
     private fun patchMyProfile(profile: MyProfile, onFailure: () -> Unit) {
         viewModelScope.launch {
             patchMyProfileUseCase(profile.toRequest())

@@ -23,6 +23,7 @@ import com.ieum.presentation.screen.component.MyProfileSection
 import com.ieum.presentation.screen.component.MyProfileTobBar
 import com.ieum.presentation.screen.component.PatchAgeGroupDialog
 import com.ieum.presentation.screen.component.PatchDiagnoseDialog
+import com.ieum.presentation.screen.component.PatchHospitalDialog
 import com.ieum.presentation.screen.component.PatchResidenceDialog
 import com.ieum.presentation.screen.component.PostListArea
 import com.ieum.presentation.util.GlobalValueModel
@@ -53,7 +54,7 @@ fun MyProfileRoute(
         patchRadiationTherapy = {},
         patchAgeGroup = viewModel::showPatchAgeGroupDialog,
         patchResidenceArea = viewModel::showPatchResidenceDialog,
-        patchHospitalArea = {},
+        patchHospitalArea = viewModel::showPatchHospitalDialog,
         onMenu = {},
         onLike = {},
         onComment = {},
@@ -83,6 +84,14 @@ fun MyProfileRoute(
             onDismissRequest = viewModel::dismissDialog,
         )
     }
+    if (dialogState is MyProfileDialogState.ShowPatchHospitalDialog) {
+        PatchHospitalDialog(
+            profile = dialogState.profile,
+            state = dialogState.state,
+            patch = dialogState.patch,
+            onDismissRequest = viewModel::dismissDialog,
+        )
+    }
 }
 
 @Composable
@@ -100,7 +109,7 @@ private fun MyProfileScreen(
     patchRadiationTherapy: () -> Unit,
     patchAgeGroup: (MyProfile) -> Unit,
     patchResidenceArea: (MyProfile) -> Unit,
-    patchHospitalArea: () -> Unit,
+    patchHospitalArea: (MyProfile) -> Unit,
     onMenu: (Int) -> Unit,
     onLike: (Int) -> Unit,
     onComment: (Int) -> Unit,
@@ -129,7 +138,7 @@ private fun MyProfileScreen(
                         patchRadiationTherapy = patchRadiationTherapy,
                         patchAgeGroup = { patchAgeGroup(uiState.profile) },
                         patchResidenceArea = { patchResidenceArea(uiState.profile) },
-                        patchHospitalArea = patchHospitalArea,
+                        patchHospitalArea = { patchHospitalArea(uiState.profile) },
                     )
                 }
             }

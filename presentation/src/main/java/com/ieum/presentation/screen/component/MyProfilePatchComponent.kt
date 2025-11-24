@@ -301,3 +301,65 @@ fun PatchResidenceDialog(
         }
     }
 }
+
+@Composable
+fun PatchHospitalDialog(
+    modifier: Modifier = Modifier,
+    profile: MyProfile,
+    state: AddressState,
+    patch: PatchMyProfile,
+    onDismissRequest: () -> Unit,
+) {
+    var isLoading by remember { mutableStateOf(false) }
+    var isOpened by remember { mutableStateOf(profile.hospitalArea.open) }
+
+    fun patchHospital() {
+        val hospitalArea = ProfileProperty(
+            data = state.getSelectedProvince()?.fullName,
+            open = isOpened,
+        )
+        if (hospitalArea != profile.hospitalArea) {
+            val patchedProfile = profile.copy(hospitalArea = hospitalArea)
+            isLoading = true
+            patch(patchedProfile) { isLoading = false }
+        } else {
+            onDismissRequest()
+        }
+    }
+
+    FullScreenDialog(onDismissRequest) {
+        Column(
+            modifier = modifier.fillMaxWidth(),
+        ) {
+            TopBarForBack(onBack = onDismissRequest)
+            IEUMSpacer(size = 12)
+            UserGuideArea(
+                modifier = Modifier.padding(horizontal = screenPadding),
+                guide = stringResource(R.string.guide_select_hospital),
+            )
+            IEUMSpacer(size = 40)
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                AddressComponent(state = state)
+                Column(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(horizontal = screenPadding)
+                        .padding(bottom = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(14.dp),
+                ) {
+                    PatchLockCheckBox(
+                        isLocked = isOpened.not(),
+                        onClick = { isOpened = isOpened.not() },
+                    )
+                    Lime400Button(
+                        text = stringResource(R.string.complete),
+                        enabled = isLoading.not(),
+                        onClick = ::patchHospital,
+                    )
+                }
+            }
+        }
+    }
+}
