@@ -11,9 +11,12 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.ieum.domain.model.post.Post
+import com.ieum.domain.model.user.MyProfile
 import com.ieum.domain.usecase.user.GetMyPostListUseCase
 import com.ieum.domain.usecase.user.GetMyProfileUseCase
+import com.ieum.domain.usecase.user.PatchMyProfileUseCase
 import com.ieum.presentation.mapper.toDomain
+import com.ieum.presentation.mapper.toRequest
 import com.ieum.presentation.mapper.toUiModel
 import com.ieum.presentation.model.post.PostTypeUiModel
 import com.ieum.presentation.model.post.PostUiModel
@@ -32,12 +35,16 @@ import javax.inject.Inject
 class MyProfileViewModel @Inject constructor(
     private val getMyProfileUseCase: GetMyProfileUseCase,
     private val getMyPostListUseCase: GetMyPostListUseCase,
+    private val patchMyProfileUseCase: PatchMyProfileUseCase,
     val valueModel: GlobalValueModel,
 ) : ViewModel() {
+    var currentTab by mutableStateOf(MyProfileTab.PROFILE)
+        private set
+
     var uiState by mutableStateOf<MyProfileUiState>(MyProfileUiState.Loading)
         private set
 
-    var currentTab by mutableStateOf(MyProfileTab.PROFILE)
+    var dialogState by mutableStateOf<MyProfileDialogState>(MyProfileDialogState.Idle)
         private set
 
     private val _postType = MutableStateFlow(PostTypeUiModel.WELLNESS)
@@ -64,20 +71,45 @@ class MyProfileViewModel @Inject constructor(
         getMyProfile()
     }
 
-    private fun getMyProfile() {
+    fun onTab(tab: MyProfileTab) {
+        currentTab = tab
+    }
+
+    fun getMyProfile() {
         viewModelScope.launch {
             getMyProfileUseCase()
                 .onSuccess {
                     uiState = MyProfileUiState.Success(it)
                 }
                 .onFailure {
-                    // 불러오기 실패
+                    uiState = MyProfileUiState.Error
                 }
         }
     }
 
-    fun onTab(tab: MyProfileTab) {
-        currentTab = tab
+    fun dismissDialog() {
+        dialogState = MyProfileDialogState.Idle
+    }
+
+    fun showPatchDiagnoseDialog(profile: MyProfile) {
+        dialogState = MyProfileDialogState.ShowPatchDiagnoseDialog(
+            profile = profile,
+            patch = ::patchMyProfile,
+        )
+    }
+
+    private fun patchMyProfile(profile: MyProfile, onFailure: () -> Unit) {
+        viewModelScope.launch {
+            patchMyProfileUseCase(profile.toRequest())
+                .onSuccess {
+                    uiState = MyProfileUiState.Success(it)
+                    dismissDialog()
+                }
+                .onFailure {
+                    onFailure()
+                    // 수정 실패
+                }
+        }
     }
 
     fun onPostType(type: PostTypeUiModel) {
