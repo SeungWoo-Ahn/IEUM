@@ -21,6 +21,7 @@ import com.ieum.presentation.screen.component.ErrorComponent
 import com.ieum.presentation.screen.component.MyProfilePostTypeArea
 import com.ieum.presentation.screen.component.MyProfileSection
 import com.ieum.presentation.screen.component.MyProfileTobBar
+import com.ieum.presentation.screen.component.PatchAgeGroupDialog
 import com.ieum.presentation.screen.component.PatchDiagnoseDialog
 import com.ieum.presentation.screen.component.PostListArea
 import com.ieum.presentation.util.GlobalValueModel
@@ -49,7 +50,7 @@ fun MyProfileRoute(
         patchDiagnose = viewModel::showPatchDiagnoseDialog,
         patchChemotherapy = {},
         patchRadiationTherapy = {},
-        patchAgeGroup = {},
+        patchAgeGroup = viewModel::showPatchAgeGroupDialog,
         patchResidenceArea = {},
         patchHospitalArea = {},
         onMenu = {},
@@ -61,6 +62,13 @@ fun MyProfileRoute(
     if (dialogState is MyProfileDialogState.ShowPatchDiagnoseDialog) {
         PatchDiagnoseDialog(
             scope = scope,
+            profile = dialogState.profile,
+            patch = dialogState.patch,
+            onDismissRequest = viewModel::dismissDialog,
+        )
+    }
+    if (dialogState is MyProfileDialogState.ShowPatchAgeGroupDialog) {
+        PatchAgeGroupDialog(
             profile = dialogState.profile,
             patch = dialogState.patch,
             onDismissRequest = viewModel::dismissDialog,
@@ -81,7 +89,7 @@ private fun MyProfileScreen(
     patchDiagnose: (MyProfile) -> Unit,
     patchChemotherapy: () -> Unit,
     patchRadiationTherapy: () -> Unit,
-    patchAgeGroup: () -> Unit,
+    patchAgeGroup: (MyProfile) -> Unit,
     patchResidenceArea: () -> Unit,
     patchHospitalArea: () -> Unit,
     onMenu: (Int) -> Unit,
@@ -110,7 +118,7 @@ private fun MyProfileScreen(
                         patchDiagnose = { patchDiagnose(uiState.profile) },
                         patchChemotherapy = patchChemotherapy,
                         patchRadiationTherapy = patchRadiationTherapy,
-                        patchAgeGroup = patchAgeGroup,
+                        patchAgeGroup = { patchAgeGroup(uiState.profile) },
                         patchResidenceArea = patchResidenceArea,
                         patchHospitalArea = patchHospitalArea,
                     )

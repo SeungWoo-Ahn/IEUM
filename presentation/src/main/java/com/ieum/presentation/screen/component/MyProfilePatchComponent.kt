@@ -20,9 +20,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.ieum.design_system.button.Lime400Button
 import com.ieum.design_system.checkbox.IEUMCheckBox
 import com.ieum.design_system.dialog.FullScreenDialog
 import com.ieum.design_system.icon.LockIcon
+import com.ieum.design_system.selector.SingleSelectorState
 import com.ieum.design_system.spacer.IEUMSpacer
 import com.ieum.design_system.theme.Slate100
 import com.ieum.design_system.theme.Slate200
@@ -34,6 +36,9 @@ import com.ieum.design_system.util.noRippleClickable
 import com.ieum.domain.model.user.MyProfile
 import com.ieum.domain.model.user.ProfileProperty
 import com.ieum.presentation.R
+import com.ieum.presentation.mapper.toDomain
+import com.ieum.presentation.mapper.toUiModel
+import com.ieum.presentation.model.user.AgeGroupUiModel
 import com.ieum.presentation.model.user.CancerDiagnoseUiModel
 import com.ieum.presentation.model.user.CancerStageUiModel
 import com.ieum.presentation.screen.main.home.myProfile.PatchMyProfile
@@ -173,6 +178,68 @@ fun PatchDiagnoseDialog(
                 callback = currentSheetState.callback,
                 onDismissRequest = ::dismissSheet,
             )
+        }
+    }
+}
+
+@Composable
+fun PatchAgeGroupDialog(
+    modifier: Modifier = Modifier,
+    profile: MyProfile,
+    patch: PatchMyProfile,
+    onDismissRequest: () -> Unit,
+) {
+    var isLoading by remember { mutableStateOf(false) }
+    var isOpened by remember { mutableStateOf(profile.ageGroup.open) }
+    val state = remember {
+        SingleSelectorState(itemList = AgeGroupUiModel.entries).apply {
+            profile.ageGroup.data?.let { setItem(it.toUiModel()) }
+        }
+    }
+
+    fun patchAgeGroup() {
+        val ageGroup = ProfileProperty(
+            data = state.selectedItem?.toDomain(),
+            open = isOpened,
+        )
+        if (ageGroup != profile.ageGroup) {
+            val patchedProfile = profile.copy(ageGroup = ageGroup)
+            isLoading = true
+            patch(patchedProfile) { isLoading = false }
+        } else {
+            onDismissRequest()
+        }
+    }
+
+    FullScreenDialog(onDismissRequest) {
+        Column(
+            modifier = modifier
+                .fillMaxWidth()
+                .background(color = White),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            TopBarForBack(onBack = onDismissRequest)
+            Column(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = screenPadding)
+                    .padding(bottom = 16.dp),
+            ) {
+                UserGuideArea(guide = stringResource(R.string.guide_select_age_group))
+                IEUMSpacer(size = 40)
+                SelectAgeGroup(state = state)
+                IEUMSpacer(modifier = Modifier.weight(1f))
+                PatchLockCheckBox(
+                    isLocked = isOpened.not(),
+                    onClick = { isOpened = isOpened.not() },
+                )
+                IEUMSpacer(size = 14)
+                Lime400Button(
+                    text = stringResource(R.string.complete),
+                    enabled = isLoading.not(),
+                    onClick = ::patchAgeGroup,
+                )
+            }
         }
     }
 }

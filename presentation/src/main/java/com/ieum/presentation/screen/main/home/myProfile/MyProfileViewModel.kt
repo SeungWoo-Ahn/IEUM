@@ -98,6 +98,13 @@ class MyProfileViewModel @Inject constructor(
         )
     }
 
+    fun showPatchAgeGroupDialog(profile: MyProfile) {
+        dialogState = MyProfileDialogState.ShowPatchAgeGroupDialog(
+            profile = profile,
+            patch = ::patchMyProfile,
+        )
+    }
+
     private fun patchMyProfile(profile: MyProfile, onFailure: () -> Unit) {
         viewModelScope.launch {
             patchMyProfileUseCase(profile.toRequest())

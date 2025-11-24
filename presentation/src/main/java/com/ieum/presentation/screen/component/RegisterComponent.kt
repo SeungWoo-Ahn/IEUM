@@ -169,7 +169,7 @@ fun RegisterSelectAgeGroup(
             .padding(horizontal = screenPadding)
             .padding(bottom = 16.dp),
     ) {
-        UserGuideArea(guide = stringResource(R.string.guide_select_diagnose))
+        UserGuideArea(guide = stringResource(R.string.guide_select_age_group))
         IEUMSpacer(size = 40)
         SelectAgeGroup(state = state)
         IEUMSpacer(modifier = Modifier.weight(1f))

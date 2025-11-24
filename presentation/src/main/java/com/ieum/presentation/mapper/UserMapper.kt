@@ -46,7 +46,7 @@ fun AgeGroupUiModel.toDomain(): AgeGroup =
         AgeGroupUiModel.OVER_SEVENTY -> AgeGroup.OVER_SEVENTY
     }
 
-private fun AgeGroup.toUiModel(): AgeGroupUiModel =
+fun AgeGroup.toUiModel(): AgeGroupUiModel =
     when (this) {
         AgeGroup.UNDER_THIRTY -> AgeGroupUiModel.UNDER_THIRTY
         AgeGroup.FORTIES -> AgeGroupUiModel.FORTIES
