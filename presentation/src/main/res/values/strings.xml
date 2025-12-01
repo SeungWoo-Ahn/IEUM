@@ -8,8 +8,9 @@
     <string name="guide_type_nickname">사용하실 닉네임을\n입력해주세요</string>
     <string name="guide_select_diagnose">진단명을 1개 이상\n선택해 주세요</string>
     <string name="guide_select_cancer_stage">선택하신 %s의 병기를\n알려주세요</string>
-    <string name="guide_select_age_group">연령대가\n어떻게 되시나요?</string>
+    <string name="guide_type_chemotherapy">받으신 항암 치료 내용을\n입력해주세요</string>
     <string name="guide_type_radiation_therapy">받으신 방사선 치료 내용을\n입력해주세요</string>
+    <string name="guide_select_age_group">연령대가\n어떻게 되시나요?</string>
     <string name="guide_select_residence">거주하고 계신 지역을\n알려주세요</string>
     <string name="guide_select_hospital">치료받고 있는 병원의\n지역을 알려주세요</string>
     <string name="guide_type_interest">요즘 가장 관심이 가는\n주제가 무엇인가요?</string>
@@ -27,6 +28,7 @@
 
     <string name="placeholder_type_nickname">아름다운하마0192</string>
     <string name="placeholder_type_interest">자유롭게 입력해주세요</string>
+    <string name="placeholder_type_cycle">차수를 입력해주세요</string>
 
     <string name="rectal_cancer">대장암</string>
     <string name="colon_cancer">직장암</string>

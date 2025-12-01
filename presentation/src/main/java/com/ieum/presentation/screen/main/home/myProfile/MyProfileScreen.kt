@@ -22,6 +22,7 @@ import com.ieum.presentation.screen.component.MyProfilePostTypeArea
 import com.ieum.presentation.screen.component.MyProfileSection
 import com.ieum.presentation.screen.component.MyProfileTobBar
 import com.ieum.presentation.screen.component.PatchAgeGroupDialog
+import com.ieum.presentation.screen.component.PatchChemotherapyDialog
 import com.ieum.presentation.screen.component.PatchDiagnoseDialog
 import com.ieum.presentation.screen.component.PatchHospitalDialog
 import com.ieum.presentation.screen.component.PatchRadiationTherapyDialog
@@ -51,7 +52,7 @@ fun MyProfileRoute(
         onTabClick = viewModel::onTab,
         onPostType = viewModel::onPostType,
         patchDiagnose = viewModel::showPatchDiagnoseDialog,
-        patchChemotherapy = {},
+        patchChemotherapy = viewModel::showPatchChemotherapyDialog,
         patchRadiationTherapy = viewModel::showPatchRadiationTherapyDialog,
         patchAgeGroup = viewModel::showPatchAgeGroupDialog,
         patchResidenceArea = viewModel::showPatchResidenceDialog,
@@ -65,6 +66,13 @@ fun MyProfileRoute(
     if (dialogState is MyProfileDialogState.ShowPatchDiagnoseDialog) {
         PatchDiagnoseDialog(
             scope = scope,
+            profile = dialogState.profile,
+            patch = dialogState.patch,
+            onDismissRequest = viewModel::dismissDialog,
+        )
+    }
+    if (dialogState is MyProfileDialogState.ShowPatchChemotherapyDialog) {
+        PatchChemotherapyDialog(
             profile = dialogState.profile,
             patch = dialogState.patch,
             onDismissRequest = viewModel::dismissDialog,
@@ -113,7 +121,7 @@ private fun MyProfileScreen(
     onTabClick: (MyProfileTab) -> Unit,
     onPostType: (PostTypeUiModel) -> Unit,
     patchDiagnose: (MyProfile) -> Unit,
-    patchChemotherapy: () -> Unit,
+    patchChemotherapy: (MyProfile) -> Unit,
     patchRadiationTherapy: (MyProfile) -> Unit,
     patchAgeGroup: (MyProfile) -> Unit,
     patchResidenceArea: (MyProfile) -> Unit,
@@ -142,7 +150,7 @@ private fun MyProfileScreen(
                     is MyProfileUiState.Success -> MyProfileSection(
                         profile = uiState.profile.toUiModel(valueModel),
                         patchDiagnose = { patchDiagnose(uiState.profile) },
-                        patchChemotherapy = patchChemotherapy,
+                        patchChemotherapy = { patchChemotherapy(uiState.profile) },
                         patchRadiationTherapy = { patchRadiationTherapy(uiState.profile) },
                         patchAgeGroup = { patchAgeGroup(uiState.profile) },
                         patchResidenceArea = { patchResidenceArea(uiState.profile) },

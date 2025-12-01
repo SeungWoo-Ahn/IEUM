@@ -21,6 +21,11 @@ sealed class MyProfileDialogState {
         val patch: PatchMyProfile,
     ) : MyProfileDialogState()
 
+    data class ShowPatchChemotherapyDialog(
+        val profile: MyProfile,
+        val patch: PatchMyProfile,
+    ) : MyProfileDialogState()
+
     data class ShowPatchRadiationTherapyDialog(
         val profile: MyProfile,
         val patch: PatchMyProfile,

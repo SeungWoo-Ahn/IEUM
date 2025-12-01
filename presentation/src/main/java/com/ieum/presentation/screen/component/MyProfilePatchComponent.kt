@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -23,6 +24,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.ieum.design_system.button.Lime400Button
 import com.ieum.design_system.checkbox.IEUMCheckBox
@@ -31,6 +34,7 @@ import com.ieum.design_system.icon.CalendarIcon
 import com.ieum.design_system.icon.LockIcon
 import com.ieum.design_system.selector.SingleSelectorState
 import com.ieum.design_system.spacer.IEUMSpacer
+import com.ieum.design_system.textfield.IEUMTextField
 import com.ieum.design_system.theme.Slate100
 import com.ieum.design_system.theme.Slate200
 import com.ieum.design_system.theme.Slate300
@@ -40,6 +44,7 @@ import com.ieum.design_system.theme.Slate950
 import com.ieum.design_system.theme.screenPadding
 import com.ieum.design_system.topbar.TopBarForBack
 import com.ieum.design_system.util.noRippleClickable
+import com.ieum.domain.model.user.Chemotherapy
 import com.ieum.domain.model.user.MyProfile
 import com.ieum.domain.model.user.ProfileProperty
 import com.ieum.domain.model.user.RadiationTherapy
@@ -53,6 +58,7 @@ import com.ieum.presentation.model.user.CancerDiagnoseUiModel
 import com.ieum.presentation.model.user.CancerStageUiModel
 import com.ieum.presentation.screen.main.home.myProfile.PatchMyProfile
 import com.ieum.presentation.state.AddressState
+import com.ieum.presentation.state.CycleState
 import com.ieum.presentation.state.DatePickerState
 import com.ieum.presentation.state.DiagnoseState
 import kotlinx.coroutines.CoroutineScope
@@ -243,6 +249,7 @@ private fun PatchDateSelector(
     onClick: () -> Unit,
 ) {
     val color = if (enabled) Slate950 else Slate300
+
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -266,6 +273,133 @@ private fun PatchDateSelector(
             color = color
         )
         CalendarIcon(tint = color)
+    }
+}
+
+@Composable
+fun PatchChemotherapyDialog(
+    modifier: Modifier = Modifier,
+    profile: MyProfile,
+    patch: PatchMyProfile,
+    onDismissRequest: () -> Unit,
+) {
+    var isLoading by remember { mutableStateOf(false) }
+    var isOpened by remember { mutableStateOf(profile.chemotherapy.open) }
+    val cycleState = remember { CycleState().apply {
+        profile.chemotherapy.data?.cycle?.let { typeText(it.toString()) }
+    } }
+    var startDate by remember {
+        mutableStateOf(profile.chemotherapy.data?.startDate
+            ?: formatDate(DateFormatStrategy.Today))
+    }
+    var endDate by remember {
+        mutableStateOf(formatDate(DateFormatStrategy.Today)) // TODO: endDate 추가 시 설정
+    }
+    var isOngoing by remember {
+        mutableStateOf(false) // TODO: endDate 추가 시 설정
+    }
+    val buttonEnabled by remember { derivedStateOf { isLoading.not() && cycleState.validate() } }
+    var pickerState by remember { mutableStateOf<DatePickerState>(DatePickerState.Idle) }
+
+    fun showStartDatePicker() {
+        pickerState = DatePickerState.Show(
+            date = startDate,
+            onDateSelected = { startDate = it },
+            onDismissRequest = { pickerState = DatePickerState.Idle }
+        )
+    }
+
+    fun showEndDatePicker() {
+        pickerState = DatePickerState.Show(
+            date = endDate,
+            onDateSelected = { endDate = it },
+            onDismissRequest = { pickerState = DatePickerState.Idle }
+        )
+    }
+
+    fun patchChemotherapy() {
+        val chemotherapy = ProfileProperty(
+            data = Chemotherapy(
+                cycle = cycleState.getTrimmedText().toInt(),
+                startDate = startDate, // TODO: endDate 추가 시 설정
+            ),
+            open = isOpened,
+        )
+        if (chemotherapy != profile.chemotherapy) {
+            val patchedProfile = profile.copy(chemotherapy = chemotherapy)
+            isLoading = true
+            patch(patchedProfile) { isLoading = false }
+        } else {
+            onDismissRequest()
+        }
+    }
+
+    FullScreenDialog(onDismissRequest) {
+        Column(
+            modifier = modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            TopBarForBack(onBack = onDismissRequest)
+            Column(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = screenPadding)
+                    .padding(bottom = 16.dp),
+            ) {
+                UserGuideArea(guide = stringResource(R.string.guide_type_chemotherapy))
+                IEUMSpacer(size = 40)
+                PatchTitle(text = stringResource(R.string.cycle))
+                IEUMSpacer(size = 12)
+                IEUMTextField(
+                    state = cycleState,
+                    placeHolder = stringResource(R.string.placeholder_type_cycle),
+                    singleLine = true,
+                    textStyle = MaterialTheme.typography.titleLarge,
+                    innerPadding = PaddingValues(horizontal = 18.dp, vertical = 24.dp),
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Done,
+                )
+                IEUMSpacer(size = 26)
+                PatchTitle(text = stringResource(R.string.start_date))
+                IEUMSpacer(size = 12)
+                PatchDateSelector(
+                    selectedDate = startDate,
+                    onClick = ::showStartDatePicker
+                )
+                IEUMSpacer(size = 26)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    PatchTitle(text = stringResource(R.string.end_date))
+                    PatchOngoingCheckBox(
+                        isOngoing = isOngoing,
+                        onClick = { isOngoing = isOngoing.not() },
+                    )
+                }
+                IEUMSpacer(size = 12)
+                PatchDateSelector(
+                    selectedDate = endDate,
+                    enabled = isOngoing.not(),
+                    onClick = ::showEndDatePicker
+                )
+                IEUMSpacer(modifier = Modifier.weight(1f))
+                PatchLockCheckBox(
+                    isLocked = isOpened.not(),
+                    onClick = { isOpened = isOpened.not() },
+                )
+                IEUMSpacer(size = 14)
+                Lime400Button(
+                    text = stringResource(R.string.complete),
+                    enabled = buttonEnabled,
+                    onClick = ::patchChemotherapy,
+                )
+            }
+        }
+        if (pickerState is DatePickerState.Show) {
+            IEUMDatePickerDialog(state = pickerState as DatePickerState.Show)
+        }
     }
 }
 
