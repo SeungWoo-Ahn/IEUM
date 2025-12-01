@@ -32,6 +32,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
 import com.ieum.design_system.icon.CommentIcon
@@ -42,6 +43,7 @@ import com.ieum.design_system.icon.MemoIcon
 import com.ieum.design_system.icon.MenuIcon
 import com.ieum.design_system.icon.PenIcon
 import com.ieum.design_system.icon.ThunderIcon
+import com.ieum.design_system.progressbar.IEUMLoadingComponent
 import com.ieum.design_system.theme.Slate100
 import com.ieum.design_system.theme.Slate400
 import com.ieum.design_system.theme.Slate600
@@ -142,26 +144,30 @@ private fun DiagnoseFilter(
 fun PostListArea(
     modifier: Modifier = Modifier,
     postList: LazyPagingItems<PostUiModel>,
-    onNickname: (Int) -> Unit,
+    onNickname: ((Int) -> Unit)? = null,
     onMenu: (Int) -> Unit,
     onLike: (Int) -> Unit,
     onComment: (Int) -> Unit,
 ) {
-    LazyColumn(
-        modifier = modifier.fillMaxSize(),
-    ) {
-        items(
-            count = postList.itemCount,
-            key = postList.itemKey { it.id }
-        ) { index ->
-            postList[index]?.let { post ->
-                PostItem(
-                    post = post,
-                    onNickname = onNickname,
-                    onMenu = { onMenu(post.id) },
-                    onLike = { onLike(post.id) },
-                    onComment = { onComment(post.id) }
-                )
+    when (postList.loadState.refresh) {
+        LoadState.Loading -> IEUMLoadingComponent()
+        is LoadState.Error -> ErrorComponent(onRetry = postList::retry)
+        is LoadState.NotLoading -> LazyColumn(
+            modifier = modifier.fillMaxSize(),
+        ) {
+            items(
+                count = postList.itemCount,
+                key = postList.itemKey { it.id }
+            ) { index ->
+                postList[index]?.let { post ->
+                    PostItem(
+                        post = post,
+                        onNickname = onNickname,
+                        onMenu = { onMenu(post.id) },
+                        onLike = { onLike(post.id) },
+                        onComment = { onComment(post.id) }
+                    )
+                }
             }
         }
     }
@@ -171,7 +177,7 @@ fun PostListArea(
 private fun PostItem(
     modifier: Modifier = Modifier,
     post: PostUiModel,
-    onNickname: (Int) -> Unit,
+    onNickname: ((Int) -> Unit)?,
     onMenu: () -> Unit,
     onLike: () -> Unit,
     onComment: () -> Unit,
@@ -202,7 +208,7 @@ private fun PostItem(
 private fun PostItemTopBar(
     modifier: Modifier = Modifier,
     userInfo: PostUserInfo?,
-    onNickname: (Int) -> Unit,
+    onNickname: ((Int) -> Unit)?,
     onMenu: () -> Unit,
 ) {
     Row(
@@ -218,7 +224,7 @@ private fun PostItemTopBar(
             modifier = Modifier
                 .weight(1f)
                 .noRippleClickable {
-                    if (userInfo != null) onNickname(userInfo.id)
+                    if (userInfo != null) onNickname?.invoke(userInfo.id)
                 },
             contentAlignment = Alignment.CenterStart,
         ) {
@@ -392,11 +398,7 @@ private fun WellnessContent(
             horizontalArrangement = Arrangement.spacedBy(6.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Box(
-                modifier = Modifier.size(24.dp)
-            ) {
-                mood.icon()
-            }
+            mood.icon(24)
             Text(
                 text = stringResource(mood.description),
                 style = MaterialTheme.typography.headlineSmall,

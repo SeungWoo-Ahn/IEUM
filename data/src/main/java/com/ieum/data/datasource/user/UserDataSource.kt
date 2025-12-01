@@ -13,16 +13,11 @@ interface UserDataSource {
 
     suspend fun getMyProfile(): MyProfileDto
 
-    suspend fun patchMyProfile(requestBody: PatchProfileRequestBody)
+    suspend fun patchMyProfile(requestBody: PatchProfileRequestBody): MyProfileDto
 
     suspend fun getOthersProfile(id: Int): OthersProfileDto
 
     suspend fun getMyPostList(page: Int, size: Int, type: String): GetPostListResponse<MyPostDto>
 
-    suspend fun getOtherPostList(
-        page: Int,
-        size: Int,
-        id: Int,
-        type: String
-    ): GetPostListResponse<OtherPostDto>
+    suspend fun getOtherPostList(page: Int, size: Int, id: Int): GetPostListResponse<OtherPostDto>
 }

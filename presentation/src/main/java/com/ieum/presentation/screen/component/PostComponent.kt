@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.HorizontalDivider
@@ -23,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.ieum.design_system.checkbox.IEUMCheckBox
 import com.ieum.design_system.icon.CloseCircleIcon
@@ -38,6 +40,8 @@ import com.ieum.design_system.icon.PlusCircleIcon
 import com.ieum.design_system.icon.RefreshBlackIcon
 import com.ieum.design_system.icon.ThunderIcon
 import com.ieum.design_system.spacer.IEUMSpacer
+import com.ieum.design_system.textfield.ITextFieldState
+import com.ieum.design_system.textfield.StylelessTextField
 import com.ieum.design_system.theme.Slate100
 import com.ieum.design_system.theme.Slate200
 import com.ieum.design_system.theme.Slate500
@@ -142,7 +146,7 @@ fun MoodBox(
         if (data == null) {
             MoodSelectIcon()
         } else {
-            data.icon()
+            data.icon(108)
         }
         RefreshBlackIcon(
             modifier = Modifier.align(Alignment.TopEnd)
@@ -387,4 +391,62 @@ fun ShareCommunityBox(
         }
         PostGuide(guide = stringResource(R.string.guide_share_community))
     }
+}
+
+@Composable
+fun TypeDailyBox(
+    modifier: Modifier = Modifier,
+    titleState: ITextFieldState,
+    contentState: ITextFieldState,
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(
+                color = White,
+                shape = MaterialTheme.shapes.medium,
+            )
+            .border(
+                width = 1.dp,
+                color = Slate200,
+                shape = MaterialTheme.shapes.medium,
+            )
+    ) {
+        TypeTitle(state = titleState)
+        HorizontalDivider(
+            thickness = 1.dp,
+            color = Slate200,
+        )
+        TypeContent(state = contentState)
+    }
+}
+
+@Composable
+private fun TypeTitle(state: ITextFieldState) {
+    StylelessTextField(
+        modifier = Modifier
+            .padding(
+                horizontal = 18.dp,
+                vertical = 16.dp,
+            ),
+        state = state,
+        placeHolder = stringResource(R.string.placeholder_title),
+        singleLine = true,
+        textStyle = MaterialTheme.typography.bodyMedium,
+        imeAction = ImeAction.Next,
+    )
+}
+
+@Composable
+private fun TypeContent(state: ITextFieldState) {
+    StylelessTextField(
+        modifier = Modifier
+            .height(394.dp)
+            .padding(all = 18.dp),
+        state = state,
+        placeHolder = stringResource(R.string.placeholder_story),
+        singleLine = false,
+        textStyle = MaterialTheme.typography.bodySmall,
+        imeAction = ImeAction.Unspecified,
+    )
 }

@@ -22,4 +22,7 @@ sealed interface MainScreen {
 
     @Serializable
     data class PostDaily(val id: Int?) : MainScreen
+
+    @Serializable
+    data class OthersProfile(val id: Int) : MainScreen
 }

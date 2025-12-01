@@ -1,4 +1,4 @@
-package com.ieum.presentation.screen.main.home
+package com.ieum.presentation.screen.main.home.feed
 
 sealed class FeedUiState {
     data object Idle : FeedUiState()

@@ -14,8 +14,15 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDefaults
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,24 +31,30 @@ import androidx.compose.ui.unit.dp
 import com.ieum.design_system.button.DarkButton
 import com.ieum.design_system.dialog.IEUMDialog
 import com.ieum.design_system.icon.CompleteIcon
-import com.ieum.design_system.icon.DailyIcon
 import com.ieum.design_system.icon.IncompleteIcon
 import com.ieum.design_system.icon.LeftIcon
 import com.ieum.design_system.icon.RightIcon
-import com.ieum.design_system.icon.WellnessIcon
 import com.ieum.design_system.spacer.IEUMSpacer
 import com.ieum.design_system.theme.Black
 import com.ieum.design_system.theme.Lime500
 import com.ieum.design_system.theme.Slate200
 import com.ieum.design_system.theme.Slate500
+import com.ieum.design_system.theme.Slate950
 import com.ieum.design_system.theme.White
 import com.ieum.design_system.theme.screenPadding
 import com.ieum.design_system.util.dropShadow
 import com.ieum.design_system.util.noRippleClickable
 import com.ieum.presentation.R
 import com.ieum.presentation.model.post.MoodUiModel
+import com.ieum.presentation.model.post.PostTypeUiModel
+import com.ieum.presentation.state.DatePickerState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 @Composable
 fun MoodDialog(
@@ -123,11 +136,7 @@ private fun MoodPagerItem(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(14.dp),
     ) {
-        Box(
-            modifier = Modifier.size(140.dp)
-        ) {
-            mood.icon()
-        }
+        mood.icon(140)
         Box(
             modifier = Modifier
                 .background(
@@ -256,11 +265,10 @@ fun AddPostDialog(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = Black.copy(alpha = 0.4f))
             .noRippleClickable(onClick = onDismissRequest)
             .padding(
                 horizontal = screenPadding,
-                vertical = 24.dp
+                vertical = 90.dp
             ),
         contentAlignment = Alignment.BottomCenter,
     ) {
@@ -275,27 +283,26 @@ fun AddPostDialog(
                 .padding(all = screenPadding),
             verticalArrangement = Arrangement.spacedBy(28.dp),
         ) {
-            AddPostItem(
-                name = stringResource(R.string.wellness_records),
-                guide = stringResource(R.string.guide_wellness_records),
-                icon = { WellnessIcon() },
-                onClick = movePostWellness
-            )
-            AddPostItem(
-                name = stringResource(R.string.daily_records),
-                guide = stringResource(R.string.guide_daily_records),
-                icon = { DailyIcon() },
-                onClick = movePostDaily
-            )
+            PostTypeUiModel.entries.forEach { type ->
+                val movePage = when (type) {
+                    PostTypeUiModel.WELLNESS -> movePostWellness
+                    PostTypeUiModel.DAILY -> movePostDaily
+                }
+                AddPostItem(
+                    postType = type,
+                    onClick = {
+                        movePage()
+                        onDismissRequest()
+                    }
+                )
+            }
         }
     }
 }
 
 @Composable
 private fun AddPostItem(
-    name: String,
-    guide: String,
-    icon: @Composable () -> Unit,
+    postType: PostTypeUiModel,
     onClick: () -> Unit,
 ) {
     Column(
@@ -308,17 +315,88 @@ private fun AddPostItem(
             horizontalArrangement = Arrangement.spacedBy(4.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            icon()
+            postType.icon(24)
             Text(
-                text = name,
+                text = stringResource(postType.displayName),
                 style = MaterialTheme.typography.headlineSmall,
             )
         }
         Text(
             modifier = Modifier.padding(start = 28.dp),
-            text = guide,
+            text = stringResource(postType.guide),
             style = MaterialTheme.typography.bodyMedium,
             color = Slate500,
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun IEUMDatePickerDialog(
+    state: DatePickerState.Show,
+) {
+    fun getYearRange(): IntRange {
+        val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+        return 1950..currentYear + 1
+    }
+
+    fun convertDateToMillis(date: String): Long {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.KOREA)
+            .apply { timeZone = TimeZone.getTimeZone("UTC") }
+        val dateLong = dateFormat.parse(date) as Date
+        return dateLong.time
+    }
+
+    fun convertMillisToDate(millis: Long): String {
+        val date = Date(millis)
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.KOREA)
+        return dateFormat.format(date)
+    }
+
+    val datePickerState = rememberDatePickerState(
+        yearRange = getYearRange(),
+        initialSelectedDateMillis = convertDateToMillis(state.date),
+    )
+    val selectedDate = datePickerState.selectedDateMillis
+        ?.let { convertMillisToDate(it) } ?: ""
+
+    DatePickerDialog(
+        modifier = Modifier.padding(all = screenPadding),
+        onDismissRequest = state.onDismissRequest,
+        colors = DatePickerDefaults.colors(containerColor = White),
+        confirmButton = {
+            Button(
+                modifier = Modifier.size(
+                    width = 120.dp,
+                    height = 48.dp,
+                ),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Slate950,
+                ),
+                onClick = {
+                    state.onDateSelected(selectedDate)
+                    state.onDismissRequest()
+                }
+            ) {
+                Text(
+                    text = stringResource(R.string.confirm),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = White,
+                )
+            }
+        }
+    ) {
+        DatePicker(
+            state = datePickerState,
+            title = null,
+            headline = null,
+            showModeToggle = false,
+            colors = DatePickerDefaults.colors(
+                containerColor = White,
+                selectedDayContainerColor = Slate950,
+                selectedYearContainerColor = Slate950,
+                todayDateBorderColor = Slate950
+            )
         )
     }
 }

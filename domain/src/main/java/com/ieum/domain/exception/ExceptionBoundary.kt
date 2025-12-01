@@ -1,12 +1,12 @@
 package com.ieum.domain.exception
 
-sealed class NetworkException(override val message: String) : IllegalStateException(message) {
-    class ClientSide(message: String) : NetworkException(message)
-    class ServerSide(message: String) : NetworkException(message)
-    class Unknown(message: String) : NetworkException(message)
+sealed class NetworkException : RuntimeException() {
+    class ConnectionException : NetworkException()
+    class ResponseException(override val message: String) : NetworkException()
+    class UnknownException(val t: Throwable) : NetworkException()
 }
 
-sealed class SGISException(override val message: String) : IllegalStateException(message) {
-    class UnAuthorized(message: String) : SGISException(message)
-    class Unknown(message: String) : SGISException(message)
+sealed class SGISException : RuntimeException() {
+    class UnAuthorized : SGISException()
+    class Unknown : SGISException()
 }

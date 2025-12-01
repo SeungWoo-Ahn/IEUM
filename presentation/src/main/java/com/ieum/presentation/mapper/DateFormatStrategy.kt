@@ -29,6 +29,14 @@ sealed interface DateFormatStrategy {
             }
         }
     }
+
+    data object Today : DateFormatStrategy {
+        override fun format(): String {
+            val current = Date()
+            val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.KOREA)
+            return formatter.format(current)
+        }
+    }
 }
 
 fun formatDate(strategy: DateFormatStrategy): String = strategy.format()

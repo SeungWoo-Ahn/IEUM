@@ -1,6 +1,5 @@
 package com.ieum.design_system.icon
 
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -77,9 +76,9 @@ fun CloseCircleIcon() {
 }
 
 @Composable
-fun WellnessIcon() {
+fun WellnessIcon(size: Int) {
     Icon(
-        modifier = Modifier.size(24.dp),
+        modifier = Modifier.size(size.dp),
         painter = painterResource(R.drawable.ic_wellness),
         tint = Color.Unspecified,
         contentDescription = "ic-wellness",
@@ -87,9 +86,9 @@ fun WellnessIcon() {
 }
 
 @Composable
-fun DailyIcon() {
+fun DailyIcon(size: Int) {
     Icon(
-        modifier = Modifier.size(24.dp),
+        modifier = Modifier.size(size.dp),
         painter = painterResource(R.drawable.ic_daily),
         tint = Color.Unspecified,
         contentDescription = "ic-daily",
@@ -223,9 +222,9 @@ fun PlusCircleIcon(
 }
 
 @Composable
-fun MoodHappyIcon() {
+fun MoodHappyIcon(size: Int) {
     Icon(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.size(size.dp),
         painter = painterResource(R.drawable.ic_mood_happy),
         tint = Color.Unspecified,
         contentDescription = "ic-mood-happy",
@@ -233,9 +232,9 @@ fun MoodHappyIcon() {
 }
 
 @Composable
-fun MoodGoodIcon() {
+fun MoodGoodIcon(size: Int) {
     Icon(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.size(size.dp),
         painter = painterResource(R.drawable.ic_mood_good),
         tint = Color.Unspecified,
         contentDescription = "ic-mood-good",
@@ -243,9 +242,9 @@ fun MoodGoodIcon() {
 }
 
 @Composable
-fun MoodNormalIcon() {
+fun MoodNormalIcon(size: Int) {
     Icon(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.size(size.dp),
         painter = painterResource(R.drawable.ic_mood_normal),
         tint = Color.Unspecified,
         contentDescription = "ic-mood-normal",
@@ -253,9 +252,9 @@ fun MoodNormalIcon() {
 }
 
 @Composable
-fun MoodBadIcon() {
+fun MoodBadIcon(size: Int) {
     Icon(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.size(size.dp),
         painter = painterResource(R.drawable.ic_mood_bad),
         tint = Color.Unspecified,
         contentDescription = "ic-mood-bad",
@@ -263,9 +262,9 @@ fun MoodBadIcon() {
 }
 
 @Composable
-fun MoodWorstIcon() {
+fun MoodWorstIcon(size: Int) {
     Icon(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.size(size.dp),
         painter = painterResource(R.drawable.ic_mood_worst),
         tint = Color.Unspecified,
         contentDescription = "ic-mood-worst",
@@ -275,7 +274,7 @@ fun MoodWorstIcon() {
 @Composable
 fun MoodSelectIcon() {
     Icon(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.size(108.dp),
         painter = painterResource(R.drawable.ic_mood_select),
         tint = Color.Unspecified,
         contentDescription = "ic-mood-select",
@@ -303,11 +302,13 @@ fun LeftIcon() {
 }
 
 @Composable
-fun RightIcon() {
+fun RightIcon(
+    color: Color = White,
+) {
     Icon(
         modifier = Modifier.size(24.dp),
         painter = painterResource(R.drawable.ic_right),
-        tint = White,
+        tint = color,
         contentDescription = "ic-right",
     )
 }
@@ -349,3 +350,86 @@ fun PenIcon() {
     )
 }
 
+@Composable
+fun FeedLightIcon() {
+    Icon(
+        modifier = Modifier.size(32.dp),
+        painter = painterResource(R.drawable.ic_feed_light),
+        contentDescription = "ic-feed-light",
+    )
+}
+
+@Composable
+fun FeedDarkIcon() {
+    Icon(
+        modifier = Modifier.size(32.dp),
+        painter = painterResource(R.drawable.ic_feed_dark),
+        contentDescription = "ic-feed-dark",
+    )
+}
+
+@Composable
+fun CalendarIcon(tint: Color) {
+    Icon(
+        modifier = Modifier.size(24.dp),
+        painter = painterResource(R.drawable.ic_calendar),
+        tint = tint,
+        contentDescription = "ic-calendar",
+    )
+}
+
+@Composable
+fun CalendarLightIcon() {
+    Icon(
+        modifier = Modifier.size(32.dp),
+        painter = painterResource(R.drawable.ic_calendar_light),
+        contentDescription = "ic-calendar-light",
+    )
+}
+
+@Composable
+fun CalendarDarkIcon() {
+    Icon(
+        modifier = Modifier.size(32.dp),
+        painter = painterResource(R.drawable.ic_calendar_dark),
+        contentDescription = "ic-calendar-dark",
+    )
+}
+
+@Composable
+fun ProfileLightIcon() {
+    Icon(
+        modifier = Modifier.size(32.dp),
+        painter = painterResource(R.drawable.ic_profile_light),
+        contentDescription = "ic-profile-light",
+    )
+}
+
+@Composable
+fun ProfileDarkIcon() {
+    Icon(
+        modifier = Modifier.size(32.dp),
+        painter = painterResource(R.drawable.ic_profile_dark),
+        contentDescription = "ic-profile-dark",
+    )
+}
+
+@Composable
+fun SettingIcon() {
+    Icon(
+        modifier = Modifier.size(24.dp),
+        painter = painterResource(R.drawable.ic_setting),
+        tint = Color.Unspecified,
+        contentDescription = "ic-setting",
+    )
+}
+
+@Composable
+fun LockIcon() {
+    Icon(
+        modifier = Modifier.size(16.dp),
+        painter = painterResource(R.drawable.ic_lock),
+        tint = Color.Unspecified,
+        contentDescription = "ic-lock",
+    )
+}

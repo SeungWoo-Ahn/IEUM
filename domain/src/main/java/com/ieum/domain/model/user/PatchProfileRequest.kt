@@ -1,10 +1,10 @@
 package com.ieum.domain.model.user
 
 data class PatchProfileRequest(
-    val diagnoses: DataStatus<List<Diagnose>>? = null,
-    val chemotherapy: DataStatus<Chemotherapy>? = null,
-    val radiationTherapy: DataStatus<RadiationTherapy>? = null,
-    val ageGroup: DataStatus<AgeGroup>? = null,
-    val residenceArea: DataStatus<String>? = null,
-    val hospitalArea: DataStatus<String>? = null,
+    val diagnoses: ProfileProperty<List<Diagnose>>,
+    val chemotherapy: ProfileProperty<Chemotherapy>,
+    val radiationTherapy: ProfileProperty<RadiationTherapy>,
+    val ageGroup: ProfileProperty<AgeGroup>,
+    val residenceArea: ProfileProperty<String>,
+    val hospitalArea: ProfileProperty<String>,
 )

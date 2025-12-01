@@ -1,6 +1,7 @@
 package com.ieum.design_system.selector
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 
@@ -53,15 +54,15 @@ class SingleSelectorState<T>(
 class MultipleSelectorState<T>(
     override val itemList: List<T>
 ) : IMultipleSelectorState<T> {
-    private var _selectedItemList by mutableStateOf<List<T>>(emptyList())
+    private var _selectedItemList = mutableStateListOf<T>()
 
     override val selectedItemList: List<T> get() = _selectedItemList
 
     override fun selectItem(item: T) {
-        _selectedItemList = if (isSelected(item)) {
-            selectedItemList - item
+        if (isSelected(item)) {
+            _selectedItemList.remove(item)
         } else {
-            selectedItemList + item
+            _selectedItemList.add(item)
         }
     }
 

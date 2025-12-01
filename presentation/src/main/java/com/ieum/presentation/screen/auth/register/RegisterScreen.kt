@@ -1,13 +1,8 @@
 package com.ieum.presentation.screen.auth.register
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -19,20 +14,20 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ieum.design_system.selector.ISingleSelectorState
 import com.ieum.design_system.spacer.IEUMSpacer
 import com.ieum.design_system.textfield.IMaxLengthTextFieldState
-import com.ieum.design_system.theme.screenPadding
 import com.ieum.design_system.topbar.TopBarForBack
+import com.ieum.presentation.R
 import com.ieum.presentation.model.user.AgeGroupUiModel
 import com.ieum.presentation.model.user.CancerDiagnoseUiModel
 import com.ieum.presentation.model.user.SexUiModel
 import com.ieum.presentation.model.user.UserTypeUiModel
 import com.ieum.presentation.screen.component.CancerStageSheet
-import com.ieum.presentation.screen.component.SelectAddress
-import com.ieum.presentation.screen.component.SelectAgeGroup
-import com.ieum.presentation.screen.component.SelectDiagnose
-import com.ieum.presentation.screen.component.SelectSex
-import com.ieum.presentation.screen.component.SelectUserType
-import com.ieum.presentation.screen.component.TypeInterest
-import com.ieum.presentation.screen.component.TypeNickname
+import com.ieum.presentation.screen.component.RegisterSelectAddress
+import com.ieum.presentation.screen.component.RegisterSelectAgeGroup
+import com.ieum.presentation.screen.component.RegisterSelectDiagnose
+import com.ieum.presentation.screen.component.RegisterSelectSex
+import com.ieum.presentation.screen.component.RegisterSelectUserType
+import com.ieum.presentation.screen.component.RegisterTypeInterest
+import com.ieum.presentation.screen.component.RegisterTypeNickname
 import com.ieum.presentation.state.AddressState
 import com.ieum.presentation.state.DiagnoseState
 import kotlinx.coroutines.CoroutineScope
@@ -46,7 +41,7 @@ fun RegisterRoute(
     viewModel: RegisterViewModel = hiltViewModel(),
 ) {
     val uiState = viewModel.uiState
-    val buttonEnabled by remember { derivedStateOf { viewModel.nextEnabled() && uiState != RegisterUiState.Loading } }
+    val buttonEnabled by remember { derivedStateOf { viewModel.nextEnabled() } }
 
     LaunchedEffect(Unit) {
         viewModel.event.collect { event ->
@@ -59,6 +54,7 @@ fun RegisterRoute(
 
     RegisterScreen(
         modifier = modifier,
+        isLoading = uiState == RegisterUiState.Loading,
         buttonEnabled = buttonEnabled,
         currentStage = viewModel.currentStage,
         userTypeState = viewModel.userTypeState,
@@ -87,6 +83,7 @@ fun RegisterRoute(
 @Composable
 private fun RegisterScreen(
     modifier: Modifier,
+    isLoading: Boolean,
     buttonEnabled: Boolean,
     currentStage: RegisterStage,
     userTypeState: ISingleSelectorState<UserTypeUiModel>,
@@ -106,64 +103,49 @@ private fun RegisterScreen(
     ) {
         TopBarForBack(onBack = onPrevStep)
         IEUMSpacer(size = 12)
-        RegisterGuideArea(guide = stringResource(currentStage.guide))
         when (currentStage) {
-            RegisterStage.SelectUserType -> SelectUserType(
+            RegisterStage.SelectUserType -> RegisterSelectUserType(
                 state = userTypeState,
                 onClick = onNextStep,
             )
-            RegisterStage.SelectSex -> SelectSex(
+            RegisterStage.SelectSex -> RegisterSelectSex(
                 state = sexState,
                 onClick = onNextStep,
             )
-            RegisterStage.TypeNickname -> TypeNickname(
+            RegisterStage.TypeNickname -> RegisterTypeNickname(
                 buttonEnabled = buttonEnabled,
                 state = nickNameState,
                 onButtonClick = onNextStep,
             )
-            RegisterStage.SelectDiagnose -> SelectDiagnose(
-                buttonEnabled = buttonEnabled,
+            RegisterStage.SelectDiagnose -> RegisterSelectDiagnose(
                 state = diagnoseState,
+                buttonEnabled = buttonEnabled,
                 showCancerStageSheet = showCancerStageSheet,
                 onButtonClick = onNextStep,
             )
-            RegisterStage.SelectAgeGroup -> SelectAgeGroup(
-                buttonEnabled = buttonEnabled,
+            RegisterStage.SelectAgeGroup -> RegisterSelectAgeGroup(
                 state = ageGroupState,
+                buttonEnabled = buttonEnabled,
                 onButtonClick = onNextStep,
             )
-            RegisterStage.SelectResidence -> SelectAddress(
-                buttonEnabled = buttonEnabled,
+            RegisterStage.SelectResidence -> RegisterSelectAddress(
+                guide = stringResource(R.string.guide_select_residence),
                 state = residenceState,
+                buttonEnabled = buttonEnabled,
                 onButtonClick = onNextStep,
             )
-            RegisterStage.SelectHospital -> SelectAddress(
-                buttonEnabled = buttonEnabled,
+            RegisterStage.SelectHospital -> RegisterSelectAddress(
+                guide = stringResource(R.string.guide_select_hospital),
                 state = hospitalState,
+                buttonEnabled = buttonEnabled,
                 onButtonClick = onNextStep,
             )
-            RegisterStage.TypeInterest -> TypeInterest(
-                buttonEnabled = buttonEnabled,
+            RegisterStage.TypeInterest -> RegisterTypeInterest(
                 state = interestState,
+                skipEnabled = isLoading.not(),
+                buttonEnabled = buttonEnabled,
                 onButtonClick = onNextStep,
             )
         }
-    }
-}
-
-@Composable
-private fun RegisterGuideArea(
-    modifier: Modifier = Modifier,
-    guide: String
-) {
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = screenPadding)
-    ) {
-        Text(
-            text = guide,
-            style = MaterialTheme.typography.headlineLarge,
-        )
     }
 }

@@ -2,8 +2,11 @@ package com.ieum.presentation.state
 
 import androidx.compose.runtime.toMutableStateList
 import com.ieum.design_system.selector.MultipleSelectorState
+import com.ieum.domain.model.user.CancerDiagnose
 import com.ieum.domain.model.user.Diagnose
 import com.ieum.presentation.mapper.toDomain
+import com.ieum.presentation.mapper.toUiKey
+import com.ieum.presentation.mapper.toUiModel
 import com.ieum.presentation.model.user.CancerDiagnoseUiKey
 import com.ieum.presentation.model.user.CancerDiagnoseUiModel
 import com.ieum.presentation.model.user.CancerStageUiModel
@@ -31,6 +34,18 @@ class DiagnoseState {
 
     val totalSelectedCount: Int
         get() = cancerDiagnoseState.selectedCount + commonDiagnoseState.selectedItemList.size
+
+    fun setDiagnoseList(diagnoseList: List<Diagnose>) {
+        diagnoseList.forEach { diagnose ->
+            when (diagnose) {
+               is CancerDiagnose -> cancerDiagnoseState.onDiagnose(diagnose.toUiModel())
+                else -> {
+                    val uiKey = diagnose.name.toUiKey() as DiagnoseUiKey
+                    commonDiagnoseState.selectItem(uiKey)
+                }
+            }
+        }
+    }
 
     fun validate(): Boolean {
         return totalSelectedCount > 0

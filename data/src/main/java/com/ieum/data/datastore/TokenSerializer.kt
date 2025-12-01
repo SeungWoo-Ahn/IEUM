@@ -9,9 +9,8 @@ import com.ieum.data.mapper.toEntity
 import com.ieum.domain.model.auth.Token
 import java.io.InputStream
 import java.io.OutputStream
-import javax.inject.Inject
 
-class TokenSerializer @Inject constructor() : Serializer<Token?> {
+internal object TokenSerializer : Serializer<Token?> {
     override val defaultValue: Token? = null
 
     override suspend fun readFrom(input: InputStream): Token? {

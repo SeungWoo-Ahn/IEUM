@@ -291,9 +291,9 @@ fun CancerStageSheet(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 selectorState.itemList.forEach { cancerStage ->
-                    RegisterSelector(
-                        isSelected = selectorState.isSelected(cancerStage),
+                    UserSelector(
                         name = stringResource(cancerStage.description),
+                        isSelected = selectorState.isSelected(cancerStage),
                         onClick = {
                             scope
                                 .launch {

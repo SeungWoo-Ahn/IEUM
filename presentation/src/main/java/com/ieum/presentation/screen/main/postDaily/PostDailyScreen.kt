@@ -4,17 +4,13 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -28,16 +24,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ieum.design_system.button.DarkButton
 import com.ieum.design_system.textfield.ITextFieldState
 import com.ieum.design_system.theme.Slate100
-import com.ieum.design_system.theme.Slate200
-import com.ieum.design_system.theme.White
 import com.ieum.design_system.theme.screenPadding
 import com.ieum.design_system.topbar.TopBarForClose
 import com.ieum.domain.model.image.ImageSource
 import com.ieum.presentation.R
 import com.ieum.presentation.screen.component.AddImageBox
 import com.ieum.presentation.screen.component.ShareCommunityBox
-import com.ieum.presentation.screen.component.TypeContent
-import com.ieum.presentation.screen.component.TypeTitle
+import com.ieum.presentation.screen.component.TypeDailyBox
 
 internal const val MAX_IMAGE_COUNT = 3
 
@@ -115,26 +108,10 @@ private fun PostDailyScreen(
                 modifier = Modifier.padding(bottom = 100.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(
-                            color = White,
-                            shape = MaterialTheme.shapes.medium,
-                        )
-                        .border(
-                            width = 1.dp,
-                            color = Slate200,
-                            shape = MaterialTheme.shapes.medium,
-                        )
-                ) {
-                    TypeTitle(state = titleState)
-                    HorizontalDivider(
-                        thickness = 1.dp,
-                        color = Slate200,
-                    )
-                    TypeContent(state = contentState)
-                }
+                TypeDailyBox(
+                    titleState = titleState,
+                    contentState = contentState,
+                )
                 AddImageBox(
                     data = imageList,
                     maxImageCount = MAX_IMAGE_COUNT,

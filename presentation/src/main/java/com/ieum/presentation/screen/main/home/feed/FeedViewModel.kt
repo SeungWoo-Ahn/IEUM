@@ -1,4 +1,4 @@
-package com.ieum.presentation.screen.main.home
+package com.ieum.presentation.screen.main.home.feed
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,7 +35,7 @@ class FeedViewModel @Inject constructor(
     private val _selectedFilter = MutableStateFlow(DiagnoseFilterUiModel.ENTIRE)
     val selectedFilter: StateFlow<DiagnoseFilterUiModel> get() = _selectedFilter
 
-    val postList: Flow<PagingData<PostUiModel>> =
+    val postListFlow: Flow<PagingData<PostUiModel>> =
         selectedFilter
             .flatMapLatest { filter ->
                 Pager(
