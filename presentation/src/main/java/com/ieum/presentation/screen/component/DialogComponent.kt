@@ -14,8 +14,15 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDefaults
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,6 +39,7 @@ import com.ieum.design_system.theme.Black
 import com.ieum.design_system.theme.Lime500
 import com.ieum.design_system.theme.Slate200
 import com.ieum.design_system.theme.Slate500
+import com.ieum.design_system.theme.Slate950
 import com.ieum.design_system.theme.White
 import com.ieum.design_system.theme.screenPadding
 import com.ieum.design_system.util.dropShadow
@@ -39,8 +47,14 @@ import com.ieum.design_system.util.noRippleClickable
 import com.ieum.presentation.R
 import com.ieum.presentation.model.post.MoodUiModel
 import com.ieum.presentation.model.post.PostTypeUiModel
+import com.ieum.presentation.state.DatePickerState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 @Composable
 fun MoodDialog(
@@ -312,6 +326,77 @@ private fun AddPostItem(
             text = stringResource(postType.guide),
             style = MaterialTheme.typography.bodyMedium,
             color = Slate500,
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun IEUMDatePickerDialog(
+    state: DatePickerState.Show,
+) {
+    fun getYearRange(): IntRange {
+        val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+        return 1950..currentYear + 1
+    }
+
+    fun convertDateToMillis(date: String): Long {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.KOREA)
+            .apply { timeZone = TimeZone.getTimeZone("UTC") }
+        val dateLong = dateFormat.parse(date) as Date
+        return dateLong.time
+    }
+
+    fun convertMillisToDate(millis: Long): String {
+        val date = Date(millis)
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.KOREA)
+        return dateFormat.format(date)
+    }
+
+    val datePickerState = rememberDatePickerState(
+        yearRange = getYearRange(),
+        initialSelectedDateMillis = convertDateToMillis(state.date),
+    )
+    val selectedDate = datePickerState.selectedDateMillis
+        ?.let { convertMillisToDate(it) } ?: ""
+
+    DatePickerDialog(
+        modifier = Modifier.padding(all = screenPadding),
+        onDismissRequest = state.onDismissRequest,
+        colors = DatePickerDefaults.colors(containerColor = White),
+        confirmButton = {
+            Button(
+                modifier = Modifier.size(
+                    width = 120.dp,
+                    height = 48.dp,
+                ),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Slate950,
+                ),
+                onClick = {
+                    state.onDateSelected(selectedDate)
+                    state.onDismissRequest()
+                }
+            ) {
+                Text(
+                    text = stringResource(R.string.confirm),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = White,
+                )
+            }
+        }
+    ) {
+        DatePicker(
+            state = datePickerState,
+            title = null,
+            headline = null,
+            showModeToggle = false,
+            colors = DatePickerDefaults.colors(
+                containerColor = White,
+                selectedDayContainerColor = Slate950,
+                selectedYearContainerColor = Slate950,
+                todayDateBorderColor = Slate950
+            )
         )
     }
 }

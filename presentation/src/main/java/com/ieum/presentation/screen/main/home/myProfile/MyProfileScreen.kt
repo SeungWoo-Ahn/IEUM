@@ -24,6 +24,7 @@ import com.ieum.presentation.screen.component.MyProfileTobBar
 import com.ieum.presentation.screen.component.PatchAgeGroupDialog
 import com.ieum.presentation.screen.component.PatchDiagnoseDialog
 import com.ieum.presentation.screen.component.PatchHospitalDialog
+import com.ieum.presentation.screen.component.PatchRadiationTherapyDialog
 import com.ieum.presentation.screen.component.PatchResidenceDialog
 import com.ieum.presentation.screen.component.PostListArea
 import com.ieum.presentation.util.GlobalValueModel
@@ -51,7 +52,7 @@ fun MyProfileRoute(
         onPostType = viewModel::onPostType,
         patchDiagnose = viewModel::showPatchDiagnoseDialog,
         patchChemotherapy = {},
-        patchRadiationTherapy = {},
+        patchRadiationTherapy = viewModel::showPatchRadiationTherapyDialog,
         patchAgeGroup = viewModel::showPatchAgeGroupDialog,
         patchResidenceArea = viewModel::showPatchResidenceDialog,
         patchHospitalArea = viewModel::showPatchHospitalDialog,
@@ -64,6 +65,13 @@ fun MyProfileRoute(
     if (dialogState is MyProfileDialogState.ShowPatchDiagnoseDialog) {
         PatchDiagnoseDialog(
             scope = scope,
+            profile = dialogState.profile,
+            patch = dialogState.patch,
+            onDismissRequest = viewModel::dismissDialog,
+        )
+    }
+    if (dialogState is MyProfileDialogState.ShowPatchRadiationTherapyDialog) {
+        PatchRadiationTherapyDialog(
             profile = dialogState.profile,
             patch = dialogState.patch,
             onDismissRequest = viewModel::dismissDialog,
@@ -106,7 +114,7 @@ private fun MyProfileScreen(
     onPostType: (PostTypeUiModel) -> Unit,
     patchDiagnose: (MyProfile) -> Unit,
     patchChemotherapy: () -> Unit,
-    patchRadiationTherapy: () -> Unit,
+    patchRadiationTherapy: (MyProfile) -> Unit,
     patchAgeGroup: (MyProfile) -> Unit,
     patchResidenceArea: (MyProfile) -> Unit,
     patchHospitalArea: (MyProfile) -> Unit,
@@ -135,7 +143,7 @@ private fun MyProfileScreen(
                         profile = uiState.profile.toUiModel(valueModel),
                         patchDiagnose = { patchDiagnose(uiState.profile) },
                         patchChemotherapy = patchChemotherapy,
-                        patchRadiationTherapy = patchRadiationTherapy,
+                        patchRadiationTherapy = { patchRadiationTherapy(uiState.profile) },
                         patchAgeGroup = { patchAgeGroup(uiState.profile) },
                         patchResidenceArea = { patchResidenceArea(uiState.profile) },
                         patchHospitalArea = { patchHospitalArea(uiState.profile) },

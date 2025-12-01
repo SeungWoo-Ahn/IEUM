@@ -369,6 +369,16 @@ fun FeedDarkIcon() {
 }
 
 @Composable
+fun CalendarIcon(tint: Color) {
+    Icon(
+        modifier = Modifier.size(24.dp),
+        painter = painterResource(R.drawable.ic_calendar),
+        tint = tint,
+        contentDescription = "ic-calendar",
+    )
+}
+
+@Composable
 fun CalendarLightIcon() {
     Icon(
         modifier = Modifier.size(32.dp),
