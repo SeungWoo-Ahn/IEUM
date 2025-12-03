@@ -7,6 +7,7 @@ import com.ieum.data.network.model.user.OthersProfileDto
 import com.ieum.data.network.model.user.PatchProfileRequestBody
 import com.ieum.data.network.model.user.RadiationTherapyDto
 import com.ieum.data.network.model.user.RegisterRequestBody
+import com.ieum.data.network.model.user.SurgeryDto
 import com.ieum.domain.model.auth.OAuthProvider
 import com.ieum.domain.model.user.AgeGroup
 import com.ieum.domain.model.user.CancerDiagnose
@@ -21,6 +22,7 @@ import com.ieum.domain.model.user.ProfileProperty
 import com.ieum.domain.model.user.RadiationTherapy
 import com.ieum.domain.model.user.RegisterRequest
 import com.ieum.domain.model.user.Sex
+import com.ieum.domain.model.user.Surgery
 import com.ieum.domain.model.user.UserType
 
 private fun Diagnose.toDto(): DiagnoseDto =
@@ -51,6 +53,18 @@ fun RegisterRequest.asBody(): RegisterRequestBody =
         ageGroup = ageGroup?.key,
         residenceArea = residenceArea,
         hospitalArea = hospitalArea,
+    )
+
+private fun Surgery.toDto(): SurgeryDto =
+    SurgeryDto(
+        date = date,
+        description = description,
+    )
+
+private fun SurgeryDto.toDomain(): Surgery =
+    Surgery(
+        date = date,
+        description = description,
     )
 
 private fun Chemotherapy.toDto(): ChemotherapyDto =
@@ -89,12 +103,16 @@ fun MyProfileDto.toDomain(): MyProfile =
             data = diagnoses.map(DiagnoseDto::toDomain),
             open = diagnosesVisible
         ),
+        surgery = ProfileProperty(
+            data = surgery?.map(SurgeryDto::toDomain),
+            open = surgeryVisible
+        ),
         chemotherapy = ProfileProperty(
-            data = chemotherapy?.toDomain(),
+            data = chemotherapy?.map(ChemotherapyDto::toDomain),
             open = chemotherapyVisible
         ),
         radiationTherapy = ProfileProperty(
-            data = radiationTherapy?.toDomain(),
+            data = radiationTherapy?.map(RadiationTherapyDto::toDomain),
             open = radiationTherapyVisible
         ),
         ageGroup = ProfileProperty(
@@ -118,13 +136,18 @@ fun OthersProfileDto.toDomain(): OthersProfile =
         } else {
             null
         },
+        surgery = if (surgeryVisible && surgery != null) {
+            surgery.map(SurgeryDto::toDomain)
+        } else {
+            null
+        },
         chemotherapy = if (chemotherapyVisible && chemotherapy != null) {
-            chemotherapy.toDomain()
+            chemotherapy.map(ChemotherapyDto::toDomain)
         } else {
             null
         },
         radiationTherapy = if (radiationTherapyVisible && radiationTherapy != null) {
-            radiationTherapy.toDomain()
+            radiationTherapy.map(RadiationTherapyDto::toDomain)
         } else {
             null
         },
@@ -137,9 +160,11 @@ fun PatchProfileRequest.asBody(): PatchProfileRequestBody {
     return PatchProfileRequestBody(
         diagnoses = diagnoses.data?.map(Diagnose::toDto),
         diagnosesVisible = diagnoses.open,
-        chemotherapy = chemotherapy.data?.toDto(),
+        surgery = surgery.data?.map(Surgery::toDto),
+        surgeryVisible = surgery.open,
+        chemotherapy = chemotherapy.data?.map(Chemotherapy::toDto),
         chemotherapyVisible = chemotherapy.open,
-        radiationTherapy = radiationTherapy.data?.toDto(),
+        radiationTherapy = radiationTherapy.data?.map(RadiationTherapy::toDto),
         radiationTherapyVisible = radiationTherapy.open,
         ageGroup = ageGroup.data?.key,
         ageGroupVisible = ageGroup.open,
