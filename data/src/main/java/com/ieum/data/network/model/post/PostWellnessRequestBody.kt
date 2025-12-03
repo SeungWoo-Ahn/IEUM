@@ -10,6 +10,5 @@ data class PostWellnessRequestBody(
     val medicationTaken: Boolean,
     val diet: DietDto?,
     val memo: String?,
-    val images: List<PostImageDto.ForRequest>?,
     val shared: Boolean,
 )

@@ -17,7 +17,7 @@ import com.ieum.domain.model.post.PostType
 import com.ieum.domain.model.post.PostUserInfo
 import com.ieum.domain.model.post.PostWellnessRequest
 
-suspend fun PostWellnessRequest.asBody(): PostWellnessRequestBody =
+fun PostWellnessRequest.asBody(): PostWellnessRequestBody =
     PostWellnessRequestBody(
         diagnosis = diagnosis.key,
         mood = mood.key,
@@ -25,7 +25,6 @@ suspend fun PostWellnessRequest.asBody(): PostWellnessRequestBody =
         medicationTaken = medicationTaken,
         diet = diet?.toDto(),
         memo = memo,
-        images = imageList.mapNotNull { it.toDto() }.ifEmpty { null },
         shared = shared,
     )
 
@@ -41,23 +40,13 @@ private fun DietDto.toDomain(): Diet =
         mealContent = mealContent,
     )
 
-private suspend fun ImageSource.Local.toDto(): PostImageDto.ForRequest? {
-    val base64Data = Base64Encoder.encode(file).getOrNull() ?: return null
-    return PostImageDto.ForRequest(
-        filename = file.name,
-        base64Data = base64Data,
-    )
-}
-
-private fun PostImageDto.ForResponse.toDomain(): ImageSource.Remote =
-    ImageSource.Remote(url)
+private fun PostImageDto.toDomain(): ImageSource.Remote = ImageSource.Remote(url)
 
 
-suspend fun PostDailyRequest.asBody(): PostDailyRequestBody =
+fun PostDailyRequest.asBody(): PostDailyRequestBody =
     PostDailyRequestBody(
         title = title,
         content = content,
-        images = imageList.mapNotNull { it.toDto() }.ifEmpty { null },
         shared = shared,
     )
 
@@ -71,7 +60,7 @@ fun AllPostDto.toDomain(): Post =
             medicationTaken = requireNotNull(medicationTaken),
             diet = requireNotNull(diet).toDomain(),
             memo = memo,
-            imageList = images?.map(PostImageDto.ForResponse::toDomain),
+            imageList = images?.map(PostImageDto::toDomain),
             shared = true,
             createdAt = createdAt,
             updatedAt = updatedAt,
@@ -81,7 +70,7 @@ fun AllPostDto.toDomain(): Post =
             userInfo = PostUserInfo(userId, userNickname),
             title = requireNotNull(title),
             content = requireNotNull(content),
-            imageList = images?.map(PostImageDto.ForResponse::toDomain),
+            imageList = images?.map(PostImageDto::toDomain),
             shared = true,
             createdAt = createdAt,
             updatedAt = updatedAt,
@@ -99,7 +88,7 @@ fun MyPostDto.toDomain(): Post =
             medicationTaken = requireNotNull(medicationTaken),
             diet = requireNotNull(diet).toDomain(),
             memo = memo,
-            imageList = images?.map(PostImageDto.ForResponse::toDomain),
+            imageList = images?.map(PostImageDto::toDomain),
             shared = shared,
             createdAt = createdAt,
             updatedAt = updatedAt,
@@ -109,7 +98,7 @@ fun MyPostDto.toDomain(): Post =
             userInfo = null,
             title = requireNotNull(title),
             content = requireNotNull(content),
-            imageList = images?.map(PostImageDto.ForResponse::toDomain),
+            imageList = images?.map(PostImageDto::toDomain),
             shared = shared,
             createdAt = createdAt,
             updatedAt = updatedAt,
@@ -127,7 +116,7 @@ fun OtherPostDto.toDomain(): Post =
             medicationTaken = requireNotNull(medicationTaken),
             diet = requireNotNull(diet).toDomain(),
             memo = memo,
-            imageList = images?.map(PostImageDto.ForResponse::toDomain),
+            imageList = images?.map(PostImageDto::toDomain),
             shared = true,
             createdAt = createdAt,
             updatedAt = updatedAt,
@@ -137,7 +126,7 @@ fun OtherPostDto.toDomain(): Post =
             userInfo = null,
             title = requireNotNull(title),
             content = requireNotNull(content),
-            imageList = images?.map(PostImageDto.ForResponse::toDomain),
+            imageList = images?.map(PostImageDto::toDomain),
             shared = true,
             createdAt = createdAt,
             updatedAt = updatedAt,

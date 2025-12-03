@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 interface BasePostDto {
     val id: Int
     val type: String
-    val images: List<PostImageDto.ForResponse>?
+    val images: List<PostImageDto>?
     val createdAt: Int
     val updatedAt: Int
 }
@@ -38,7 +38,7 @@ data class AllPostDto(
     override val memo: String? = null,
     override val title: String? = null,
     override val content: String? = null,
-    override val images: List<PostImageDto.ForResponse>? = null,
+    override val images: List<PostImageDto>? = null,
     override val createdAt: Int,
     override val updatedAt: Int,
 ) : BasePostDto, WellnessDto, DailyDto
@@ -55,7 +55,7 @@ data class MyPostDto(
     override val memo: String? = null,
     override val title: String? = null,
     override val content: String? = null,
-    override val images: List<PostImageDto.ForResponse>? = null,
+    override val images: List<PostImageDto>? = null,
     val shared: Boolean,
     override val createdAt: Int,
     override val updatedAt: Int,
@@ -73,7 +73,7 @@ data class OtherPostDto(
     override val memo: String? = null,
     override val title: String? = null,
     override val content: String? = null,
-    override val images: List<PostImageDto.ForResponse>? = null,
+    override val images: List<PostImageDto>? = null,
     override val createdAt: Int,
     override val updatedAt: Int,
 ) : BasePostDto, WellnessDto, DailyDto

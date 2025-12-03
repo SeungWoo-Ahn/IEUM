@@ -53,8 +53,8 @@ internal object NetworkModule {
     private fun createKtorClient(): HttpClient =
         HttpClient(Android) {
             install(HttpTimeout) {
-                connectTimeoutMillis = 10_000
-                requestTimeoutMillis = 10_000
+                connectTimeoutMillis = 5_000
+                requestTimeoutMillis = 5_000
             }
             install(Logging) {
                 logger = object : Logger {
