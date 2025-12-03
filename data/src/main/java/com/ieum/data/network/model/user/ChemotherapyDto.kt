@@ -5,5 +5,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ChemotherapyDto(
     val cycle: Int,
-    val startDate: String, // TODO: endDate 추가
+    val startDate: String,
+    val endDate: String?,
 )

@@ -12,6 +12,7 @@ import com.ieum.domain.model.user.PatchProfileRequest
 import com.ieum.domain.model.user.ProfileProperty
 import com.ieum.domain.model.user.RadiationTherapy
 import com.ieum.domain.model.user.Sex
+import com.ieum.domain.model.user.Surgery
 import com.ieum.domain.model.user.UserType
 import com.ieum.presentation.model.user.AgeGroupUiModel
 import com.ieum.presentation.model.user.CancerDiagnoseUiKey
@@ -113,12 +114,14 @@ private fun Diagnose.toUiModel(valueModel: GlobalValueModel): String =
         }
     }
 
-private fun Chemotherapy.toUiModel(): String = "$startDate (${cycle}차수)"
+private fun Surgery.toUiModel(): String = "$description ($date)"
+
+private fun Chemotherapy.toUiModel(): String = "$startDate (${cycle}차)"
 
 private fun RadiationTherapy.toUiModel(): String = if (endDate == null) {
     "$startDate (진행중)"
 } else {
-    "$startDate ~ $endDate"
+    "$startDate - $endDate"
 }
 
 fun OthersProfile.toUiModel(valueModel: GlobalValueModel): OthersProfileUiModel =
@@ -126,8 +129,9 @@ fun OthersProfile.toUiModel(valueModel: GlobalValueModel): OthersProfileUiModel 
         id = id,
         nickname = nickname,
         diagnoses = diagnoses?.map { it.toUiModel(valueModel) },
-        chemotherapy = chemotherapy?.let(Chemotherapy::toUiModel),
-        radiationTherapy = radiationTherapy?.let(RadiationTherapy::toUiModel),
+        surgery = surgery?.map(Surgery::toUiModel),
+        chemotherapy = chemotherapy?.map(Chemotherapy::toUiModel),
+        radiationTherapy = radiationTherapy?.map(RadiationTherapy::toUiModel),
         ageGroup = ageGroup?.toUiModel(),
         residenceArea = residenceArea,
         hospitalArea = hospitalArea,
@@ -145,8 +149,10 @@ fun MyProfile.toUiModel(valueModel: GlobalValueModel): MyProfileUiModel =
         email = email,
         nickname = nickname,
         diagnoses = diagnoses.map { property -> property.map { it.toUiModel(valueModel) } },
-        chemotherapy = chemotherapy.map(Chemotherapy::toUiModel),
-        radiationTherapy = radiationTherapy.map(RadiationTherapy::toUiModel),
+        surgery = surgery.map { property -> property.map(Surgery::toUiModel) },
+        chemotherapy = chemotherapy.map { property -> property.map(Chemotherapy::toUiModel) },
+        radiationTherapy = radiationTherapy.map {
+            property -> property.map(RadiationTherapy::toUiModel) },
         ageGroup = ageGroup.map(AgeGroup::toUiModel),
         residenceArea = residenceArea,
         hospitalArea = hospitalArea,
@@ -155,6 +161,7 @@ fun MyProfile.toUiModel(valueModel: GlobalValueModel): MyProfileUiModel =
 fun MyProfile.toRequest(): PatchProfileRequest =
     PatchProfileRequest(
         diagnoses = diagnoses,
+        surgery = surgery,
         chemotherapy = chemotherapy,
         radiationTherapy = radiationTherapy,
         ageGroup = ageGroup,

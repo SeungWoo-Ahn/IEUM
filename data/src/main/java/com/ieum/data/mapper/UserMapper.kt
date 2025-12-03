@@ -71,12 +71,14 @@ private fun Chemotherapy.toDto(): ChemotherapyDto =
     ChemotherapyDto(
         cycle = cycle,
         startDate = startDate,
+        endDate = endDate,
     )
 
 private fun ChemotherapyDto.toDomain(): Chemotherapy =
     Chemotherapy(
         cycle = cycle,
         startDate = startDate,
+        endDate = endDate,
     )
 
 private fun RadiationTherapy.toDto(): RadiationTherapyDto =
