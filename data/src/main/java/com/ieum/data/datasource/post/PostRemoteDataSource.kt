@@ -11,11 +11,17 @@ import com.ieum.data.network.model.post.PostWellnessResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.delete
+import io.ktor.client.request.forms.formData
+import io.ktor.client.request.forms.submitFormWithBinaryData
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.patch
-import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import io.ktor.http.ContentType
+import io.ktor.http.Headers
+import io.ktor.http.HttpHeaders
+import kotlinx.serialization.json.Json
+import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -24,11 +30,42 @@ class PostRemoteDataSource @Inject constructor(
     @NetworkSource(IEUMNetwork.Default)
     private val ktorClient: HttpClient,
 ) : PostDataSource {
-    override suspend fun postWellness(body: PostWellnessRequestBody): PostWellnessResponse =
+    private fun getMimeType(fileName: String): String =
+        when (fileName.substringAfterLast('.')) {
+            "jpeg" -> "image/jpeg"
+            "webp" -> "image/webp"
+            else -> "image/*"
+        }
+
+    override suspend fun postWellness(
+        body: PostWellnessRequestBody,
+        fileList: List<File>
+    ): PostWellnessResponse =
         ktorClient
-            .post("api/v1/posts/wellness") {
-                setBody(body)
-            }
+            .submitFormWithBinaryData(
+                url = "api/v1/posts/wellness",
+                formData = formData {
+                    append(
+                        key = "body", // TODO: 키 변경
+                        value = Json.encodeToString(body),
+                        headers = Headers.build {
+                            append(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                        }
+                    )
+                    fileList.forEach { file ->
+                        val contentType = getMimeType(file.name)
+                        val contentDisposition = "filename=\"${file.name}\""
+                        append(
+                            key = "files", // TODO: 키 변경
+                            value = file.readBytes(),
+                            headers = Headers.build {
+                                append(HttpHeaders.ContentType, contentType)
+                                append(HttpHeaders.ContentDisposition, contentDisposition)
+                            }
+                        )
+                    }
+                }
+            )
             .body<PostWellnessResponse>()
 
     override suspend fun patchWellness(id: Int, body: PostWellnessRequestBody) {
@@ -42,11 +79,35 @@ class PostRemoteDataSource @Inject constructor(
         ktorClient.delete("api/v1/posts/wellness/${id}")
     }
 
-    override suspend fun postDaily(body: PostDailyRequestBody): PostDailyResponse =
+    override suspend fun postDaily(
+        body: PostDailyRequestBody,
+        fileList: List<File>
+    ): PostDailyResponse =
         ktorClient
-            .post("api/v1/posts/daily") {
-                setBody(body)
-            }
+            .submitFormWithBinaryData(
+                url = "api/v1/posts/daily",
+                formData = formData {
+                    append(
+                        key = "body", // TODO: 키 변경
+                        value = Json.encodeToString(body),
+                        headers = Headers.build {
+                            append(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                        }
+                    )
+                    fileList.forEach { file ->
+                        val contentType = getMimeType(file.name)
+                        val contentDisposition = "filename=\"${file.name}\""
+                        append(
+                            key = "files", // TODO: 키 변경
+                            value = file.readBytes(),
+                            headers = Headers.build {
+                                append(HttpHeaders.ContentType, contentType)
+                                append(HttpHeaders.ContentDisposition, contentDisposition)
+                            }
+                        )
+                    }
+                }
+            )
             .body<PostDailyResponse>()
 
     override suspend fun patchDaily(id: Int, body: PostDailyRequestBody) {
