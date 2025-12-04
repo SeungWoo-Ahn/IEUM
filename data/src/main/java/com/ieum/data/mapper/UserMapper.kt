@@ -162,11 +162,12 @@ fun PatchProfileRequest.asBody(): PatchProfileRequestBody {
     return PatchProfileRequestBody(
         diagnoses = diagnoses.data?.map(Diagnose::toDto),
         diagnosesVisible = diagnoses.open,
-        surgery = surgery.data?.map(Surgery::toDto),
+        surgery = surgery.data?.sorted()?.map(Surgery::toDto)?.ifEmpty { null },
         surgeryVisible = surgery.open,
-        chemotherapy = chemotherapy.data?.map(Chemotherapy::toDto),
+        chemotherapy = chemotherapy.data?.sorted()?.map(Chemotherapy::toDto)?.ifEmpty { null },
         chemotherapyVisible = chemotherapy.open,
-        radiationTherapy = radiationTherapy.data?.map(RadiationTherapy::toDto),
+        radiationTherapy = radiationTherapy.data?.sorted()
+            ?.map(RadiationTherapy::toDto)?.ifEmpty { null },
         radiationTherapyVisible = radiationTherapy.open,
         ageGroup = ageGroup.data?.key,
         ageGroupVisible = ageGroup.open,

@@ -121,7 +121,7 @@ private fun Chemotherapy.toUiModel(): String = "$startDate (${cycle}차)"
 private fun RadiationTherapy.toUiModel(): String = if (endDate == null) {
     "$startDate (진행중)"
 } else {
-    "$startDate - $endDate"
+    "$startDate ~ $endDate"
 }
 
 fun OthersProfile.toUiModel(valueModel: GlobalValueModel): OthersProfileUiModel =

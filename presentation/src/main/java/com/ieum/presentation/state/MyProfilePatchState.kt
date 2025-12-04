@@ -319,7 +319,7 @@ class RadiationTherapyState(
 
     fun getProfileProperty(): ProfileProperty<List<RadiationTherapy>> =
         ProfileProperty(
-            data = stateList.map(RadiationTherapyItemState::getRadiationTherapy).ifEmpty { null },
+            data = stateList.map(RadiationTherapyItemState::getRadiationTherapy),
             open = isOpened,
         )
 }
