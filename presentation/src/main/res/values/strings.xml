@@ -110,6 +110,7 @@
     <string name="my_post_list">내가 쓴 글</string>
     <string name="opened_profile_data_empty">공개된 프로필 정보가 없습니다</string>
     <string name="diagnose">진단명</string>
+    <string name="surgery">수술 이력</string>
     <string name="chemotherapy">항암 이력</string>
     <string name="radiation_therapy">방사선 이력</string>
     <string name="age_group">연령대</string>
@@ -117,6 +118,7 @@
     <string name="hospital_area">이용중 병원</string>
     <string name="not_opened">비공개</string>
 
+    <string name="empty_surgery_description">수술 이력이 있다면 기록해주세요</string>
     <string name="empty_chemotherapy_description">항암 이력이 있다면 기록해주세요</string>
     <string name="empty_radiation_therapy_description">방사선 이력이 있다면 기록해주세요</string>
     <string name="empty_age_group_description">연령대를 기록해주세요</string>

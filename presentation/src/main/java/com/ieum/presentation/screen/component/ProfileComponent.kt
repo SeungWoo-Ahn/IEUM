@@ -252,10 +252,22 @@ private fun ProfileChip(text: String) {
 }
 
 @Composable
+private fun ProfileChipList(data: List<String>) {
+    FlowRow(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(6.dp),
+        verticalArrangement = Arrangement.spacedBy(6.dp),
+    ) {
+        data.forEach { text -> ProfileChip(text = text) }
+    }
+}
+
+@Composable
 fun MyProfileSection(
     modifier: Modifier = Modifier,
     profile: MyProfileUiModel,
     patchDiagnose: () -> Unit,
+    patchSurgery: () -> Unit,
     patchChemotherapy: () -> Unit,
     patchRadiationTherapy: () -> Unit,
     patchAgeGroup: () -> Unit,
@@ -267,6 +279,7 @@ fun MyProfileSection(
             .fillMaxWidth()
             .verticalScroll(state = rememberScrollState())
             .padding(all = screenPadding)
+            .padding(bottom = 120.dp)
     ) {
         ProfileBox {
             MyProfileItem(
@@ -274,13 +287,15 @@ fun MyProfileSection(
                 profileProperty = profile.diagnoses,
                 onClick = patchDiagnose,
             ) {
-                FlowRow(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(6.dp),
-                    verticalArrangement = Arrangement.spacedBy(6.dp),
-                ) {
-                    it.forEach { data -> ProfileChip(text = data) }
-                }
+                ProfileChipList(it)
+            }
+            MyProfileItem(
+                title = stringResource(R.string.surgery),
+                profileProperty = profile.surgery,
+                emptyDescription = stringResource(R.string.empty_surgery_description),
+                onClick = patchSurgery,
+            ) {
+                ProfileChipList(it)
             }
             MyProfileItem(
                 title = stringResource(R.string.chemotherapy),
@@ -288,7 +303,7 @@ fun MyProfileSection(
                 emptyDescription = stringResource(R.string.empty_chemotherapy_description),
                 onClick = patchChemotherapy,
             ) {
-                ProfileChip(text = it)
+                ProfileChipList(it)
             }
             MyProfileItem(
                 title = stringResource(R.string.radiation_therapy),
@@ -296,7 +311,7 @@ fun MyProfileSection(
                 emptyDescription = stringResource(R.string.empty_radiation_therapy_description),
                 onClick = patchRadiationTherapy,
             ) {
-                ProfileChip(text = it)
+                ProfileChipList(it)
             }
             MyProfileItem(
                 title = stringResource(R.string.age_group),
@@ -356,25 +371,25 @@ fun OthersProfileSection(
                     title = stringResource(R.string.diagnose),
                     data = profile.diagnoses
                 ) {
-                    FlowRow(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(6.dp),
-                        verticalArrangement = Arrangement.spacedBy(6.dp),
-                    ) {
-                        it.forEach { data -> ProfileChip(text = data) }
-                    }
+                    ProfileChipList(it)
+                }
+                OthersProfileItem(
+                    title = stringResource(R.string.surgery),
+                    data = profile.surgery,
+                ) {
+                    ProfileChipList(it)
                 }
                 OthersProfileItem(
                     title = stringResource(R.string.chemotherapy),
                     data = profile.chemotherapy,
                 ) {
-                    ProfileChip(text = it)
+                    ProfileChipList(it)
                 }
                 OthersProfileItem(
                     title = stringResource(R.string.radiation_therapy),
                     data = profile.radiationTherapy,
                 ) {
-                    ProfileChip(text = it)
+                    ProfileChipList(it)
                 }
                 OthersProfileItem(
                     title = stringResource(R.string.age_group),

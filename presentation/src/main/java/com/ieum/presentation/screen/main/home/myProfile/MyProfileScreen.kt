@@ -52,6 +52,7 @@ fun MyProfileRoute(
         onTabClick = viewModel::onTab,
         onPostType = viewModel::onPostType,
         patchDiagnose = viewModel::showPatchDiagnoseDialog,
+        patchSurgery = {},
         patchChemotherapy = viewModel::showPatchChemotherapyDialog,
         patchRadiationTherapy = viewModel::showPatchRadiationTherapyDialog,
         patchAgeGroup = viewModel::showPatchAgeGroupDialog,
@@ -121,6 +122,7 @@ private fun MyProfileScreen(
     onTabClick: (MyProfileTab) -> Unit,
     onPostType: (PostTypeUiModel) -> Unit,
     patchDiagnose: (MyProfile) -> Unit,
+    patchSurgery: (MyProfile) -> Unit,
     patchChemotherapy: (MyProfile) -> Unit,
     patchRadiationTherapy: (MyProfile) -> Unit,
     patchAgeGroup: (MyProfile) -> Unit,
@@ -150,6 +152,7 @@ private fun MyProfileScreen(
                     is MyProfileUiState.Success -> MyProfileSection(
                         profile = uiState.profile.toUiModel(valueModel),
                         patchDiagnose = { patchDiagnose(uiState.profile) },
+                        patchSurgery = { patchSurgery(uiState.profile) },
                         patchChemotherapy = { patchChemotherapy(uiState.profile) },
                         patchRadiationTherapy = { patchRadiationTherapy(uiState.profile) },
                         patchAgeGroup = { patchAgeGroup(uiState.profile) },

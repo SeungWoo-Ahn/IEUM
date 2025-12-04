@@ -106,15 +106,15 @@ fun MyProfileDto.toDomain(): MyProfile =
             open = diagnosesVisible
         ),
         surgery = ProfileProperty(
-            data = surgery?.map(SurgeryDto::toDomain),
+            data = surgery?.map(SurgeryDto::toDomain)?.ifEmpty { null },
             open = surgeryVisible
         ),
         chemotherapy = ProfileProperty(
-            data = chemotherapy?.map(ChemotherapyDto::toDomain),
+            data = chemotherapy?.map(ChemotherapyDto::toDomain)?.ifEmpty { null },
             open = chemotherapyVisible
         ),
         radiationTherapy = ProfileProperty(
-            data = radiationTherapy?.map(RadiationTherapyDto::toDomain),
+            data = radiationTherapy?.map(RadiationTherapyDto::toDomain)?.ifEmpty { null },
             open = radiationTherapyVisible
         ),
         ageGroup = ProfileProperty(
@@ -133,22 +133,22 @@ fun OthersProfileDto.toDomain(): OthersProfile =
         userType = UserType.fromKey(userType),
         nickname = nickname,
         sex = if (sexVisible && sex != null) Sex.fromKey(sex) else null,
-        diagnoses = if (diagnosesVisible && diagnoses != null) {
+        diagnoses = if (diagnosesVisible && !diagnoses.isNullOrEmpty()) {
             diagnoses.map(DiagnoseDto::toDomain)
         } else {
             null
         },
-        surgery = if (surgeryVisible && surgery != null) {
+        surgery = if (surgeryVisible && !surgery.isNullOrEmpty()) {
             surgery.map(SurgeryDto::toDomain)
         } else {
             null
         },
-        chemotherapy = if (chemotherapyVisible && chemotherapy != null) {
+        chemotherapy = if (chemotherapyVisible && !chemotherapy.isNullOrEmpty()) {
             chemotherapy.map(ChemotherapyDto::toDomain)
         } else {
             null
         },
-        radiationTherapy = if (radiationTherapyVisible && radiationTherapy != null) {
+        radiationTherapy = if (radiationTherapyVisible && !radiationTherapy.isNullOrEmpty()) {
             radiationTherapy.map(RadiationTherapyDto::toDomain)
         } else {
             null
