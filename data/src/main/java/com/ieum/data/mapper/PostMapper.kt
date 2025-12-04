@@ -19,7 +19,7 @@ import com.ieum.domain.model.post.PostWellnessRequest
 
 fun PostWellnessRequest.asBody(): PostWellnessRequestBody =
     PostWellnessRequestBody(
-        diagnosis = diagnosis.key,
+        diagnosis = null,
         mood = mood.key,
         unusualSymptoms = unusualSymptoms,
         medicationTaken = medicationTaken,

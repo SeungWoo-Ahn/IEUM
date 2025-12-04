@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class PostWellnessRequestBody(
-    val diagnosis: String,
+    val diagnosis: List<String>?,
     val mood: Int,
     val unusualSymptoms: String?,
     val medicationTaken: Boolean,

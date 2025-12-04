@@ -11,7 +11,7 @@ interface BasePostDto {
 }
 
 internal interface WellnessDto {
-    val diagnosis: String?
+    val diagnosis: List<String>?
     val mood: Int?
     val unusualSymptoms: String?
     val medicationTaken: Boolean?
@@ -30,7 +30,7 @@ data class AllPostDto(
     val userId: Int,
     val userNickname: String,
     override val type: String,
-    override val diagnosis: String? = null,
+    override val diagnosis: List<String>? = null,
     override val mood: Int? = null,
     override val unusualSymptoms: String? = null,
     override val medicationTaken: Boolean? = null,
@@ -47,7 +47,7 @@ data class AllPostDto(
 data class MyPostDto(
     override val id: Int,
     override val type: String,
-    override val diagnosis: String? = null,
+    override val diagnosis: List<String>? = null,
     override val mood: Int? = null,
     override val unusualSymptoms: String? = null,
     override val medicationTaken: Boolean? = null,
@@ -65,7 +65,7 @@ data class MyPostDto(
 data class OtherPostDto(
     override val id: Int,
     override val type: String,
-    override val diagnosis: String? = null,
+    override val diagnosis: List<String>? = null,
     override val mood: Int? = null,
     override val unusualSymptoms: String? = null,
     override val medicationTaken: Boolean? = null,

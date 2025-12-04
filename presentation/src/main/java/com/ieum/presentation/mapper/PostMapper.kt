@@ -73,7 +73,6 @@ fun Post.Wellness.toUiModel(): PostWellnessUiModel =
 
 fun PostWellnessUiModel.toRequest(): PostWellnessRequest =
     PostWellnessRequest(
-        diagnosis = Diagnosis.OTHERS, // TODO: 진단 추가 후 수정
         mood = requireNotNull(mood).toDomain(),
         unusualSymptoms = unusualSymptoms.ifEmpty { null },
         medicationTaken = medicationTaken ?: false,
