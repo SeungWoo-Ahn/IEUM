@@ -27,7 +27,11 @@ class PostRepositoryImpl @Inject constructor(
             .id
 
     override suspend fun patchWellness(id: Int, request: PostWellnessRequest) {
-        postDataSource.patchWellness(id, request.asBody())
+        postDataSource.patchWellness(
+            id = id,
+            body = request.asBody(),
+            fileList = request.imageList.map(ImageSource.Local::file)
+        )
     }
 
     override suspend fun deleteWellness(id: Int) {
@@ -43,7 +47,11 @@ class PostRepositoryImpl @Inject constructor(
             .id
 
     override suspend fun patchDaily(id: Int, request: PostDailyRequest) {
-        postDataSource.patchDaily(id, request.asBody())
+        postDataSource.patchDaily(
+            id = id,
+            body = request.asBody(),
+            fileList = request.imageList.map(ImageSource.Local::file)
+        )
     }
 
     override suspend fun deleteDaily(id: Int) {
