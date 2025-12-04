@@ -1,5 +1,6 @@
 package com.ieum.presentation.screen.component
 
+import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -51,6 +52,11 @@ import com.ieum.presentation.state.DatePickerState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
@@ -337,28 +343,39 @@ fun IEUMDatePickerDialog(
 ) {
     fun getYearRange(): IntRange {
         val currentYear = Calendar.getInstance().get(Calendar.YEAR)
-        return 1950..currentYear + 1
+        return 2_000..currentYear + 1
     }
 
     fun convertDateToMillis(date: String): Long {
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.KOREA)
-            .apply { timeZone = TimeZone.getTimeZone("UTC") }
-        val dateLong = dateFormat.parse(date) as Date
-        return dateLong.time
+        val pattern = "yyyy-MM-dd"
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val formatter = DateTimeFormatter.ofPattern(pattern)
+            val dateTime = LocalDate.parse(date, formatter)
+            dateTime.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
+        } else {
+            val formatter = SimpleDateFormat(pattern, Locale.KOREA)
+                .apply { timeZone = TimeZone.getTimeZone("UTC") }
+            (formatter.parse(date) as Date).time
+        }
     }
 
     fun convertMillisToDate(millis: Long): String {
-        val date = Date(millis)
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.KOREA)
-        return dateFormat.format(date)
+        val pattern = "yyyy-MM-dd"
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val dateTime = Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault())
+            val formatter = DateTimeFormatter.ofPattern(pattern, Locale.KOREA)
+            dateTime.format(formatter)
+        } else {
+            val date = Date(millis)
+            val formatter = SimpleDateFormat(pattern, Locale.KOREA)
+            formatter.format(date)
+        }
     }
 
     val datePickerState = rememberDatePickerState(
         yearRange = getYearRange(),
         initialSelectedDateMillis = convertDateToMillis(state.date),
     )
-    val selectedDate = datePickerState.selectedDateMillis
-        ?.let { convertMillisToDate(it) } ?: ""
 
     DatePickerDialog(
         modifier = Modifier.padding(all = screenPadding),
@@ -370,12 +387,16 @@ fun IEUMDatePickerDialog(
                     width = 120.dp,
                     height = 48.dp,
                 ),
+                enabled = datePickerState.selectedDateMillis != null,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Slate950,
                 ),
                 onClick = {
-                    state.onDateSelected(selectedDate)
-                    state.onDismissRequest()
+                    val millis = datePickerState.selectedDateMillis
+                    if (millis != null) {
+                        state.onDateSelected(convertMillisToDate(millis))
+                        state.onDismissRequest()
+                    }
                 }
             ) {
                 Text(

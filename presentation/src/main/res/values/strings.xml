@@ -124,4 +124,8 @@
     <string name="empty_age_group_description">연령대를 기록해주세요</string>
     <string name="empty_residence_area_description">거주지를 기록해주세요</string>
     <string name="empty_hospital_area_description">이용중 병원이 있다면 기록해주세요</string>
+
+    <string name="add_surgery">수술 이력 추가</string>
+    <string name="add_chemotherapy">항암치료 이력 추가</string>
+    <string name="add_radiation_therapy">방사선치료 이력 추가</string>
 </resources>
