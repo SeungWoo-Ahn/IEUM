@@ -13,4 +13,8 @@ class CycleState : MaxLengthTextFieldState(maxLength = 2) {
             super.typeText(cycle.toString())
         }
     }
+
+    override fun validate(): Boolean {
+        return super.validate() && getTrimmedText().toIntOrNull() != null
+    }
 }

@@ -51,8 +51,6 @@ import com.ieum.design_system.util.noRippleClickable
 import com.ieum.domain.model.user.MyProfile
 import com.ieum.domain.model.user.ProfileProperty
 import com.ieum.presentation.R
-import com.ieum.presentation.mapper.DateFormatStrategy
-import com.ieum.presentation.mapper.formatDate
 import com.ieum.presentation.mapper.toDomain
 import com.ieum.presentation.mapper.toUiModel
 import com.ieum.presentation.model.user.AgeGroupUiModel
@@ -60,7 +58,8 @@ import com.ieum.presentation.model.user.CancerDiagnoseUiModel
 import com.ieum.presentation.model.user.CancerStageUiModel
 import com.ieum.presentation.screen.main.home.myProfile.PatchMyProfile
 import com.ieum.presentation.state.AddressState
-import com.ieum.presentation.state.CycleState
+import com.ieum.presentation.state.ChemoTherapyItemState
+import com.ieum.presentation.state.ChemotherapyState
 import com.ieum.presentation.state.DatePickerState
 import com.ieum.presentation.state.DiagnoseState
 import com.ieum.presentation.state.RadiationTherapyItemState
@@ -281,6 +280,25 @@ private fun PatchDateSelector(
 }
 
 @Composable
+private fun AddProfileItemBox(
+    text: String,
+    onClick: () -> Unit,
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 24.dp)
+            .noRippleClickable(onClick = onClick),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.titleLarge,
+        )
+    }
+}
+
+@Composable
 fun PatchChemotherapyDialog(
     modifier: Modifier = Modifier,
     profile: MyProfile,
@@ -288,120 +306,142 @@ fun PatchChemotherapyDialog(
     onDismissRequest: () -> Unit,
 ) {
     var isLoading by remember { mutableStateOf(false) }
-    var isOpened by remember { mutableStateOf(profile.chemotherapy.open) }
-    val cycleState = remember { CycleState().apply {
-/*        profile.chemotherapy.data?.cycle?.let { typeText(it.toString()) }*/
-    } }
-    var startDate by remember {
-        mutableStateOf( formatDate(DateFormatStrategy.Today))
-    }
-    var endDate by remember {
-        mutableStateOf(formatDate(DateFormatStrategy.Today)) // TODO: endDate 추가 시 설정
-    }
-    var isOngoing by remember {
-        mutableStateOf(false) // TODO: endDate 추가 시 설정
-    }
-    val buttonEnabled by remember { derivedStateOf { isLoading.not() && cycleState.validate() } }
-    var pickerState by remember { mutableStateOf<DatePickerState>(DatePickerState.Idle) }
-
-    fun showStartDatePicker() {
-        pickerState = DatePickerState.Show(
-            date = startDate,
-            onDateSelected = { startDate = it },
-            onDismissRequest = { pickerState = DatePickerState.Idle }
-        )
-    }
-
-    fun showEndDatePicker() {
-        pickerState = DatePickerState.Show(
-            date = endDate,
-            onDateSelected = { endDate = it },
-            onDismissRequest = { pickerState = DatePickerState.Idle }
-        )
-    }
+    val state = remember { ChemotherapyState(profile.chemotherapy) }
+    val buttonEnabled by remember { derivedStateOf { isLoading.not() && state.validate() } }
 
     fun patchChemotherapy() {
-/*        val chemotherapy = ProfileProperty(
-            data = Chemotherapy(
-                cycle = cycleState.getTrimmedText().toInt(),
-                startDate = startDate, // TODO: endDate 추가 시 설정
-            ),
-            open = isOpened,
-        )
+        val chemotherapy = state.getProfileProperty()
         if (chemotherapy != profile.chemotherapy) {
             val patchedProfile = profile.copy(chemotherapy = chemotherapy)
             isLoading = true
             patch(patchedProfile) { isLoading = false }
         } else {
             onDismissRequest()
-        }*/
+        }
     }
 
     FullScreenDialog(onDismissRequest) {
         Column(
-            modifier = modifier.fillMaxWidth(),
+            modifier = modifier
+                .fillMaxWidth()
+                .background(color = Slate50),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             TopBarForBack(onBack = onDismissRequest)
-            Column(
-                modifier = modifier
-                    .fillMaxWidth()
+            Box(
+                modifier = Modifier
+                    .weight(1f)
                     .padding(horizontal = screenPadding)
-                    .padding(bottom = 16.dp),
             ) {
-                UserGuideArea(guide = stringResource(R.string.guide_type_chemotherapy))
-                IEUMSpacer(size = 40)
-                PatchTitle(text = stringResource(R.string.cycle))
-                IEUMSpacer(size = 12)
-                IEUMTextField(
-                    state = cycleState,
-                    placeHolder = stringResource(R.string.placeholder_type_cycle),
-                    singleLine = true,
-                    textStyle = MaterialTheme.typography.titleLarge,
-                    innerPadding = PaddingValues(horizontal = 18.dp, vertical = 24.dp),
-                    keyboardType = KeyboardType.Number,
-                    imeAction = ImeAction.Done,
-                )
-                IEUMSpacer(size = 26)
-                PatchTitle(text = stringResource(R.string.start_date))
-                IEUMSpacer(size = 12)
-                PatchDateSelector(
-                    selectedDate = startDate,
-                    onClick = ::showStartDatePicker
-                )
-                IEUMSpacer(size = 26)
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .verticalScroll(state = rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(20.dp)
                 ) {
-                    PatchTitle(text = stringResource(R.string.end_date))
-                    PatchOngoingCheckBox(
-                        isOngoing = isOngoing,
-                        onClick = { isOngoing = isOngoing.not() },
+                    UserGuideArea(guide = stringResource(R.string.guide_type_chemotherapy))
+                    state.stateList.forEach { itemState ->
+                        ChemotherapyItem(
+                            state = itemState,
+                            onStartDate = { state.showStartDatePicker(itemState) },
+                            onEndDate = { state.showEndDatePicker(itemState) },
+                        )
+                    }
+                    AddProfileItemBox(
+                        text = stringResource(R.string.add_chemotherapy),
+                        onClick = state::addItemState
+                    )
+                    IEUMSpacer(size = 120)
+                }
+                Column(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(14.dp),
+                ) {
+                    PatchLockCheckBox(
+                        isLocked = state.isOpened.not(),
+                        onClick = state::toggleIsOpened,
+                    )
+                    Lime400Button(
+                        text = stringResource(R.string.complete),
+                        enabled = buttonEnabled,
+                        onClick = ::patchChemotherapy,
                     )
                 }
-                IEUMSpacer(size = 12)
-                PatchDateSelector(
-                    selectedDate = endDate,
-                    enabled = isOngoing.not(),
-                    onClick = ::showEndDatePicker
-                )
-                IEUMSpacer(modifier = Modifier.weight(1f))
-                PatchLockCheckBox(
-                    isLocked = isOpened.not(),
-                    onClick = { isOpened = isOpened.not() },
-                )
-                IEUMSpacer(size = 14)
-                Lime400Button(
-                    text = stringResource(R.string.complete),
-                    enabled = buttonEnabled,
-                    onClick = ::patchChemotherapy,
-                )
             }
         }
+        val pickerState = state.pickerState
         if (pickerState is DatePickerState.Show) {
-            IEUMDatePickerDialog(state = pickerState as DatePickerState.Show)
+            IEUMDatePickerDialog(state = pickerState)
+        }
+    }
+}
+
+@Composable
+private fun ChemotherapyItem(
+    modifier: Modifier = Modifier,
+    state: ChemoTherapyItemState,
+    onStartDate: () -> Unit,
+    onEndDate: () -> Unit,
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(
+                color = White,
+                shape = MaterialTheme.shapes.medium
+            )
+            .border(
+                width = 1.dp,
+                color = Slate200,
+                shape = MaterialTheme.shapes.medium
+            )
+            .padding(all = 20.dp),
+        verticalArrangement = Arrangement.spacedBy(26.dp),
+    ) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            PatchTitle(text = stringResource(R.string.cycle))
+            IEUMTextField(
+                state = state.cycleState,
+                placeHolder = stringResource(R.string.placeholder_type_cycle),
+                singleLine = true,
+                textStyle = MaterialTheme.typography.titleLarge,
+                innerPadding = PaddingValues(horizontal = 18.dp, vertical = 24.dp),
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Done,
+            )
+        }
+        Column(
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            PatchTitle(text = stringResource(R.string.start_date))
+            PatchDateSelector(
+                selectedDate = state.startDate,
+                onClick = onStartDate,
+            )
+        }
+        Column(
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                PatchTitle(text = stringResource(R.string.end_date))
+                PatchOngoingCheckBox(
+                    isOngoing = state.isOngoing,
+                    onClick = state::toggleIsOngoing,
+                )
+            }
+            PatchDateSelector(
+                selectedDate = state.endDate,
+                enabled = state.isOngoing.not(),
+                onClick = onEndDate,
+            )
         }
     }
 }
@@ -486,25 +526,6 @@ fun PatchRadiationTherapyDialog(
 }
 
 @Composable
-private fun AddProfileItemBox(
-    text: String,
-    onClick: () -> Unit,
-) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 24.dp)
-            .noRippleClickable(onClick = onClick),
-        contentAlignment = Alignment.Center,
-    ) {
-        Text(
-            text = text,
-            style = MaterialTheme.typography.titleLarge,
-        )
-    }
-}
-
-@Composable
 private fun RadiationTherapyItem(
     modifier: Modifier = Modifier,
     state: RadiationTherapyItemState,
@@ -523,32 +544,38 @@ private fun RadiationTherapyItem(
                 color = Slate200,
                 shape = MaterialTheme.shapes.medium
             )
-            .padding(all = 20.dp)
+            .padding(all = 20.dp),
+        verticalArrangement = Arrangement.spacedBy(26.dp),
     ) {
-        PatchTitle(text = stringResource(R.string.start_date))
-        IEUMSpacer(size = 12)
-        PatchDateSelector(
-            selectedDate = state.startDate,
-            onClick = onStartDate,
-        )
-        IEUMSpacer(size = 26)
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
+        Column(
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            PatchTitle(text = stringResource(R.string.end_date))
-            PatchOngoingCheckBox(
-                isOngoing = state.isOngoing,
-                onClick = state::toggleIsOngoing,
+            PatchTitle(text = stringResource(R.string.start_date))
+            PatchDateSelector(
+                selectedDate = state.startDate,
+                onClick = onStartDate,
             )
         }
-        IEUMSpacer(size = 12)
-        PatchDateSelector(
-            selectedDate = state.endDate,
-            enabled = state.isOngoing.not(),
-            onClick = onEndDate,
-        )
+        Column(
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                PatchTitle(text = stringResource(R.string.end_date))
+                PatchOngoingCheckBox(
+                    isOngoing = state.isOngoing,
+                    onClick = state::toggleIsOngoing,
+                )
+            }
+            PatchDateSelector(
+                selectedDate = state.endDate,
+                enabled = state.isOngoing.not(),
+                onClick = onEndDate,
+            )
+        }
     }
 }
 

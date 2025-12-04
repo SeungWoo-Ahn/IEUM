@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import com.ieum.domain.model.user.Chemotherapy
 import com.ieum.domain.model.user.ProfileProperty
 import com.ieum.domain.model.user.RadiationTherapy
 import com.ieum.presentation.mapper.DateFormatStrategy
@@ -38,13 +39,123 @@ private fun String.isAfter(date: String): Boolean {
     return compareDateStrings(this, date) > 0
 }
 
+class ChemoTherapyItemState(initData: Chemotherapy? = null) {
+    val cycleState = CycleState()
+        .apply { initData?.cycle?.let { typeText(it.toString()) } }
+
+    var startDate by mutableStateOf(
+        initData?.startDate ?: formatDate(DateFormatStrategy.Today)
+    )
+        private set
+    var endDate by mutableStateOf(
+        initData?.endDate
+            ?: initData?.startDate
+            ?: formatDate(DateFormatStrategy.Today)
+    )
+        private set
+    var isOngoing by mutableStateOf(
+        if (initData == null) false else initData.endDate == null
+    )
+        private set
+
+    fun startDateCallback(date: String) {
+        if (date.isAfter(endDate)) {
+            endDate = date
+        }
+        startDate = date
+    }
+
+    fun endDateCallback(date: String) {
+        if (date.isBefore(startDate)) {
+            startDate = date
+        }
+        endDate = date
+    }
+
+    fun toggleIsOngoing() {
+        isOngoing = isOngoing.not()
+    }
+
+    fun validate(): Boolean = cycleState.validate()
+
+    fun getChemotherapy(): Chemotherapy =
+        Chemotherapy(
+            cycle = cycleState.getTrimmedText().toInt(),
+            startDate = startDate,
+            endDate = if (isOngoing) null else endDate,
+        )
+}
+
+class ChemotherapyState(
+    initData: ProfileProperty<List<Chemotherapy>>,
+) {
+    private val _stateList = mutableStateListOf<ChemoTherapyItemState>()
+    val stateList: List<ChemoTherapyItemState> get() = _stateList
+
+    var isOpened by mutableStateOf(initData.open)
+        private set
+
+    var pickerState by mutableStateOf<DatePickerState>(DatePickerState.Idle)
+        private set
+
+    init {
+        initData.data?.let {
+            _stateList += it.map { therapy -> ChemoTherapyItemState(therapy) }
+        } ?: run {
+            addItemState()
+        }
+    }
+
+    fun addItemState() {
+        _stateList += ChemoTherapyItemState()
+    }
+
+    fun removeItemState(itemState: ChemoTherapyItemState) {
+        _stateList -= itemState
+    }
+
+    private fun dismissDatePicker() {
+        pickerState = DatePickerState.Idle
+    }
+
+    fun showStartDatePicker(itemState: ChemoTherapyItemState) {
+        pickerState = DatePickerState.Show(
+            date = itemState.startDate,
+            onDateSelected = itemState::startDateCallback,
+            onDismissRequest = ::dismissDatePicker,
+        )
+    }
+
+    fun showEndDatePicker(itemState: ChemoTherapyItemState) {
+        pickerState = DatePickerState.Show(
+            date = itemState.endDate,
+            onDateSelected = itemState::endDateCallback,
+            onDismissRequest = ::dismissDatePicker,
+        )
+    }
+
+    fun toggleIsOpened() {
+        isOpened = isOpened.not()
+    }
+
+    fun validate(): Boolean = stateList.all(ChemoTherapyItemState::validate)
+
+    fun getProfileProperty(): ProfileProperty<List<Chemotherapy>> =
+        ProfileProperty(
+            data = stateList.map(ChemoTherapyItemState::getChemotherapy),
+            open = isOpened,
+        )
+}
+
 class RadiationTherapyItemState(initData: RadiationTherapy? = null) {
     var startDate by mutableStateOf(
         initData?.startDate ?: formatDate(DateFormatStrategy.Today)
     )
         private set
     var endDate by mutableStateOf(
-        initData?.endDate ?: formatDate(DateFormatStrategy.Today)
+        initData?.endDate
+            ?: initData?.startDate
+            ?: formatDate(DateFormatStrategy.Today)
     )
         private set
     var isOngoing by mutableStateOf(
@@ -101,26 +212,26 @@ class RadiationTherapyState(
         _stateList += RadiationTherapyItemState()
     }
 
-    fun removeItemState(state: RadiationTherapyItemState) {
-        _stateList -= state
+    fun removeItemState(itemState: RadiationTherapyItemState) {
+        _stateList -= itemState
     }
 
     private fun dismissDatePicker() {
         pickerState = DatePickerState.Idle
     }
 
-    fun showStartDatePicker(state: RadiationTherapyItemState) {
+    fun showStartDatePicker(itemState: RadiationTherapyItemState) {
         pickerState = DatePickerState.Show(
-            date = state.startDate,
-            onDateSelected = state::startDateCallback,
+            date = itemState.startDate,
+            onDateSelected = itemState::startDateCallback,
             onDismissRequest = ::dismissDatePicker,
         )
     }
 
-    fun showEndDatePicker(state: RadiationTherapyItemState) {
+    fun showEndDatePicker(itemState: RadiationTherapyItemState) {
         pickerState = DatePickerState.Show(
-            date = state.endDate,
-            onDateSelected = state::endDateCallback,
+            date = itemState.endDate,
+            onDateSelected = itemState::endDateCallback,
             onDismissRequest = ::dismissDatePicker,
         )
     }
