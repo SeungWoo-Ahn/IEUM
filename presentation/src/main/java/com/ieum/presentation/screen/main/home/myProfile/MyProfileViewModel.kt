@@ -101,6 +101,13 @@ class MyProfileViewModel @Inject constructor(
         )
     }
 
+    fun showPatchSurgeryDialog(profile: MyProfile) {
+        dialogState = MyProfileDialogState.ShowPatchSurgeryDialog(
+            profile = profile,
+            patch = ::patchMyProfile,
+        )
+    }
+
     fun showPatchChemotherapyDialog(profile: MyProfile) {
         dialogState = MyProfileDialogState.ShowPatchChemotherapyDialog(
             profile = profile,

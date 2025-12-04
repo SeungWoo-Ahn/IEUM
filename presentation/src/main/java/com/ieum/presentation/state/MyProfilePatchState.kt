@@ -5,9 +5,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import com.ieum.design_system.textfield.MaxLengthTextFieldState
 import com.ieum.domain.model.user.Chemotherapy
 import com.ieum.domain.model.user.ProfileProperty
 import com.ieum.domain.model.user.RadiationTherapy
+import com.ieum.domain.model.user.Surgery
 import com.ieum.presentation.mapper.DateFormatStrategy
 import com.ieum.presentation.mapper.formatDate
 import java.text.SimpleDateFormat
@@ -15,6 +17,81 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
+
+class SurgeryItemState(initData: Surgery? = null) {
+    var date by mutableStateOf(
+        initData?.date ?: formatDate(DateFormatStrategy.Today)
+    )
+        private set
+
+    val descriptionState = MaxLengthTextFieldState(20)
+        .apply { initData?.description?.let { typeText(it) } }
+
+    fun dateCallback(date: String) {
+        this.date = date
+    }
+
+    fun validate(): Boolean = descriptionState.validate()
+
+    fun getSurgery(): Surgery =
+        Surgery(
+            date = date,
+            description = descriptionState.getTrimmedText(),
+        )
+}
+
+class SurgeryState(
+    initData: ProfileProperty<List<Surgery>>,
+) {
+    private val _stateList = mutableStateListOf<SurgeryItemState>()
+    val stateList: List<SurgeryItemState> get() = _stateList
+
+    var isOpened by mutableStateOf(initData.open)
+        private set
+
+    var pickerState by mutableStateOf<DatePickerState>(DatePickerState.Idle)
+        private set
+
+    init {
+        initData.data?.let {
+            _stateList += it.map { therapy -> SurgeryItemState(therapy) }
+        } ?: run {
+            addItemState()
+        }
+    }
+
+    fun addItemState() {
+        _stateList += SurgeryItemState()
+    }
+
+    fun removeItemState(itemState: SurgeryItemState) {
+        _stateList -= itemState
+    }
+
+    private fun dismissDatePicker() {
+        pickerState = DatePickerState.Idle
+    }
+
+    fun showDatePicker(itemState: SurgeryItemState) {
+        pickerState = DatePickerState.Show(
+            date = itemState.date,
+            onDateSelected = itemState::dateCallback,
+            onDismissRequest = ::dismissDatePicker,
+        )
+    }
+
+    fun toggleIsOpened() {
+        isOpened = isOpened.not()
+    }
+
+    fun validate(): Boolean = stateList.all(SurgeryItemState::validate)
+
+    fun getProfileProperty(): ProfileProperty<List<Surgery>> =
+        ProfileProperty(
+            data = stateList.map(SurgeryItemState::getSurgery),
+            open = isOpened,
+        )
+}
 
 private fun compareDateStrings(dateString1: String, dateString2: String): Int {
     val pattern = "yyyy-MM-dd"

@@ -37,6 +37,7 @@ import com.ieum.design_system.icon.LockIcon
 import com.ieum.design_system.selector.SingleSelectorState
 import com.ieum.design_system.spacer.IEUMSpacer
 import com.ieum.design_system.textfield.IEUMTextField
+import com.ieum.design_system.textfield.MaxLengthTextField
 import com.ieum.design_system.theme.Slate100
 import com.ieum.design_system.theme.Slate200
 import com.ieum.design_system.theme.Slate300
@@ -64,6 +65,8 @@ import com.ieum.presentation.state.DatePickerState
 import com.ieum.presentation.state.DiagnoseState
 import com.ieum.presentation.state.RadiationTherapyItemState
 import com.ieum.presentation.state.RadiationTherapyState
+import com.ieum.presentation.state.SurgeryItemState
+import com.ieum.presentation.state.SurgeryState
 import kotlinx.coroutines.CoroutineScope
 
 @Composable
@@ -295,6 +298,127 @@ private fun AddProfileItemBox(
             text = text,
             style = MaterialTheme.typography.titleLarge,
         )
+    }
+}
+
+@Composable
+fun PatchSurgeryDialog(
+    modifier: Modifier = Modifier,
+    profile: MyProfile,
+    patch: PatchMyProfile,
+    onDismissRequest: () -> Unit,
+) {
+    var isLoading by remember { mutableStateOf(false) }
+    val state = remember { SurgeryState(profile.surgery) }
+    val buttonEnabled by remember { derivedStateOf { isLoading.not() && state.validate() } }
+
+    fun patchSurgery() {
+        val surgery = state.getProfileProperty()
+        if (surgery != profile.surgery) {
+            val patchedProfile = profile.copy(surgery = surgery)
+            isLoading = true
+            patch(patchedProfile) { isLoading = false }
+        } else {
+            onDismissRequest()
+        }
+    }
+
+    FullScreenDialog(onDismissRequest) {
+        Column(
+            modifier = modifier
+                .fillMaxWidth()
+                .background(color = Slate50),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            TopBarForBack(onBack = onDismissRequest)
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = screenPadding)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .verticalScroll(state = rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(20.dp)
+                ) {
+                    UserGuideArea(guide = stringResource(R.string.guide_type_surgery))
+                    state.stateList.forEach { itemState ->
+                        SurgeryItem(
+                            state = itemState,
+                            onDate = { state.showDatePicker(itemState) },
+                        )
+                    }
+                    AddProfileItemBox(
+                        text = stringResource(R.string.add_chemotherapy),
+                        onClick = state::addItemState
+                    )
+                    IEUMSpacer(size = 120)
+                }
+                Column(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(14.dp),
+                ) {
+                    PatchLockCheckBox(
+                        isLocked = state.isOpened.not(),
+                        onClick = state::toggleIsOpened,
+                    )
+                    Lime400Button(
+                        text = stringResource(R.string.complete),
+                        enabled = buttonEnabled,
+                        onClick = ::patchSurgery,
+                    )
+                }
+            }
+        }
+        val pickerState = state.pickerState
+        if (pickerState is DatePickerState.Show) {
+            IEUMDatePickerDialog(state = pickerState)
+        }
+    }
+}
+
+@Composable
+private fun SurgeryItem(
+    modifier: Modifier = Modifier,
+    state: SurgeryItemState,
+    onDate: () -> Unit,
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(
+                color = White,
+                shape = MaterialTheme.shapes.medium
+            )
+            .border(
+                width = 1.dp,
+                color = Slate200,
+                shape = MaterialTheme.shapes.medium
+            )
+            .padding(all = 20.dp),
+        verticalArrangement = Arrangement.spacedBy(26.dp),
+    ) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            PatchTitle(text = stringResource(R.string.surgery_date))
+            PatchDateSelector(
+                selectedDate = state.date,
+                onClick = onDate,
+            )
+        }
+        Column(
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            PatchTitle(text = stringResource(R.string.surgery_name))
+            MaxLengthTextField(
+                state = state.descriptionState,
+                placeHolder = "",
+            )
+        }
     }
 }
 

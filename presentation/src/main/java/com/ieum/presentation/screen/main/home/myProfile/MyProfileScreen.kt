@@ -27,6 +27,7 @@ import com.ieum.presentation.screen.component.PatchDiagnoseDialog
 import com.ieum.presentation.screen.component.PatchHospitalDialog
 import com.ieum.presentation.screen.component.PatchRadiationTherapyDialog
 import com.ieum.presentation.screen.component.PatchResidenceDialog
+import com.ieum.presentation.screen.component.PatchSurgeryDialog
 import com.ieum.presentation.screen.component.PostListArea
 import com.ieum.presentation.util.GlobalValueModel
 import kotlinx.coroutines.CoroutineScope
@@ -52,7 +53,7 @@ fun MyProfileRoute(
         onTabClick = viewModel::onTab,
         onPostType = viewModel::onPostType,
         patchDiagnose = viewModel::showPatchDiagnoseDialog,
-        patchSurgery = {},
+        patchSurgery = viewModel::showPatchSurgeryDialog,
         patchChemotherapy = viewModel::showPatchChemotherapyDialog,
         patchRadiationTherapy = viewModel::showPatchRadiationTherapyDialog,
         patchAgeGroup = viewModel::showPatchAgeGroupDialog,
@@ -67,6 +68,13 @@ fun MyProfileRoute(
     if (dialogState is MyProfileDialogState.ShowPatchDiagnoseDialog) {
         PatchDiagnoseDialog(
             scope = scope,
+            profile = dialogState.profile,
+            patch = dialogState.patch,
+            onDismissRequest = viewModel::dismissDialog,
+        )
+    }
+    if (dialogState is MyProfileDialogState.ShowPatchSurgeryDialog) {
+        PatchSurgeryDialog(
             profile = dialogState.profile,
             patch = dialogState.patch,
             onDismissRequest = viewModel::dismissDialog,
