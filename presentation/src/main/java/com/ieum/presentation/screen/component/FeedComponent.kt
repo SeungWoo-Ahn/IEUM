@@ -6,6 +6,7 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -34,7 +35,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.itemKey
 import com.ieum.design_system.icon.CommentIcon
 import com.ieum.design_system.icon.HeartIcon
 import com.ieum.design_system.icon.MealIcon
@@ -53,6 +53,7 @@ import com.ieum.design_system.theme.White
 import com.ieum.design_system.theme.screenPadding
 import com.ieum.design_system.util.noRippleClickable
 import com.ieum.domain.model.image.ImageSource
+import com.ieum.domain.model.post.PostType
 import com.ieum.domain.model.post.PostUserInfo
 import com.ieum.presentation.R
 import com.ieum.presentation.model.post.DiagnoseFilterUiModel
@@ -154,10 +155,17 @@ fun PostListArea(
         is LoadState.Error -> ErrorComponent(onRetry = postList::retry)
         is LoadState.NotLoading -> LazyColumn(
             modifier = modifier.fillMaxSize(),
+            contentPadding = PaddingValues(bottom = 120.dp)
         ) {
             items(
                 count = postList.itemCount,
-                key = postList.itemKey { it.id }
+                key = {
+                    when (val post = postList[it]) {
+                        is PostUiModel.Wellness -> "${PostType.WELLNESS.key}${post.id}"
+                        is PostUiModel.Daily -> "${PostType.DAILY.key}${post.id}"
+                        null -> it
+                    }
+                }
             ) { index ->
                 postList[index]?.let { post ->
                     PostItem(

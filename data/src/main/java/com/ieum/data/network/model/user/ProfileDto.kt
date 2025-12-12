@@ -9,13 +9,15 @@ interface BaseProfileDto {
     val nickname: String
     val sex: String?
     val diagnoses: List<DiagnoseDto>?
-    val chemotherapy: ChemotherapyDto?
-    val radiationTherapy: RadiationTherapyDto?
+    val surgery: List<SurgeryDto>?
+    val chemotherapy: List<ChemotherapyDto>?
+    val radiationTherapy: List<RadiationTherapyDto>?
     val ageGroup: String?
     val residenceArea: String?
     val hospitalArea: String?
     val sexVisible: Boolean
     val diagnosesVisible: Boolean
+    val surgeryVisible: Boolean
     val chemotherapyVisible: Boolean
     val radiationTherapyVisible: Boolean
     val ageGroupVisible: Boolean
@@ -32,13 +34,15 @@ data class MyProfileDto(
     override val nickname: String,
     override val sex: String,
     override val diagnoses: List<DiagnoseDto>,
-    override val chemotherapy: ChemotherapyDto?,
-    override val radiationTherapy: RadiationTherapyDto?,
+    override val surgery: List<SurgeryDto>?,
+    override val chemotherapy: List<ChemotherapyDto>?,
+    override val radiationTherapy: List<RadiationTherapyDto>?,
     override val ageGroup: String?,
     override val residenceArea: String?,
     override val hospitalArea: String?,
     override val sexVisible: Boolean,
     override val diagnosesVisible: Boolean,
+    override val surgeryVisible: Boolean,
     override val chemotherapyVisible: Boolean,
     override val radiationTherapyVisible: Boolean,
     override val ageGroupVisible: Boolean,
@@ -54,13 +58,15 @@ data class OthersProfileDto(
     override val nickname: String,
     override val sex: String?,
     override val diagnoses: List<DiagnoseDto>?,
-    override val chemotherapy: ChemotherapyDto?,
-    override val radiationTherapy: RadiationTherapyDto?,
+    override val surgery: List<SurgeryDto>?,
+    override val chemotherapy: List<ChemotherapyDto>?,
+    override val radiationTherapy: List<RadiationTherapyDto>?,
     override val ageGroup: String?,
     override val residenceArea: String?,
     override val hospitalArea: String?,
     override val sexVisible: Boolean,
     override val diagnosesVisible: Boolean,
+    override val surgeryVisible: Boolean,
     override val chemotherapyVisible: Boolean,
     override val radiationTherapyVisible: Boolean,
     override val ageGroupVisible: Boolean,

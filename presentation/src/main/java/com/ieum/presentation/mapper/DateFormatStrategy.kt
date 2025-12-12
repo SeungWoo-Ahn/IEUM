@@ -3,6 +3,7 @@ package com.ieum.presentation.mapper
 import android.os.Build
 import java.text.SimpleDateFormat
 import java.time.Instant
+import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Date
@@ -17,8 +18,7 @@ sealed interface DateFormatStrategy {
         override fun format(): String {
             val seconds = timestamp.toLong()
             return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val instant = Instant.ofEpochSecond(seconds)
-                val dateTime = instant.atZone(ZoneId.systemDefault())
+                val dateTime = Instant.ofEpochSecond(seconds).atZone(ZoneId.systemDefault())
                 val formatter = DateTimeFormatter.ofPattern(pattern, Locale.KOREA)
                 dateTime.format(formatter)
             } else {
@@ -31,10 +31,18 @@ sealed interface DateFormatStrategy {
     }
 
     data object Today : DateFormatStrategy {
+        private const val PATTERN = "yyyy-MM-dd"
+
         override fun format(): String {
-            val current = Date()
-            val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.KOREA)
-            return formatter.format(current)
+            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val current = LocalDate.now()
+                val formatter = DateTimeFormatter.ofPattern(PATTERN)
+                current.format(formatter)
+            } else {
+                val current = Date()
+                val formatter = SimpleDateFormat(PATTERN, Locale.KOREA)
+                formatter.format(current)
+            }
         }
     }
 }

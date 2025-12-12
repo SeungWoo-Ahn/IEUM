@@ -6,6 +6,5 @@ import kotlinx.serialization.Serializable
 data class PostDailyRequestBody(
     val title: String,
     val content: String,
-    val images: List<PostImageDto.ForRequest>?,
     val shared: Boolean,
 )

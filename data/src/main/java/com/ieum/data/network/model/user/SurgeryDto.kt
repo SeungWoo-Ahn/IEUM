@@ -3,8 +3,7 @@ package com.ieum.data.network.model.user
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ChemotherapyDto(
-    val cycle: Int,
-    val startDate: String,
-    val endDate: String?,
+data class SurgeryDto(
+    val date: String,
+    val description: String,
 )

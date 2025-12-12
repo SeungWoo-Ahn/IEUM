@@ -35,7 +35,6 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.serialization.kotlinx.json.json
-import kotlinx.coroutines.flow.first
 import kotlinx.serialization.json.Json
 import okio.IOException
 import timber.log.Timber
@@ -53,8 +52,8 @@ internal object NetworkModule {
     private fun createKtorClient(): HttpClient =
         HttpClient(Android) {
             install(HttpTimeout) {
-                connectTimeoutMillis = 10_000
-                requestTimeoutMillis = 10_000
+                connectTimeoutMillis = 5_000
+                requestTimeoutMillis = 5_000
             }
             install(Logging) {
                 logger = object : Logger {
@@ -96,8 +95,7 @@ internal object NetworkModule {
             install(Auth) {
                 bearer {
                     loadTokens {
-                        val savedToken = preferenceRepository.tokenFlow.first()
-                        savedToken?.let {
+                        preferenceRepository.getCachedToken()?.let {
                             BearerTokens(it.accessToken, it.refreshToken)
                         }
                     }

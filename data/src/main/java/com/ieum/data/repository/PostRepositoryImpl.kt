@@ -4,6 +4,7 @@ import com.ieum.data.datasource.post.PostDataSource
 import com.ieum.data.mapper.asBody
 import com.ieum.data.mapper.toDomain
 import com.ieum.data.network.model.post.AllPostDto
+import com.ieum.domain.model.image.ImageSource
 import com.ieum.domain.model.post.Post
 import com.ieum.domain.model.post.PostDailyRequest
 import com.ieum.domain.model.post.PostType
@@ -19,11 +20,18 @@ class PostRepositoryImpl @Inject constructor(
 ) : PostRepository {
     override suspend fun postWellness(request: PostWellnessRequest): Int =
         postDataSource
-            .postWellness(request.asBody())
+            .postWellness(
+                body = request.asBody(),
+                fileList = request.imageList.map(ImageSource.Local::file)
+            )
             .id
 
     override suspend fun patchWellness(id: Int, request: PostWellnessRequest) {
-        postDataSource.patchWellness(id, request.asBody())
+        postDataSource.patchWellness(
+            id = id,
+            body = request.asBody(),
+            fileList = request.imageList.map(ImageSource.Local::file)
+        )
     }
 
     override suspend fun deleteWellness(id: Int) {
@@ -32,11 +40,18 @@ class PostRepositoryImpl @Inject constructor(
 
     override suspend fun postDaily(request: PostDailyRequest): Int =
         postDataSource
-            .postDaily(request.asBody())
+            .postDaily(
+                body = request.asBody(),
+                fileList = request.imageList.map(ImageSource.Local::file)
+            )
             .id
 
     override suspend fun patchDaily(id: Int, request: PostDailyRequest) {
-        postDataSource.patchDaily(id, request.asBody())
+        postDataSource.patchDaily(
+            id = id,
+            body = request.asBody(),
+            fileList = request.imageList.map(ImageSource.Local::file)
+        )
     }
 
     override suspend fun deleteDaily(id: Int) {

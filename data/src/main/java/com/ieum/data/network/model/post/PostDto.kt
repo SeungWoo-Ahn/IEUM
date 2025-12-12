@@ -5,13 +5,13 @@ import kotlinx.serialization.Serializable
 interface BasePostDto {
     val id: Int
     val type: String
-    val images: List<PostImageDto.ForResponse>?
+    val images: List<PostImageDto>?
     val createdAt: Int
     val updatedAt: Int
 }
 
 internal interface WellnessDto {
-    val diagnosis: String?
+    val diagnosis: List<String>?
     val mood: Int?
     val unusualSymptoms: String?
     val medicationTaken: Boolean?
@@ -30,7 +30,7 @@ data class AllPostDto(
     val userId: Int,
     val userNickname: String,
     override val type: String,
-    override val diagnosis: String? = null,
+    override val diagnosis: List<String>? = null,
     override val mood: Int? = null,
     override val unusualSymptoms: String? = null,
     override val medicationTaken: Boolean? = null,
@@ -38,7 +38,7 @@ data class AllPostDto(
     override val memo: String? = null,
     override val title: String? = null,
     override val content: String? = null,
-    override val images: List<PostImageDto.ForResponse>? = null,
+    override val images: List<PostImageDto>? = null,
     override val createdAt: Int,
     override val updatedAt: Int,
 ) : BasePostDto, WellnessDto, DailyDto
@@ -47,7 +47,7 @@ data class AllPostDto(
 data class MyPostDto(
     override val id: Int,
     override val type: String,
-    override val diagnosis: String? = null,
+    override val diagnosis: List<String>? = null,
     override val mood: Int? = null,
     override val unusualSymptoms: String? = null,
     override val medicationTaken: Boolean? = null,
@@ -55,7 +55,7 @@ data class MyPostDto(
     override val memo: String? = null,
     override val title: String? = null,
     override val content: String? = null,
-    override val images: List<PostImageDto.ForResponse>? = null,
+    override val images: List<PostImageDto>? = null,
     val shared: Boolean,
     override val createdAt: Int,
     override val updatedAt: Int,
@@ -65,7 +65,7 @@ data class MyPostDto(
 data class OtherPostDto(
     override val id: Int,
     override val type: String,
-    override val diagnosis: String? = null,
+    override val diagnosis: List<String>? = null,
     override val mood: Int? = null,
     override val unusualSymptoms: String? = null,
     override val medicationTaken: Boolean? = null,
@@ -73,7 +73,7 @@ data class OtherPostDto(
     override val memo: String? = null,
     override val title: String? = null,
     override val content: String? = null,
-    override val images: List<PostImageDto.ForResponse>? = null,
+    override val images: List<PostImageDto>? = null,
     override val createdAt: Int,
     override val updatedAt: Int,
 ) : BasePostDto, WellnessDto, DailyDto

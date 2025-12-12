@@ -27,6 +27,7 @@ import com.ieum.presentation.screen.component.PatchDiagnoseDialog
 import com.ieum.presentation.screen.component.PatchHospitalDialog
 import com.ieum.presentation.screen.component.PatchRadiationTherapyDialog
 import com.ieum.presentation.screen.component.PatchResidenceDialog
+import com.ieum.presentation.screen.component.PatchSurgeryDialog
 import com.ieum.presentation.screen.component.PostListArea
 import com.ieum.presentation.util.GlobalValueModel
 import kotlinx.coroutines.CoroutineScope
@@ -52,6 +53,7 @@ fun MyProfileRoute(
         onTabClick = viewModel::onTab,
         onPostType = viewModel::onPostType,
         patchDiagnose = viewModel::showPatchDiagnoseDialog,
+        patchSurgery = viewModel::showPatchSurgeryDialog,
         patchChemotherapy = viewModel::showPatchChemotherapyDialog,
         patchRadiationTherapy = viewModel::showPatchRadiationTherapyDialog,
         patchAgeGroup = viewModel::showPatchAgeGroupDialog,
@@ -66,6 +68,13 @@ fun MyProfileRoute(
     if (dialogState is MyProfileDialogState.ShowPatchDiagnoseDialog) {
         PatchDiagnoseDialog(
             scope = scope,
+            profile = dialogState.profile,
+            patch = dialogState.patch,
+            onDismissRequest = viewModel::dismissDialog,
+        )
+    }
+    if (dialogState is MyProfileDialogState.ShowPatchSurgeryDialog) {
+        PatchSurgeryDialog(
             profile = dialogState.profile,
             patch = dialogState.patch,
             onDismissRequest = viewModel::dismissDialog,
@@ -121,6 +130,7 @@ private fun MyProfileScreen(
     onTabClick: (MyProfileTab) -> Unit,
     onPostType: (PostTypeUiModel) -> Unit,
     patchDiagnose: (MyProfile) -> Unit,
+    patchSurgery: (MyProfile) -> Unit,
     patchChemotherapy: (MyProfile) -> Unit,
     patchRadiationTherapy: (MyProfile) -> Unit,
     patchAgeGroup: (MyProfile) -> Unit,
@@ -150,6 +160,7 @@ private fun MyProfileScreen(
                     is MyProfileUiState.Success -> MyProfileSection(
                         profile = uiState.profile.toUiModel(valueModel),
                         patchDiagnose = { patchDiagnose(uiState.profile) },
+                        patchSurgery = { patchSurgery(uiState.profile) },
                         patchChemotherapy = { patchChemotherapy(uiState.profile) },
                         patchRadiationTherapy = { patchRadiationTherapy(uiState.profile) },
                         patchAgeGroup = { patchAgeGroup(uiState.profile) },
