@@ -9,4 +9,8 @@ data class CalendarMonth(
     fun indexIn(years: IntRange): Int {
         return (year - years.first) * 12 + month - 1
     }
+
+    override fun toString(): String {
+        return "$year.$month"
+    }
 }
