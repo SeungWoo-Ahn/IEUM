@@ -56,6 +56,16 @@ fun CheckCircleIcon() {
 }
 
 @Composable
+fun CheckSquareIcon() {
+    Icon(
+        modifier = Modifier.size(32.dp),
+        painter = painterResource(R.drawable.ic_check_square),
+        tint = Color.Unspecified,
+        contentDescription = "ic-check-square",
+    )
+}
+
+@Composable
 fun CloseIcon() {
     Icon(
         modifier = Modifier.size(24.dp),
@@ -310,6 +320,15 @@ fun RightIcon(
         painter = painterResource(R.drawable.ic_right),
         tint = color,
         contentDescription = "ic-right",
+    )
+}
+
+@Composable
+fun DownIcon() {
+    Icon(
+        modifier = Modifier.size(24.dp),
+        painter = painterResource(R.drawable.ic_down),
+        contentDescription = "ic-down",
     )
 }
 
