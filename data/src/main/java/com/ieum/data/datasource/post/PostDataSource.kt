@@ -1,7 +1,9 @@
 package com.ieum.data.datasource.post
 
 import com.ieum.data.network.model.post.AllPostDto
+import com.ieum.data.network.model.post.GetCommentListResponse
 import com.ieum.data.network.model.post.GetPostListResponse
+import com.ieum.data.network.model.post.PostCommentRequestBody
 import com.ieum.data.network.model.post.PostDailyRequestBody
 import com.ieum.data.network.model.post.PostDailyResponse
 import com.ieum.data.network.model.post.PostWellnessRequestBody
@@ -38,4 +40,15 @@ interface PostDataSource {
     suspend fun likePost(id: Int, type: String)
 
     suspend fun unlikePost(id: Int, type: String)
+
+    suspend fun getCommentList(
+        page: Int,
+        size: Int,
+        postId: Int,
+        type: String,
+    ): GetCommentListResponse
+
+    suspend fun postComment(postId: Int, type: String, body: PostCommentRequestBody)
+
+    suspend fun deleteComment(postId: Int, type: String, commentId: Int)
 }

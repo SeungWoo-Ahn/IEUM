@@ -3,7 +3,9 @@ package com.ieum.data.datasource.post
 import com.ieum.data.network.di.IEUMNetwork
 import com.ieum.data.network.di.NetworkSource
 import com.ieum.data.network.model.post.AllPostDto
+import com.ieum.data.network.model.post.GetCommentListResponse
 import com.ieum.data.network.model.post.GetPostListResponse
+import com.ieum.data.network.model.post.PostCommentRequestBody
 import com.ieum.data.network.model.post.PostDailyRequestBody
 import com.ieum.data.network.model.post.PostDailyResponse
 import com.ieum.data.network.model.post.PostWellnessRequestBody
@@ -16,6 +18,7 @@ import io.ktor.client.request.forms.submitFormWithBinaryData
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
+import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType
 import io.ktor.http.Headers
@@ -154,5 +157,34 @@ class PostRemoteDataSource @Inject constructor(
 
     override suspend fun unlikePost(id: Int, type: String) {
         ktorClient.delete("api/v1/posts/${type}/${id}/like")
+    }
+
+    override suspend fun getCommentList(
+        page: Int,
+        size: Int,
+        postId: Int,
+        type: String
+    ): GetCommentListResponse =
+        ktorClient
+            .get("api/v1/posts/${type}/${postId}/comments")
+            .body<GetCommentListResponse>()
+
+    override suspend fun postComment(
+        postId: Int,
+        type: String,
+        body: PostCommentRequestBody
+    ) {
+        ktorClient
+            .post("api/v1/posts/${type}/${postId}/comments") {
+                setBody(body)
+            }
+    }
+
+    override suspend fun deleteComment(
+        postId: Int,
+        type: String,
+        commentId: Int
+    ) {
+        ktorClient.delete("api/v1/posts/${type}/${postId}/comments/${commentId}")
     }
 }
