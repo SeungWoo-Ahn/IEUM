@@ -1,17 +1,21 @@
 package com.ieum.data.mapper
 
 import com.ieum.data.network.model.post.AllPostDto
+import com.ieum.data.network.model.post.CommentDto
 import com.ieum.data.network.model.post.DietDto
 import com.ieum.data.network.model.post.MyPostDto
 import com.ieum.data.network.model.post.OtherPostDto
+import com.ieum.data.network.model.post.PostCommentRequestBody
 import com.ieum.data.network.model.post.PostDailyRequestBody
 import com.ieum.data.network.model.post.PostImageDto
 import com.ieum.data.network.model.post.PostWellnessRequestBody
 import com.ieum.domain.model.image.ImageSource
 import com.ieum.domain.model.post.AmountEaten
+import com.ieum.domain.model.post.Comment
 import com.ieum.domain.model.post.Diet
 import com.ieum.domain.model.post.Mood
 import com.ieum.domain.model.post.Post
+import com.ieum.domain.model.post.PostCommentRequest
 import com.ieum.domain.model.post.PostDailyRequest
 import com.ieum.domain.model.post.PostType
 import com.ieum.domain.model.post.PostUserInfo
@@ -139,3 +143,17 @@ fun OtherPostDto.toDomain(): Post =
         )
         else -> throw IllegalArgumentException("Unknown post type: $type")
     }
+
+fun CommentDto.toDomain(): Comment =
+    Comment(
+        id = id,
+        nickname = nickname,
+        content = content,
+        createdAt = createdAt,
+    )
+
+fun PostCommentRequest.asBody(): PostCommentRequestBody =
+    PostCommentRequestBody(
+        content = content,
+        parentId = parentId,
+    )
