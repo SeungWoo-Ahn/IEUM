@@ -6,6 +6,8 @@ interface BasePostDto {
     val id: Int
     val type: String
     val images: List<PostImageDto>?
+    val isLiked: Boolean
+    val likesCount: Int
     val createdAt: Int
     val updatedAt: Int
 }
@@ -39,6 +41,8 @@ data class AllPostDto(
     override val title: String? = null,
     override val content: String? = null,
     override val images: List<PostImageDto>? = null,
+    override val isLiked: Boolean,
+    override val likesCount: Int,
     override val createdAt: Int,
     override val updatedAt: Int,
 ) : BasePostDto, WellnessDto, DailyDto
@@ -57,6 +61,8 @@ data class MyPostDto(
     override val content: String? = null,
     override val images: List<PostImageDto>? = null,
     val shared: Boolean,
+    override val isLiked: Boolean,
+    override val likesCount: Int,
     override val createdAt: Int,
     override val updatedAt: Int,
 ) : BasePostDto, WellnessDto, DailyDto
@@ -74,6 +80,8 @@ data class OtherPostDto(
     override val title: String? = null,
     override val content: String? = null,
     override val images: List<PostImageDto>? = null,
+    override val isLiked: Boolean,
+    override val likesCount: Int,
     override val createdAt: Int,
     override val updatedAt: Int,
 ) : BasePostDto, WellnessDto, DailyDto

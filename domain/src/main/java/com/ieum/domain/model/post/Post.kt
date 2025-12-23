@@ -7,6 +7,9 @@ sealed class Post {
     abstract val userInfo: PostUserInfo?
     abstract val imageList: List<ImageSource.Remote>?
     abstract val shared: Boolean
+
+    abstract val isLiked: Boolean
+
     abstract val createdAt: Int
     abstract val updatedAt: Int
 
@@ -20,6 +23,7 @@ sealed class Post {
         val memo: String?,
         override val imageList: List<ImageSource.Remote>?,
         override val shared: Boolean,
+        override val isLiked: Boolean,
         override val createdAt: Int,
         override val updatedAt: Int,
     ) : Post()
@@ -31,6 +35,7 @@ sealed class Post {
         val content: String,
         override val imageList: List<ImageSource.Remote>?,
         override val shared: Boolean,
+        override val isLiked: Boolean,
         override val createdAt: Int,
         override val updatedAt: Int,
     ) : Post()
