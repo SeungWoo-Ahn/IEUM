@@ -15,6 +15,7 @@ import io.ktor.client.request.forms.formData
 import io.ktor.client.request.forms.submitFormWithBinaryData
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
+import io.ktor.client.request.post
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType
 import io.ktor.http.Headers
@@ -146,4 +147,12 @@ class PostRemoteDataSource @Inject constructor(
         ktorClient
             .get("api/v1/posts/${type}/${id}")
             .body<AllPostDto>()
+
+    override suspend fun likePost(id: Int, type: String) {
+        ktorClient.post("api/v1/posts/${type}/${id}/like")
+    }
+
+    override suspend fun unlikePost(id: Int, type: String) {
+        ktorClient.delete("api/v1/posts/${type}/${id}/like")
+    }
 }
