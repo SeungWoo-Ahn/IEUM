@@ -68,4 +68,10 @@ class PostRepositoryImpl @Inject constructor(
         postDataSource
             .getPost(id, type.key)
             .toDomain()
+
+    override suspend fun likePost(id: Int, type: PostType) =
+        postDataSource.likePost(id, type.key)
+
+    override suspend fun unlikePost(id: Int, type: PostType) =
+        postDataSource.unlikePost(id, type.key)
 }
