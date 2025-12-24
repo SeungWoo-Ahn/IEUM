@@ -94,6 +94,7 @@ fun Post.toUiModel(): PostUiModel =
             memo = memo,
             imageList = imageList,
             shared = shared,
+            isLiked = isLiked,
             createdAt = formatDate(DateFormatStrategy.FullDate(createdAt))
         )
         is Post.Daily -> PostUiModel.Daily(
@@ -103,6 +104,7 @@ fun Post.toUiModel(): PostUiModel =
             content = content,
             imageList = imageList,
             shared = shared,
+            isLiked = isLiked,
             createdAt = formatDate(DateFormatStrategy.FullDate(createdAt))
         )
     }
