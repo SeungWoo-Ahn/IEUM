@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,6 +22,8 @@ import com.ieum.presentation.screen.component.AddPostDialog
 import com.ieum.presentation.screen.component.DiagnoseFilterArea
 import com.ieum.presentation.screen.component.PostListArea
 import com.ieum.presentation.screen.component.WriteFAB
+import com.ieum.presentation.util.GlobalEvent
+import com.ieum.presentation.util.GlobalEventBus
 
 @Composable
 fun FeedRoute(
@@ -32,6 +35,14 @@ fun FeedRoute(
     val uiState = viewModel.uiState
     val selectedFilter by viewModel.selectedFilter.collectAsStateWithLifecycle()
     val postList = viewModel.postListFlow.collectAsLazyPagingItems()
+
+    LaunchedEffect(Unit) {
+        GlobalEventBus.eventFlow.collect {
+            when (it) {
+                GlobalEvent.AddMyPost -> postList.refresh()
+            }
+        }
+    }
 
     FeedScreen(
         modifier = modifier,

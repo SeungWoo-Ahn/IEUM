@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -29,6 +30,8 @@ import com.ieum.presentation.screen.component.PatchRadiationTherapyDialog
 import com.ieum.presentation.screen.component.PatchResidenceDialog
 import com.ieum.presentation.screen.component.PatchSurgeryDialog
 import com.ieum.presentation.screen.component.PostListArea
+import com.ieum.presentation.util.GlobalEvent
+import com.ieum.presentation.util.GlobalEventBus
 import com.ieum.presentation.util.GlobalValueModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -172,6 +175,15 @@ private fun MyProfileScreen(
             MyProfileTab.POST_LIST -> {
                 val postType by postTypeFlow.collectAsStateWithLifecycle()
                 val postList = postListFlow.collectAsLazyPagingItems()
+
+                LaunchedEffect(Unit) {
+                    GlobalEventBus.eventFlow.collect {
+                        when (it) {
+                            GlobalEvent.AddMyPost -> postList.refresh()
+                        }
+                    }
+                }
+
                 Column(
                     modifier = Modifier.fillMaxWidth()
                 ) {
