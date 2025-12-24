@@ -147,7 +147,7 @@ fun PostListArea(
     postList: LazyPagingItems<PostUiModel>,
     onNickname: ((Int) -> Unit)? = null,
     onMenu: (Int) -> Unit,
-    onLike: (Int) -> Unit,
+    onLike: (PostUiModel) -> Unit,
     onComment: (Int) -> Unit,
 ) {
     when (postList.loadState.refresh) {
@@ -172,7 +172,7 @@ fun PostListArea(
                         post = post,
                         onNickname = onNickname,
                         onMenu = { onMenu(post.id) },
-                        onLike = { onLike(post.id) },
+                        onLike = { onLike(post) },
                         onComment = { onComment(post.id) }
                     )
                 }

@@ -44,6 +44,14 @@ fun FeedRoute(
         }
     }
 
+    LaunchedEffect(Unit) {
+        viewModel.event.collect {
+            when (it) {
+                FeedEvent.TogglePostLike -> postList.refresh()
+            }
+        }
+    }
+
     FeedScreen(
         modifier = modifier,
         selectedFilter = selectedFilter,
@@ -51,7 +59,7 @@ fun FeedRoute(
         onFilter = viewModel::onFilter,
         onNickname = {},
         onMenu = {},
-        onLike = {},
+        onLike = viewModel::togglePostLike,
         onComment = {},
         showAddPostDialog = viewModel::showAddPostDialog
     )
@@ -72,7 +80,7 @@ private fun FeedScreen(
     onFilter: (DiagnoseFilterUiModel) -> Unit,
     onNickname: (Int) -> Unit,
     onMenu: (Int) -> Unit,
-    onLike: (Int) -> Unit,
+    onLike: (PostUiModel) -> Unit,
     onComment: (Int) -> Unit,
     showAddPostDialog: () -> Unit,
 ) {

@@ -12,25 +12,33 @@ import androidx.paging.cachedIn
 import androidx.paging.map
 import com.ieum.domain.model.post.Post
 import com.ieum.domain.usecase.post.GetAllPostListUseCase
+import com.ieum.domain.usecase.post.TogglePostLikeUseCase
 import com.ieum.presentation.mapper.toDomain
 import com.ieum.presentation.mapper.toUiModel
 import com.ieum.presentation.model.post.DiagnoseFilterUiModel
 import com.ieum.presentation.model.post.PostUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class FeedViewModel @Inject constructor(
     private val getAllPostListUseCase: GetAllPostListUseCase,
+    private val togglePostLikeUseCase: TogglePostLikeUseCase,
 ) : ViewModel() {
     var uiState by mutableStateOf<FeedUiState>(FeedUiState.Idle)
         private set
+
+    private val _event = Channel<FeedEvent>()
+    val event: Flow<FeedEvent> = _event.receiveAsFlow()
 
     private val _selectedFilter = MutableStateFlow(DiagnoseFilterUiModel.ENTIRE)
     val selectedFilter: StateFlow<DiagnoseFilterUiModel> get() = _selectedFilter
@@ -62,5 +70,14 @@ class FeedViewModel @Inject constructor(
 
     fun onFilter(filter: DiagnoseFilterUiModel) {
         _selectedFilter.update { filter }
+    }
+
+    fun togglePostLike(post: PostUiModel) {
+        viewModelScope.launch {
+            togglePostLikeUseCase(id = post.id, type = post.type, isLiked = post.isLiked)
+                .onSuccess {
+                    _event.send(FeedEvent.TogglePostLike)
+                }
+        }
     }
 }
