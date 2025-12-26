@@ -332,6 +332,15 @@ fun HeartIcon() {
 }
 
 @Composable
+fun RedHeartIcon() {
+    Icon(
+        modifier = Modifier.size(28.dp),
+        painter = painterResource(R.drawable.ic_heart_red),
+        contentDescription = "ic-heart-red",
+    )
+}
+
+@Composable
 fun MenuIcon() {
     Icon(
         modifier = Modifier.size(24.dp),

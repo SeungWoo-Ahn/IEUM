@@ -42,6 +42,7 @@ import com.ieum.design_system.icon.MedicineIcon
 import com.ieum.design_system.icon.MemoIcon
 import com.ieum.design_system.icon.MenuIcon
 import com.ieum.design_system.icon.PenIcon
+import com.ieum.design_system.icon.RedHeartIcon
 import com.ieum.design_system.icon.ThunderIcon
 import com.ieum.design_system.progressbar.IEUMLoadingComponent
 import com.ieum.design_system.theme.Slate100
@@ -205,6 +206,7 @@ private fun PostItem(
             PostItemImageList(imageList = it)
         }
         PostItemIconList(
+            isLiked = post.isLiked,
             onLike = onLike,
             onComment = onComment,
         )
@@ -299,6 +301,7 @@ private fun PostItemImageList(
 @Composable
 private fun PostItemIconList(
     modifier: Modifier = Modifier,
+    isLiked: Boolean,
     onLike: () -> Unit,
     onComment: () -> Unit,
 ) {
@@ -312,7 +315,11 @@ private fun PostItemIconList(
         Box(
             modifier = Modifier.noRippleClickable(onClick = onLike)
         ) {
-            HeartIcon()
+            if (isLiked) {
+                RedHeartIcon()
+            } else {
+                HeartIcon()
+            }
         }
         Box(
             modifier = Modifier.noRippleClickable(onClick = onComment)
