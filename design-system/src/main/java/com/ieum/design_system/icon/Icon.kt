@@ -336,6 +336,7 @@ fun RedHeartIcon() {
     Icon(
         modifier = Modifier.size(28.dp),
         painter = painterResource(R.drawable.ic_heart_red),
+        tint = Color.Unspecified,
         contentDescription = "ic-heart-red",
     )
 }
