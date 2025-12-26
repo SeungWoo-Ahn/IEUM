@@ -52,6 +52,7 @@ fun MyProfileRoute(
         uiState = viewModel.uiState,
         valueModel = viewModel.valueModel,
         postTypeFlow = viewModel.postType,
+        event = viewModel.event,
         postListFlow = viewModel.postListFlow,
         onTabClick = viewModel::onTab,
         onPostType = viewModel::onPostType,
@@ -129,6 +130,7 @@ private fun MyProfileScreen(
     uiState: MyProfileUiState,
     valueModel: GlobalValueModel,
     postTypeFlow: StateFlow<PostTypeUiModel>,
+    event: Flow<MyProfileEvent>,
     postListFlow: Flow<PagingData<PostUiModel>>,
     onTabClick: (MyProfileTab) -> Unit,
     onPostType: (PostTypeUiModel) -> Unit,
@@ -180,6 +182,14 @@ private fun MyProfileScreen(
                     GlobalEventBus.eventFlow.collect {
                         when (it) {
                             GlobalEvent.AddMyPost -> postList.refresh()
+                        }
+                    }
+                }
+
+                LaunchedEffect(Unit) {
+                    event.collect {
+                        when (it) {
+                            MyProfileEvent.TogglePostLike -> postList.refresh()
                         }
                     }
                 }
