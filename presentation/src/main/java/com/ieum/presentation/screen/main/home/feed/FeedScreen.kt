@@ -30,6 +30,7 @@ fun FeedRoute(
     modifier: Modifier = Modifier,
     movePostWellness: () -> Unit,
     movePostDaily: () -> Unit,
+    moveOthersProfile: (Int) -> Unit,
     viewModel: FeedViewModel = hiltViewModel(),
 ) {
     val uiState = viewModel.uiState
@@ -57,7 +58,7 @@ fun FeedRoute(
         selectedFilter = selectedFilter,
         postList = postList,
         onFilter = viewModel::onFilter,
-        onNickname = {},
+        onNickname = moveOthersProfile,
         onMenu = {},
         onLike = viewModel::togglePostLike,
         onComment = {},

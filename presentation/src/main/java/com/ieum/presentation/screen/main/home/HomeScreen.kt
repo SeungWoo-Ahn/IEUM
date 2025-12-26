@@ -19,6 +19,7 @@ fun HomeRoute(
     movePostWellness: () -> Unit,
     movePostDaily: () -> Unit,
     moveSetting: () -> Unit,
+    moveOthersProfile: (Int) -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     HomeScreen(
@@ -29,6 +30,7 @@ fun HomeRoute(
         movePostWellness = movePostWellness,
         movePostDaily = movePostDaily,
         moveSetting = moveSetting,
+        moveOthersProfile = moveOthersProfile,
     )
 }
 
@@ -41,6 +43,7 @@ private fun HomeScreen(
     movePostWellness: () -> Unit,
     movePostDaily: () -> Unit,
     moveSetting: () -> Unit,
+    moveOthersProfile: (Int) -> Unit,
 ) {
     Box(
         modifier = modifier.fillMaxSize()
@@ -49,6 +52,7 @@ private fun HomeScreen(
             BottomNavigationItem.Feed -> FeedRoute(
                 movePostWellness = movePostWellness,
                 movePostDaily = movePostDaily,
+                moveOthersProfile = moveOthersProfile
             )
             BottomNavigationItem.Calendar -> {}
             BottomNavigationItem.Profile -> MyProfileRoute(
