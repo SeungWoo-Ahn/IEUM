@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.PagingData
@@ -27,6 +28,7 @@ fun OthersProfileRoute(
         modifier = modifier,
         uiState = viewModel.uiState,
         currentTab = viewModel.currentTab,
+        event = viewModel.event,
         postListFlow = viewModel.postListFlow,
         onTabClick = viewModel::onTab,
         onMenu = {},
@@ -41,10 +43,11 @@ private fun OthersProfileScreen(
     modifier: Modifier,
     uiState: OthersProfileUiState,
     currentTab: OthersProfileTab,
+    event: Flow<OtherProfileEvent>,
     postListFlow: Flow<PagingData<PostUiModel>>,
     onTabClick: (OthersProfileTab) -> Unit,
     onMenu: (Int) -> Unit,
-    onLike: (Int) -> Unit,
+    onLike: (PostUiModel) -> Unit,
     onComment: (Int) -> Unit,
     onBack: () -> Unit,
 ) {
@@ -62,6 +65,15 @@ private fun OthersProfileScreen(
                     OthersProfileTab.PROFILE -> OthersProfileSection(profile = uiState.profile)
                     OthersProfileTab.POST_LIST -> {
                         val postList = postListFlow.collectAsLazyPagingItems()
+
+                        LaunchedEffect(Unit) {
+                            event.collect {
+                                when (it) {
+                                    OtherProfileEvent.TogglePostLike -> postList.refresh()
+                                }
+                            }
+                        }
+
                         PostListArea(
                             postList = postList,
                             onMenu = onMenu,
