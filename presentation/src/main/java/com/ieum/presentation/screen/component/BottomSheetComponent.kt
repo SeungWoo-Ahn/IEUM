@@ -2,11 +2,14 @@ package com.ieum.presentation.screen.component
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SheetState
@@ -16,13 +19,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import com.ieum.design_system.bottomsheet.IEUMBottomSheet
 import com.ieum.design_system.button.DarkButton
+import com.ieum.design_system.icon.MenuIcon
+import com.ieum.design_system.progressbar.IEUMLoadingComponent
 import com.ieum.design_system.selector.SingleSelectorState
 import com.ieum.design_system.spacer.IEUMSpacer
 import com.ieum.design_system.textfield.MultiLineTextField
@@ -33,9 +45,12 @@ import com.ieum.design_system.theme.screenPadding
 import com.ieum.design_system.util.noRippleClickable
 import com.ieum.presentation.R
 import com.ieum.presentation.model.post.AmountEatenUiModel
+import com.ieum.presentation.model.post.CommentUiModel
 import com.ieum.presentation.model.post.DietUiModel
 import com.ieum.presentation.model.user.CancerDiagnoseUiModel
 import com.ieum.presentation.model.user.CancerStageUiModel
+import com.ieum.presentation.state.CommentBottomSheetEvent
+import com.ieum.presentation.state.CommentBottomSheetState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -308,5 +323,112 @@ fun CancerStageSheet(
                 }
             }
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CommentListSheet(
+    modifier: Modifier = Modifier,
+    state: CommentBottomSheetState.Show,
+    onDismissRequest: () -> Unit,
+) {
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val commentList = state.commentList.collectAsLazyPagingItems()
+
+    LaunchedEffect(Unit) {
+        state.event.collect {
+            when (it) {
+                CommentBottomSheetEvent.RefreshCommentList -> commentList.refresh()
+            }
+        }
+    }
+
+    IEUMBottomSheet(
+        sheetState = sheetState,
+        onDismissRequest = onDismissRequest,
+    ) {
+        Column(
+            modifier = modifier
+                .fillMaxWidth()
+                .height(600.dp),
+        ) {
+            CommentListArea(
+                modifier = Modifier.weight(1f),
+                commentList = commentList,
+            )
+        }
+    }
+}
+
+@Composable
+private fun CommentListArea(
+    modifier: Modifier = Modifier,
+    commentList: LazyPagingItems<CommentUiModel>,
+) {
+    Box(
+        modifier = modifier.fillMaxWidth(),
+        contentAlignment = Alignment.Center,
+    ) {
+        when (commentList.loadState.refresh) {
+            LoadState.Loading -> IEUMLoadingComponent()
+            is LoadState.Error -> ErrorComponent(onRetry = commentList::retry)
+            is LoadState.NotLoading -> {
+                if (commentList.itemSnapshotList.isEmpty()) {
+                    Text(
+                        text = stringResource(R.string.empty_comment_description),
+                        style = MaterialTheme.typography.bodyMedium,
+                    )
+                } else {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentPadding = PaddingValues(all = 28.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        items(
+                            count = commentList.itemCount,
+                            key = commentList.itemKey { it.id }
+                        ) {
+                            commentList[it]?.let { comment ->
+                                CommentItem(comment = comment)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun CommentItem(
+    modifier: Modifier = Modifier,
+    comment: CommentUiModel,
+) {
+    var showMenu by remember { mutableStateOf(false) }
+
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                text = comment.nickname,
+                style = MaterialTheme.typography.titleMedium,
+            )
+            Box(
+                modifier = Modifier.noRippleClickable { showMenu = true }
+            ) {
+                MenuIcon()
+            }
+        }
+        Text(
+            text = comment.content,
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.W400,
+        )
     }
 }

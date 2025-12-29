@@ -131,4 +131,6 @@
     <string name="add_surgery">수술 이력 추가</string>
     <string name="add_chemotherapy">항암치료 이력 추가</string>
     <string name="add_radiation_therapy">방사선치료 이력 추가</string>
+
+    <string name="empty_comment_description">첫 댓글을 남겨보세요</string>
 </resources>
