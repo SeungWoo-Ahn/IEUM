@@ -143,7 +143,7 @@ private fun MyProfileScreen(
     patchHospitalArea: (MyProfile) -> Unit,
     onMenu: (Int) -> Unit,
     onLike: (PostUiModel) -> Unit,
-    onComment: (Int) -> Unit,
+    onComment: (PostUiModel) -> Unit,
     moveSetting: () -> Unit,
     getMyProfile: () -> Unit,
 ) {

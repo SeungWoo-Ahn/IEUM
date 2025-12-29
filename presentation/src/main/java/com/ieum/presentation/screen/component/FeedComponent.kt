@@ -149,7 +149,7 @@ fun PostListArea(
     onNickname: ((Int) -> Unit)? = null,
     onMenu: (Int) -> Unit,
     onLike: (PostUiModel) -> Unit,
-    onComment: (Int) -> Unit,
+    onComment: (PostUiModel) -> Unit,
 ) {
     when (postList.loadState.refresh) {
         LoadState.Loading -> IEUMLoadingComponent()
@@ -174,7 +174,7 @@ fun PostListArea(
                         onNickname = onNickname,
                         onMenu = { onMenu(post.id) },
                         onLike = { onLike(post) },
-                        onComment = { onComment(post.id) }
+                        onComment = { onComment(post) }
                     )
                 }
             }

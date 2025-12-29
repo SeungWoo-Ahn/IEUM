@@ -48,7 +48,7 @@ private fun OthersProfileScreen(
     onTabClick: (OthersProfileTab) -> Unit,
     onMenu: (Int) -> Unit,
     onLike: (PostUiModel) -> Unit,
-    onComment: (Int) -> Unit,
+    onComment: (PostUiModel) -> Unit,
     onBack: () -> Unit,
 ) {
     Column(

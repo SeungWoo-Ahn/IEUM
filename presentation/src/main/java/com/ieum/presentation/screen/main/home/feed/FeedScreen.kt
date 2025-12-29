@@ -19,9 +19,11 @@ import com.ieum.design_system.topbar.FeedTopBar
 import com.ieum.presentation.model.post.DiagnoseFilterUiModel
 import com.ieum.presentation.model.post.PostUiModel
 import com.ieum.presentation.screen.component.AddPostDialog
+import com.ieum.presentation.screen.component.CommentListSheet
 import com.ieum.presentation.screen.component.DiagnoseFilterArea
 import com.ieum.presentation.screen.component.PostListArea
 import com.ieum.presentation.screen.component.WriteFAB
+import com.ieum.presentation.state.CommentBottomSheetState
 import com.ieum.presentation.util.GlobalEvent
 import com.ieum.presentation.util.GlobalEventBus
 
@@ -36,6 +38,7 @@ fun FeedRoute(
     val uiState = viewModel.uiState
     val selectedFilter by viewModel.selectedFilter.collectAsStateWithLifecycle()
     val postList = viewModel.postListFlow.collectAsLazyPagingItems()
+    val commentBottomSheetState = viewModel.commentState.bottomSheetState
 
     LaunchedEffect(Unit) {
         GlobalEventBus.eventFlow.collect {
@@ -61,7 +64,7 @@ fun FeedRoute(
         onNickname = moveOthersProfile,
         onMenu = {},
         onLike = viewModel::togglePostLike,
-        onComment = {},
+        onComment = viewModel::showCommentSheet,
         showAddPostDialog = viewModel::showAddPostDialog
     )
     if (uiState is FeedUiState.ShowAddPostDialog) {
@@ -69,6 +72,12 @@ fun FeedRoute(
             movePostWellness = movePostWellness,
             movePostDaily = movePostDaily,
             onDismissRequest = viewModel::resetUiState,
+        )
+    }
+    if (commentBottomSheetState is CommentBottomSheetState.Show) {
+        CommentListSheet(
+            state = commentBottomSheetState,
+            onDismissRequest = viewModel.commentState::dismiss
         )
     }
 }
@@ -82,7 +91,7 @@ private fun FeedScreen(
     onNickname: (Int) -> Unit,
     onMenu: (Int) -> Unit,
     onLike: (PostUiModel) -> Unit,
-    onComment: (Int) -> Unit,
+    onComment: (PostUiModel) -> Unit,
     showAddPostDialog: () -> Unit,
 ) {
     Box(
