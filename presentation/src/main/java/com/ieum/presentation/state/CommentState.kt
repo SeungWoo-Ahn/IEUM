@@ -39,10 +39,6 @@ sealed class CommentBottomSheetState {
         private val postCommentUseCase: PostCommentUseCase,
         private val deleteCommentUseCase: DeleteCommentUseCase,
     ) : CommentBottomSheetState() {
-        sealed class CommentBottomSheetEvent {
-            data object RefreshCommentList : CommentBottomSheetEvent()
-        }
-
         private val _event = Channel<CommentBottomSheetEvent>()
         val event: Flow<CommentBottomSheetEvent> = _event.receiveAsFlow()
 
@@ -100,6 +96,10 @@ sealed class CommentBottomSheetState {
             }
         }
     }
+}
+
+sealed class CommentBottomSheetEvent {
+    data object RefreshCommentList : CommentBottomSheetEvent()
 }
 
 class CommentState @Inject constructor(

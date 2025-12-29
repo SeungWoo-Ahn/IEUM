@@ -16,6 +16,8 @@ interface ITextFieldState {
 
 interface IMaxLengthTextFieldState : ITextFieldState {
     val maxLength: Int
+
+    fun resetText()
 }
 
 class TextFieldState : ITextFieldState {
@@ -49,6 +51,10 @@ open class MaxLengthTextFieldState(
 
     override fun getTrimmedText(): String {
         return typedText.trim()
+    }
+
+    override fun resetText() {
+        _typedText = ""
     }
 
     override fun validate(): Boolean {
