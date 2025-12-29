@@ -26,6 +26,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 sealed class CommentBottomSheetState {
@@ -61,6 +62,10 @@ sealed class CommentBottomSheetState {
                     pagingData.map(Comment::toUiModel)
                 }
                 .cachedIn(scope)
+
+        init {
+            Timber.i("commentState 인스턴스 생성")
+        }
 
         fun postComment() {
             scope.launch {
@@ -147,8 +152,8 @@ private class CommentPagerSource(
                 postId = postId,
                 type = type,
             ).getOrThrow()
-            val prevKey = if (page == 1) null else page -1
-            val nextKey = if (response.isEmpty()) null else page + 1
+            val prevKey = if (page == 1) null else page - 1
+            val nextKey = if (response.size < params.loadSize) null else page + 1
             LoadResult.Page(response, prevKey, nextKey)
         } catch (e: Exception) {
             LoadResult.Error(e)
