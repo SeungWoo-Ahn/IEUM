@@ -17,10 +17,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -31,7 +27,6 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
-import com.ieum.design_system.icon.MenuIcon
 import com.ieum.design_system.icon.UpIcon
 import com.ieum.design_system.progressbar.IEUMLoadingComponent
 import com.ieum.design_system.textfield.IEUMTextField
@@ -41,7 +36,6 @@ import com.ieum.design_system.theme.Lime400
 import com.ieum.design_system.theme.Lime500
 import com.ieum.design_system.theme.Slate300
 import com.ieum.design_system.theme.screenPadding
-import com.ieum.design_system.util.noRippleClickable
 import com.ieum.presentation.R
 import com.ieum.presentation.model.post.CommentUiModel
 
@@ -49,6 +43,7 @@ import com.ieum.presentation.model.post.CommentUiModel
 fun CommentListArea(
     modifier: Modifier = Modifier,
     commentList: LazyPagingItems<CommentUiModel>,
+    onMenu: (Int, DropDownMenu) -> Unit,
 ) {
     Box(
         modifier = modifier
@@ -72,7 +67,10 @@ fun CommentListArea(
                             key = commentList.itemKey { it.id }
                         ) {
                             commentList[it]?.let { comment ->
-                                CommentItem(comment = comment)
+                                CommentItem(
+                                    comment = comment,
+                                    onMenu = onMenu,
+                                )
                             }
                         }
                     }
@@ -101,9 +99,8 @@ private fun EmptyComment(
 private fun CommentItem(
     modifier: Modifier = Modifier,
     comment: CommentUiModel,
+    onMenu: (Int, DropDownMenu) -> Unit,
 ) {
-    var showMenu by remember { mutableStateOf(false) }
-
     Column(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -117,11 +114,10 @@ private fun CommentItem(
                 text = comment.nickname,
                 style = MaterialTheme.typography.titleMedium,
             )
-            Box(
-                modifier = Modifier.noRippleClickable { showMenu = true }
-            ) {
-                MenuIcon()
-            }
+            IEUMDropDownMenu(
+                isMine = comment.isMine,
+                onMenu = { onMenu(comment.id, it) },
+            )
         }
         Text(
             text = comment.content,

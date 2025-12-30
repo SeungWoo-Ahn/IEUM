@@ -4,4 +4,5 @@ data class CommentUiModel(
     val id: Int,
     val nickname: String,
     val content: String,
+    val isMine: Boolean = true,
 )

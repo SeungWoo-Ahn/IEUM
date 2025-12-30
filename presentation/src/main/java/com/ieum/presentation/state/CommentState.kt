@@ -20,13 +20,13 @@ import com.ieum.domain.usecase.post.PostCommentUseCase
 import com.ieum.presentation.mapper.toUiModel
 import com.ieum.presentation.model.post.CommentUiModel
 import com.ieum.presentation.model.post.PostUiModel
+import com.ieum.presentation.screen.component.DropDownMenu
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 sealed class CommentBottomSheetState {
@@ -63,10 +63,6 @@ sealed class CommentBottomSheetState {
                 }
                 .cachedIn(scope)
 
-        init {
-            Timber.i("commentState 인스턴스 생성")
-        }
-
         fun postComment() {
             scope.launch {
                 val request = PostCommentRequest(
@@ -87,7 +83,14 @@ sealed class CommentBottomSheetState {
             }
         }
 
-        fun deleteComment(commentId: Int) {
+        fun onMenu(commendId: Int, selectedMenu: DropDownMenu) {
+            when (selectedMenu) {
+                DropDownMenu.REPORT -> {}
+                DropDownMenu.DELETE -> deleteComment(commendId)
+            }
+        }
+
+        private fun deleteComment(commentId: Int) {
             scope.launch {
                 isLoading = true
                 deleteCommentUseCase(

@@ -352,7 +352,10 @@ fun CommentListSheet(
             Box(
                 modifier = Modifier.weight(1f)
             ) {
-                CommentListArea(commentList = commentList)
+                CommentListArea(
+                    commentList = commentList,
+                    onMenu = state::onMenu
+                )
             }
             Box(
                 modifier = Modifier
