@@ -314,6 +314,15 @@ fun RightIcon(
 }
 
 @Composable
+fun UpIcon() {
+    Icon(
+        modifier = Modifier.size(24.dp),
+        painter = painterResource(R.drawable.ic_arrow_up),
+        contentDescription = "ic-arrow-up"
+    )
+}
+
+@Composable
 fun CommentIcon() {
     Icon(
         modifier = Modifier.size(28.dp),
