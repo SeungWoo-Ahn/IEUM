@@ -4,16 +4,14 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
@@ -22,38 +20,24 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.paging.LoadState
-import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.itemKey
 import com.ieum.design_system.bottomsheet.IEUMBottomSheet
 import com.ieum.design_system.button.DarkButton
-import com.ieum.design_system.icon.MenuIcon
-import com.ieum.design_system.progressbar.IEUMLoadingComponent
 import com.ieum.design_system.selector.SingleSelectorState
 import com.ieum.design_system.spacer.IEUMSpacer
-import com.ieum.design_system.textfield.IEUMTextField
-import com.ieum.design_system.textfield.IMaxLengthTextFieldState
 import com.ieum.design_system.textfield.MultiLineTextField
 import com.ieum.design_system.textfield.TextFieldState
-import com.ieum.design_system.theme.Gray300
 import com.ieum.design_system.theme.Lime500
 import com.ieum.design_system.theme.Slate200
 import com.ieum.design_system.theme.screenPadding
 import com.ieum.design_system.util.noRippleClickable
 import com.ieum.presentation.R
 import com.ieum.presentation.model.post.AmountEatenUiModel
-import com.ieum.presentation.model.post.CommentUiModel
 import com.ieum.presentation.model.post.DietUiModel
 import com.ieum.presentation.model.user.CancerDiagnoseUiModel
 import com.ieum.presentation.model.user.CancerStageUiModel
@@ -363,133 +347,25 @@ fun CommentListSheet(
         Column(
             modifier = modifier
                 .fillMaxWidth()
-                .height(600.dp),
+                .fillMaxHeight(fraction = 0.6f)
         ) {
-            CommentListArea(
-                modifier = Modifier.weight(1f),
-                commentList = commentList,
-            )
-            TypeCommentArea(
-                state = state.typedCommentState,
-                onSend = {
-                    if (commentPostEnabled) state.postComment()
-                }
-            )
-        }
-    }
-}
-
-@Composable
-private fun CommentListArea(
-    modifier: Modifier = Modifier,
-    commentList: LazyPagingItems<CommentUiModel>,
-) {
-    when (commentList.loadState.refresh) {
-        LoadState.Loading -> IEUMLoadingComponent(modifier = modifier)
-        is LoadState.Error -> ErrorComponent(modifier = modifier, onRetry = commentList::retry)
-        is LoadState.NotLoading -> {
-            if (commentList.itemSnapshotList.isEmpty()) {
-                EmptyComment()
-            } else {
-                LazyColumn(
-                    modifier = modifier.fillMaxWidth(),
-                    contentPadding = PaddingValues(all = 28.dp),
-                    verticalArrangement = Arrangement.spacedBy(20.dp),
-                ) {
-                    items(
-                        count = commentList.itemCount,
-                        key = commentList.itemKey { it.id }
-                    ) {
-                        commentList[it]?.let { comment ->
-                            CommentItem(comment = comment)
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun EmptyComment(
-    modifier: Modifier = Modifier,
-) {
-    Box(
-        modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center,
-    ) {
-        Text(
-            text = stringResource(R.string.empty_comment_description),
-            style = MaterialTheme.typography.bodyMedium,
-        )
-    }
-}
-
-@Composable
-private fun CommentItem(
-    modifier: Modifier = Modifier,
-    comment: CommentUiModel,
-) {
-    var showMenu by remember { mutableStateOf(false) }
-
-    Column(
-        modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                text = comment.nickname,
-                style = MaterialTheme.typography.titleMedium,
-            )
             Box(
-                modifier = Modifier.noRippleClickable { showMenu = true }
+                modifier = Modifier.weight(1f)
             ) {
-                MenuIcon()
+                CommentListArea(commentList = commentList)
             }
-        }
-        Text(
-            text = comment.content,
-            style = MaterialTheme.typography.bodyMedium,
-            fontWeight = FontWeight.W400,
-        )
-    }
-}
-
-@Composable
-private fun TypeCommentArea(
-    modifier: Modifier = Modifier,
-    state: IMaxLengthTextFieldState,
-    onSend: () -> Unit,
-) {
-    Column(
-        modifier = modifier.fillMaxWidth()
-    ) {
-        HorizontalDivider(
-            modifier = Modifier.fillMaxWidth(),
-            thickness = 1.dp,
-            color = Gray300,
-        )
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(all = screenPadding),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            IEUMTextField(
-                state = state,
-                placeHolder = stringResource(R.string.comment_placeholder),
-                singleLine = false,
-                textStyle = MaterialTheme.typography.titleLarge,
-                innerPadding = PaddingValues(horizontal = 18.dp, vertical = 10.dp),
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Send,
-                keyboardActions = KeyboardActions(onSend = { onSend() })
-            )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .imePadding()
+                    .navigationBarsPadding()
+            ) {
+                TypeCommentArea(
+                    state = state.typedCommentState,
+                    postEnabled = commentPostEnabled,
+                    onPost = state::postComment,
+                )
+            }
         }
     }
 }
