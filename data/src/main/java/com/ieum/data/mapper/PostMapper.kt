@@ -67,6 +67,7 @@ fun AllPostDto.toDomain(): Post =
             imageList = images?.map(PostImageDto::toDomain),
             shared = true,
             isLiked = isLiked,
+            isMine = false,
             createdAt = createdAt,
             updatedAt = updatedAt,
         )
@@ -78,6 +79,7 @@ fun AllPostDto.toDomain(): Post =
             imageList = images?.map(PostImageDto::toDomain),
             shared = true,
             isLiked = isLiked,
+            isMine = false,
             createdAt = createdAt,
             updatedAt = updatedAt,
         )
@@ -97,6 +99,7 @@ fun MyPostDto.toDomain(): Post =
             imageList = images?.map(PostImageDto::toDomain),
             shared = shared,
             isLiked = isLiked,
+            isMine = true,
             createdAt = createdAt,
             updatedAt = updatedAt,
         )
@@ -108,6 +111,7 @@ fun MyPostDto.toDomain(): Post =
             imageList = images?.map(PostImageDto::toDomain),
             shared = shared,
             isLiked = isLiked,
+            isMine = true,
             createdAt = createdAt,
             updatedAt = updatedAt,
         )
@@ -127,6 +131,7 @@ fun OtherPostDto.toDomain(): Post =
             imageList = images?.map(PostImageDto::toDomain),
             shared = true,
             isLiked = isLiked,
+            isMine = false,
             createdAt = createdAt,
             updatedAt = updatedAt,
         )
@@ -138,6 +143,7 @@ fun OtherPostDto.toDomain(): Post =
             imageList = images?.map(PostImageDto::toDomain),
             shared = true,
             isLiked = isLiked,
+            isMine = false,
             createdAt = createdAt,
             updatedAt = updatedAt,
         )
