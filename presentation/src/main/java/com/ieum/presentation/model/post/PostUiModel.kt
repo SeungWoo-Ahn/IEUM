@@ -1,6 +1,7 @@
 package com.ieum.presentation.model.post
 
 import com.ieum.domain.model.image.ImageSource
+import com.ieum.domain.model.post.PostType
 import com.ieum.domain.model.post.PostUserInfo
 
 sealed class PostUiModel {
@@ -8,7 +9,10 @@ sealed class PostUiModel {
     abstract val userInfo: PostUserInfo?
     abstract val imageList: List<ImageSource.Remote>?
     abstract val shared: Boolean
+    abstract val isLiked: Boolean
+    abstract val isMine: Boolean
     abstract val createdAt: String
+    abstract val type: PostType
 
     data class Wellness(
         override val id: Int,
@@ -20,8 +24,12 @@ sealed class PostUiModel {
         val memo: String?,
         override val imageList: List<ImageSource.Remote>?,
         override val shared: Boolean,
-        override val createdAt: String
-    ) : PostUiModel()
+        override val isLiked: Boolean,
+        override val isMine: Boolean,
+        override val createdAt: String,
+    ) : PostUiModel() {
+        override val type: PostType = PostType.WELLNESS
+    }
 
     data class Daily(
         override val id: Int,
@@ -30,6 +38,10 @@ sealed class PostUiModel {
         val content: String,
         override val imageList: List<ImageSource.Remote>?,
         override val shared: Boolean,
-        override val createdAt: String
-    ) : PostUiModel()
+        override val isLiked: Boolean,
+        override val isMine: Boolean,
+        override val createdAt: String,
+    ) : PostUiModel() {
+        override val type: PostType = PostType.DAILY
+    }
 }

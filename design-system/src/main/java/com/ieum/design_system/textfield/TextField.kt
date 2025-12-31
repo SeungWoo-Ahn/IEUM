@@ -67,7 +67,7 @@ fun IEUMTextField(
 
     CompositionLocalProvider(LocalTextSelectionColors provides textSelectionColors) {
         BasicTextField(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .onFocusChanged { focusState ->
                     isFocused = focusState.isFocused
@@ -82,7 +82,7 @@ fun IEUMTextField(
             onValueChange = state::typeText,
         ) { innerTextField ->
             Box(
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxWidth()
                     .border(
                         width = 1.dp,

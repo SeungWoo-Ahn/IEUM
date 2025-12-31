@@ -314,6 +314,15 @@ fun RightIcon(
 }
 
 @Composable
+fun UpIcon() {
+    Icon(
+        modifier = Modifier.size(24.dp),
+        painter = painterResource(R.drawable.ic_arrow_up),
+        contentDescription = "ic-arrow-up"
+    )
+}
+
+@Composable
 fun CommentIcon() {
     Icon(
         modifier = Modifier.size(28.dp),
@@ -328,6 +337,16 @@ fun HeartIcon() {
         modifier = Modifier.size(28.dp),
         painter = painterResource(R.drawable.ic_heart),
         contentDescription = "ic-heart",
+    )
+}
+
+@Composable
+fun RedHeartIcon() {
+    Icon(
+        modifier = Modifier.size(28.dp),
+        painter = painterResource(R.drawable.ic_heart_red),
+        tint = Color.Unspecified,
+        contentDescription = "ic-heart-red",
     )
 }
 

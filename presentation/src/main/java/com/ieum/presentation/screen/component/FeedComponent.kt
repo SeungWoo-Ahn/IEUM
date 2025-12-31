@@ -40,8 +40,8 @@ import com.ieum.design_system.icon.HeartIcon
 import com.ieum.design_system.icon.MealIcon
 import com.ieum.design_system.icon.MedicineIcon
 import com.ieum.design_system.icon.MemoIcon
-import com.ieum.design_system.icon.MenuIcon
 import com.ieum.design_system.icon.PenIcon
+import com.ieum.design_system.icon.RedHeartIcon
 import com.ieum.design_system.icon.ThunderIcon
 import com.ieum.design_system.progressbar.IEUMLoadingComponent
 import com.ieum.design_system.theme.Slate100
@@ -145,10 +145,10 @@ private fun DiagnoseFilter(
 fun PostListArea(
     modifier: Modifier = Modifier,
     postList: LazyPagingItems<PostUiModel>,
-    onNickname: ((Int) -> Unit)? = null,
-    onMenu: (Int) -> Unit,
-    onLike: (Int) -> Unit,
-    onComment: (Int) -> Unit,
+    onNickname: ((Boolean, Int) -> Unit)? = null,
+    onMenu: (PostUiModel, DropDownMenu) -> Unit,
+    onLike: (PostUiModel) -> Unit,
+    onComment: (PostUiModel) -> Unit,
 ) {
     when (postList.loadState.refresh) {
         LoadState.Loading -> IEUMLoadingComponent()
@@ -170,10 +170,12 @@ fun PostListArea(
                 postList[index]?.let { post ->
                     PostItem(
                         post = post,
-                        onNickname = onNickname,
-                        onMenu = { onMenu(post.id) },
-                        onLike = { onLike(post.id) },
-                        onComment = { onComment(post.id) }
+                        onNickname = {
+                            post.userInfo?.let { onNickname?.invoke(post.isMine, it.id) }
+                        },
+                        onMenu = { onMenu(post, it) },
+                        onLike = { onLike(post) },
+                        onComment = { onComment(post) }
                     )
                 }
             }
@@ -185,8 +187,8 @@ fun PostListArea(
 private fun PostItem(
     modifier: Modifier = Modifier,
     post: PostUiModel,
-    onNickname: ((Int) -> Unit)?,
-    onMenu: () -> Unit,
+    onMenu: (DropDownMenu) -> Unit,
+    onNickname: () -> Unit,
     onLike: () -> Unit,
     onComment: () -> Unit,
 ) {
@@ -198,13 +200,15 @@ private fun PostItem(
     ) {
         PostItemTopBar(
             userInfo = post.userInfo,
-            onNickname = onNickname,
+            isMine = post.isMine,
             onMenu = onMenu,
+            onNickname = onNickname,
         )
         post.imageList?.let {
             PostItemImageList(imageList = it)
         }
         PostItemIconList(
+            isLiked = post.isLiked,
             onLike = onLike,
             onComment = onComment,
         )
@@ -215,9 +219,10 @@ private fun PostItem(
 @Composable
 private fun PostItemTopBar(
     modifier: Modifier = Modifier,
+    isMine: Boolean,
     userInfo: PostUserInfo?,
-    onNickname: ((Int) -> Unit)?,
-    onMenu: () -> Unit,
+    onMenu: (DropDownMenu) -> Unit,
+    onNickname: () -> Unit,
 ) {
     Row(
         modifier = modifier
@@ -231,9 +236,7 @@ private fun PostItemTopBar(
         Box(
             modifier = Modifier
                 .weight(1f)
-                .noRippleClickable {
-                    if (userInfo != null) onNickname?.invoke(userInfo.id)
-                },
+                .noRippleClickable(onClick = onNickname),
             contentAlignment = Alignment.CenterStart,
         ) {
             userInfo?.let {
@@ -243,11 +246,10 @@ private fun PostItemTopBar(
                 )
             }
         }
-        Box(
-            modifier = Modifier.noRippleClickable(onClick = onMenu)
-        ) {
-            MenuIcon()
-        }
+        PostDropDownMenu(
+            isMine = isMine,
+            onMenu = onMenu,
+        )
     }
 }
 
@@ -299,6 +301,7 @@ private fun PostItemImageList(
 @Composable
 private fun PostItemIconList(
     modifier: Modifier = Modifier,
+    isLiked: Boolean,
     onLike: () -> Unit,
     onComment: () -> Unit,
 ) {
@@ -312,7 +315,11 @@ private fun PostItemIconList(
         Box(
             modifier = Modifier.noRippleClickable(onClick = onLike)
         ) {
-            HeartIcon()
+            if (isLiked) {
+                RedHeartIcon()
+            } else {
+                HeartIcon()
+            }
         }
         Box(
             modifier = Modifier.noRippleClickable(onClick = onComment)
