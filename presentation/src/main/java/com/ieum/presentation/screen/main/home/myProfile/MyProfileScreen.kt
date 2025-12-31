@@ -14,11 +14,13 @@ import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ieum.design_system.progressbar.IEUMLoadingComponent
 import com.ieum.design_system.theme.Slate50
+import com.ieum.domain.model.post.PostType
 import com.ieum.domain.model.user.MyProfile
 import com.ieum.presentation.mapper.toUiModel
 import com.ieum.presentation.model.post.PostTypeUiModel
 import com.ieum.presentation.model.post.PostUiModel
 import com.ieum.presentation.screen.component.CommentListSheet
+import com.ieum.presentation.screen.component.DropDownMenu
 import com.ieum.presentation.screen.component.ErrorComponent
 import com.ieum.presentation.screen.component.MyProfilePostTypeArea
 import com.ieum.presentation.screen.component.MyProfileSection
@@ -44,6 +46,8 @@ fun MyProfileRoute(
     modifier: Modifier = Modifier,
     scope: CoroutineScope,
     moveSetting: () -> Unit,
+    moveEditWellness: (Int) -> Unit,
+    moveEditDaily: (Int) -> Unit,
     viewModel: MyProfileViewModel = hiltViewModel(),
 ) {
     val dialogState = viewModel.dialogState
@@ -66,9 +70,15 @@ fun MyProfileRoute(
         patchAgeGroup = viewModel::showPatchAgeGroupDialog,
         patchResidenceArea = viewModel::showPatchResidenceDialog,
         patchHospitalArea = viewModel::showPatchHospitalDialog,
-        onMenu = {},
+        onMenu = viewModel::onPostMenu,
         onLike = viewModel::togglePostLike,
         onComment = viewModel::showCommentSheet,
+        moveEditPost = { id, type ->
+            when (type) {
+                PostType.WELLNESS -> moveEditWellness(id)
+                PostType.DAILY -> moveEditDaily(id)
+            }
+        },
         moveSetting = moveSetting,
         getMyProfile = viewModel::getMyProfile,
     )
@@ -150,9 +160,10 @@ private fun MyProfileScreen(
     patchAgeGroup: (MyProfile) -> Unit,
     patchResidenceArea: (MyProfile) -> Unit,
     patchHospitalArea: (MyProfile) -> Unit,
-    onMenu: (Int) -> Unit,
+    onMenu: (PostUiModel, DropDownMenu) -> Unit,
     onLike: (PostUiModel) -> Unit,
     onComment: (PostUiModel) -> Unit,
+    moveEditPost: (Int, PostType) -> Unit,
     moveSetting: () -> Unit,
     getMyProfile: () -> Unit,
 ) {
@@ -199,6 +210,8 @@ private fun MyProfileScreen(
                     event.collect {
                         when (it) {
                             MyProfileEvent.TogglePostLike -> postList.refresh()
+                            MyProfileEvent.DeletePost -> postList.refresh()
+                            is MyProfileEvent.MoveEditPost -> moveEditPost(it.postId, it.type)
                         }
                     }
                 }

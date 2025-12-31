@@ -13,6 +13,7 @@ import androidx.paging.map
 import com.ieum.domain.model.post.Post
 import com.ieum.domain.model.user.MyProfile
 import com.ieum.domain.usecase.address.GetAddressListUseCase
+import com.ieum.domain.usecase.post.DeletePostUseCase
 import com.ieum.domain.usecase.post.TogglePostLikeUseCase
 import com.ieum.domain.usecase.user.GetMyPostListUseCase
 import com.ieum.domain.usecase.user.GetMyProfileUseCase
@@ -22,6 +23,7 @@ import com.ieum.presentation.mapper.toRequest
 import com.ieum.presentation.mapper.toUiModel
 import com.ieum.presentation.model.post.PostTypeUiModel
 import com.ieum.presentation.model.post.PostUiModel
+import com.ieum.presentation.screen.component.DropDownMenu
 import com.ieum.presentation.state.AddressState
 import com.ieum.presentation.state.CommentState
 import com.ieum.presentation.util.GlobalValueModel
@@ -44,6 +46,7 @@ class MyProfileViewModel @Inject constructor(
     private val patchMyProfileUseCase: PatchMyProfileUseCase,
     private val getAddressListUseCase: GetAddressListUseCase,
     private val togglePostLikeUseCase: TogglePostLikeUseCase,
+    private val deletePostUseCase: DeletePostUseCase,
     val commentState: CommentState,
     val valueModel: GlobalValueModel,
 ) : ViewModel() {
@@ -189,5 +192,25 @@ class MyProfileViewModel @Inject constructor(
 
     fun showCommentSheet(post: PostUiModel) {
         commentState.showSheet(post, viewModelScope)
+    }
+
+    fun onPostMenu(post: PostUiModel, menu: DropDownMenu) {
+        viewModelScope.launch {
+            when (menu) {
+                DropDownMenu.REPORT -> {/*not-used*/}
+                DropDownMenu.EDIT -> {
+                    _event.send(MyProfileEvent.MoveEditPost(post.id, post.type))
+                }
+                DropDownMenu.DELETE -> {
+                    deletePostUseCase(post.id, post.type)
+                        .onSuccess {
+                            _event.send(MyProfileEvent.DeletePost)
+                        }
+                        .onFailure {
+                            // 삭제 실패
+                        }
+                }
+            }
+        }
     }
 }
