@@ -114,7 +114,7 @@ private fun CommentItem(
                 text = comment.nickname,
                 style = MaterialTheme.typography.titleMedium,
             )
-            IEUMDropDownMenu(
+            CommentDropDownMenu(
                 isMine = comment.isMine,
                 onMenu = { onMenu(comment.id, it) },
             )
