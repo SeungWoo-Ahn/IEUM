@@ -23,16 +23,42 @@ import com.ieum.presentation.R
 
 enum class DropDownMenu(@StringRes val displayName: Int) {
     REPORT(R.string.report),
+    EDIT(R.string.edit),
     DELETE(R.string.delete),
 }
 
 @Composable
-fun IEUMDropDownMenu(
+fun CommentDropDownMenu(
     isMine: Boolean,
     onMenu: (DropDownMenu) -> Unit,
 ) {
+    IEUMDropDownMenu(
+        menuList = if (isMine) listOf(DropDownMenu.DELETE) else listOf(DropDownMenu.REPORT),
+        onMenu = onMenu,
+    )
+}
+
+@Composable
+fun PostDropDownMenu(
+    isMine: Boolean,
+    onMenu: (DropDownMenu) -> Unit,
+) {
+    IEUMDropDownMenu(
+        menuList = if (isMine) {
+            listOf(DropDownMenu.EDIT, DropDownMenu.DELETE)
+        } else {
+            listOf(DropDownMenu.REPORT)
+        },
+        onMenu = onMenu,
+    )
+}
+
+@Composable
+private fun IEUMDropDownMenu(
+    menuList: List<DropDownMenu>,
+    onMenu: (DropDownMenu) -> Unit,
+) {
     var expanded by remember { mutableStateOf(false) }
-    val menus = if (isMine) listOf(DropDownMenu.DELETE) else listOf(DropDownMenu.REPORT)
 
     Box {
         IconButton(onClick = { expanded = expanded.not() }) {
@@ -44,7 +70,7 @@ fun IEUMDropDownMenu(
             shape = RoundedCornerShape(10.dp),
             onDismissRequest = { expanded = false }
         ) {
-            menus.forEach { menu ->
+            menuList.forEach { menu ->
                 DropDownMenuItem(
                     text = stringResource(menu.displayName),
                     onClick = { onMenu(menu) }

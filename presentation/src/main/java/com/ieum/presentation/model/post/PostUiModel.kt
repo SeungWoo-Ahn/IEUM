@@ -10,6 +10,7 @@ sealed class PostUiModel {
     abstract val imageList: List<ImageSource.Remote>?
     abstract val shared: Boolean
     abstract val isLiked: Boolean
+    abstract val isMine: Boolean
     abstract val createdAt: String
     abstract val type: PostType
 
@@ -24,6 +25,7 @@ sealed class PostUiModel {
         override val imageList: List<ImageSource.Remote>?,
         override val shared: Boolean,
         override val isLiked: Boolean,
+        override val isMine: Boolean,
         override val createdAt: String,
     ) : PostUiModel() {
         override val type: PostType = PostType.WELLNESS
@@ -37,6 +39,7 @@ sealed class PostUiModel {
         override val imageList: List<ImageSource.Remote>?,
         override val shared: Boolean,
         override val isLiked: Boolean,
+        override val isMine: Boolean,
         override val createdAt: String,
     ) : PostUiModel() {
         override val type: PostType = PostType.DAILY

@@ -40,7 +40,6 @@ import com.ieum.design_system.icon.HeartIcon
 import com.ieum.design_system.icon.MealIcon
 import com.ieum.design_system.icon.MedicineIcon
 import com.ieum.design_system.icon.MemoIcon
-import com.ieum.design_system.icon.MenuIcon
 import com.ieum.design_system.icon.PenIcon
 import com.ieum.design_system.icon.RedHeartIcon
 import com.ieum.design_system.icon.ThunderIcon
@@ -147,7 +146,7 @@ fun PostListArea(
     modifier: Modifier = Modifier,
     postList: LazyPagingItems<PostUiModel>,
     onNickname: ((Int) -> Unit)? = null,
-    onMenu: (Int) -> Unit,
+    onMenu: (PostUiModel, DropDownMenu) -> Unit,
     onLike: (PostUiModel) -> Unit,
     onComment: (PostUiModel) -> Unit,
 ) {
@@ -171,8 +170,10 @@ fun PostListArea(
                 postList[index]?.let { post ->
                     PostItem(
                         post = post,
-                        onNickname = onNickname,
-                        onMenu = { onMenu(post.id) },
+                        onNickname = {
+                            post.userInfo?.let { onNickname?.invoke(it.id) }
+                        },
+                        onMenu = { onMenu(post, it) },
                         onLike = { onLike(post) },
                         onComment = { onComment(post) }
                     )
@@ -186,8 +187,8 @@ fun PostListArea(
 private fun PostItem(
     modifier: Modifier = Modifier,
     post: PostUiModel,
-    onNickname: ((Int) -> Unit)?,
-    onMenu: () -> Unit,
+    onMenu: (DropDownMenu) -> Unit,
+    onNickname: () -> Unit,
     onLike: () -> Unit,
     onComment: () -> Unit,
 ) {
@@ -199,8 +200,9 @@ private fun PostItem(
     ) {
         PostItemTopBar(
             userInfo = post.userInfo,
-            onNickname = onNickname,
+            isMine = post.isMine,
             onMenu = onMenu,
+            onNickname = onNickname,
         )
         post.imageList?.let {
             PostItemImageList(imageList = it)
@@ -217,9 +219,10 @@ private fun PostItem(
 @Composable
 private fun PostItemTopBar(
     modifier: Modifier = Modifier,
+    isMine: Boolean,
     userInfo: PostUserInfo?,
-    onNickname: ((Int) -> Unit)?,
-    onMenu: () -> Unit,
+    onMenu: (DropDownMenu) -> Unit,
+    onNickname: () -> Unit,
 ) {
     Row(
         modifier = modifier
@@ -233,9 +236,7 @@ private fun PostItemTopBar(
         Box(
             modifier = Modifier
                 .weight(1f)
-                .noRippleClickable {
-                    if (userInfo != null) onNickname?.invoke(userInfo.id)
-                },
+                .noRippleClickable(onClick = onNickname),
             contentAlignment = Alignment.CenterStart,
         ) {
             userInfo?.let {
@@ -245,11 +246,10 @@ private fun PostItemTopBar(
                 )
             }
         }
-        Box(
-            modifier = Modifier.noRippleClickable(onClick = onMenu)
-        ) {
-            MenuIcon()
-        }
+        PostDropDownMenu(
+            isMine = isMine,
+            onMenu = onMenu,
+        )
     }
 }
 
