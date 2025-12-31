@@ -69,7 +69,7 @@ fun Post.Wellness.toUiModel(): PostWellnessUiModel =
         medicationTaken = medicationTaken,
         diet = diet?.toUiModel(),
         memo = memo ?: "",
-        imageList = emptyList(), // TODO: 이미지 삭제 추가 후 수정
+        imageList = imageList ?: emptyList(), // TODO: 이미지 삭제 추가 후 수정
         shared = shared,
     )
 

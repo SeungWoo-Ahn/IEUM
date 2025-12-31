@@ -63,6 +63,7 @@ class PostDailyViewModel @Inject constructor(
                     titleState.typeText(daily.title)
                     contentState.typeText(daily.content)
                     daily.imageList?.let { _imageList.addAll(it) }
+                    shareCommunity = daily.shared
                 }
                 .onFailure {
                     // 데이터 로드 실패 시
