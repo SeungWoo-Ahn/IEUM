@@ -86,6 +86,7 @@ sealed class CommentBottomSheetState {
         fun onMenu(commendId: Int, selectedMenu: DropDownMenu) {
             when (selectedMenu) {
                 DropDownMenu.REPORT -> {}
+                DropDownMenu.EDIT -> {}
                 DropDownMenu.DELETE -> deleteComment(commendId)
             }
         }
