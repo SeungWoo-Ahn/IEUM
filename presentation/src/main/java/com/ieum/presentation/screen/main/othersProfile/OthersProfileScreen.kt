@@ -14,6 +14,7 @@ import com.ieum.design_system.theme.Slate50
 import com.ieum.design_system.topbar.TopBarForBack
 import com.ieum.presentation.model.post.PostUiModel
 import com.ieum.presentation.screen.component.CommentListSheet
+import com.ieum.presentation.screen.component.DropDownMenu
 import com.ieum.presentation.screen.component.OthersProfileSection
 import com.ieum.presentation.screen.component.OthersProfileTabArea
 import com.ieum.presentation.screen.component.PostListArea
@@ -35,7 +36,7 @@ fun OthersProfileRoute(
         event = viewModel.event,
         postListFlow = viewModel.postListFlow,
         onTabClick = viewModel::onTab,
-        onMenu = {},
+        onMenu = viewModel::onPostMenu,
         onLike = viewModel::togglePostLike,
         onComment = viewModel::showCommentSheet,
         onBack = onBack,
@@ -57,7 +58,7 @@ private fun OthersProfileScreen(
     event: Flow<OtherProfileEvent>,
     postListFlow: Flow<PagingData<PostUiModel>>,
     onTabClick: (OthersProfileTab) -> Unit,
-    onMenu: (Int) -> Unit,
+    onMenu: (PostUiModel, DropDownMenu) -> Unit,
     onLike: (PostUiModel) -> Unit,
     onComment: (PostUiModel) -> Unit,
     onBack: () -> Unit,

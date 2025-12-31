@@ -19,6 +19,7 @@ import com.ieum.domain.usecase.user.GetOthersProfileUseCase
 import com.ieum.presentation.mapper.toUiModel
 import com.ieum.presentation.model.post.PostUiModel
 import com.ieum.presentation.navigation.MainScreen
+import com.ieum.presentation.screen.component.DropDownMenu
 import com.ieum.presentation.state.CommentState
 import com.ieum.presentation.util.GlobalValueModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -98,5 +99,11 @@ class OthersProfileViewModel @Inject constructor(
 
     fun showCommentSheet(post: PostUiModel) {
         commentState.showSheet(post, viewModelScope)
+    }
+
+    fun onPostMenu(post: PostUiModel, menu: DropDownMenu) {
+        if (menu == DropDownMenu.REPORT) {
+            // 신고 로직
+        }
     }
 }
