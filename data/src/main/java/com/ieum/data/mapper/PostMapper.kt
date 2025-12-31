@@ -147,9 +147,11 @@ fun OtherPostDto.toDomain(): Post =
 fun CommentDto.toDomain(): Comment =
     Comment(
         id = id,
+        userId = userId,
         nickname = nickname,
         content = content,
         createdAt = createdAt,
+        isMine = false
     )
 
 fun PostCommentRequest.asBody(): PostCommentRequestBody =

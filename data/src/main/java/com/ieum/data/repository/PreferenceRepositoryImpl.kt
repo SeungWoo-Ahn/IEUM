@@ -20,6 +20,7 @@ class PreferenceRepositoryImpl @Inject constructor(
     override val tokenFlow: Flow<Token?> get() = tokenDataStore.data
 
     private val cachedToken = MutableStateFlow<Token?>(null)
+    private val cachedMyId = MutableStateFlow<Int?>(null)
 
     init {
         scope.launch {
@@ -39,5 +40,13 @@ class PreferenceRepositoryImpl @Inject constructor(
 
     override suspend fun clearToken() {
         tokenDataStore.updateData { null }
+    }
+
+    override fun getMyId(): Int? {
+        return cachedMyId.value
+    }
+
+    override fun setMyId(id: Int) {
+        cachedMyId.update { id }
     }
 }

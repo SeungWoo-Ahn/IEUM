@@ -131,4 +131,5 @@ fun Comment.toUiModel(): CommentUiModel =
         id = id,
         nickname = nickname,
         content = content,
+        isMine = isMine
     )
