@@ -145,7 +145,7 @@ private fun DiagnoseFilter(
 fun PostListArea(
     modifier: Modifier = Modifier,
     postList: LazyPagingItems<PostUiModel>,
-    onNickname: ((Int) -> Unit)? = null,
+    onNickname: ((Boolean, Int) -> Unit)? = null,
     onMenu: (PostUiModel, DropDownMenu) -> Unit,
     onLike: (PostUiModel) -> Unit,
     onComment: (PostUiModel) -> Unit,
@@ -171,7 +171,7 @@ fun PostListArea(
                     PostItem(
                         post = post,
                         onNickname = {
-                            post.userInfo?.let { onNickname?.invoke(it.id) }
+                            post.userInfo?.let { onNickname?.invoke(post.isMine, it.id) }
                         },
                         onMenu = { onMenu(post, it) },
                         onLike = { onLike(post) },

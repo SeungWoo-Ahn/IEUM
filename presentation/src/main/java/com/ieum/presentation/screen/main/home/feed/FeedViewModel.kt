@@ -11,12 +11,14 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.ieum.domain.model.post.Post
+import com.ieum.domain.usecase.post.DeletePostUseCase
 import com.ieum.domain.usecase.post.GetAllPostListUseCase
 import com.ieum.domain.usecase.post.TogglePostLikeUseCase
 import com.ieum.presentation.mapper.toDomain
 import com.ieum.presentation.mapper.toUiModel
 import com.ieum.presentation.model.post.DiagnoseFilterUiModel
 import com.ieum.presentation.model.post.PostUiModel
+import com.ieum.presentation.screen.component.DropDownMenu
 import com.ieum.presentation.state.CommentState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -34,6 +36,7 @@ import javax.inject.Inject
 class FeedViewModel @Inject constructor(
     private val getAllPostListUseCase: GetAllPostListUseCase,
     private val togglePostLikeUseCase: TogglePostLikeUseCase,
+    private val deletePostUseCase: DeletePostUseCase,
     val commentState: CommentState,
 ) : ViewModel() {
     var uiState by mutableStateOf<FeedUiState>(FeedUiState.Idle)
@@ -85,5 +88,35 @@ class FeedViewModel @Inject constructor(
 
     fun showCommentSheet(post: PostUiModel) {
         commentState.showSheet(post, viewModelScope)
+    }
+
+    fun onPostNickname(isMine: Boolean, userId: Int) {
+        viewModelScope.launch {
+            if (isMine) {
+                _event.send(FeedEvent.MoveMyProfile)
+            } else {
+                _event.send(FeedEvent.MoveOthersProfile(userId))
+            }
+        }
+    }
+
+    fun onPostMenu(post: PostUiModel, menu: DropDownMenu) {
+        viewModelScope.launch {
+            when (menu) {
+                DropDownMenu.REPORT -> { }
+                DropDownMenu.EDIT -> {
+                    _event.send(FeedEvent.MoveEditPost(post.id, post.type))
+                }
+                DropDownMenu.DELETE -> {
+                    deletePostUseCase(post.id, post.type)
+                        .onSuccess {
+                            _event.send(FeedEvent.DeletePost)
+                        }
+                        .onFailure {
+                            // 삭제 실패
+                        }
+                }
+            }
+        }
     }
 }

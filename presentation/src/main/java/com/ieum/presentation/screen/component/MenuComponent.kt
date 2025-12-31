@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,6 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ieum.design_system.icon.MenuIcon
 import com.ieum.design_system.theme.White
+import com.ieum.design_system.util.noRippleClickable
 import com.ieum.presentation.R
 
 enum class DropDownMenu(@StringRes val displayName: Int) {
@@ -61,7 +61,9 @@ private fun IEUMDropDownMenu(
     var expanded by remember { mutableStateOf(false) }
 
     Box {
-        IconButton(onClick = { expanded = expanded.not() }) {
+        Box(
+            modifier = Modifier.noRippleClickable { expanded = expanded.not() }
+        ) {
             MenuIcon()
         }
         DropdownMenu(
@@ -73,7 +75,10 @@ private fun IEUMDropDownMenu(
             menuList.forEach { menu ->
                 DropDownMenuItem(
                     text = stringResource(menu.displayName),
-                    onClick = { onMenu(menu) }
+                    onClick = {
+                        expanded = false
+                        onMenu(menu)
+                    }
                 )
             }
         }
