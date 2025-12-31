@@ -13,9 +13,11 @@ import com.ieum.design_system.progressbar.IEUMLoadingComponent
 import com.ieum.design_system.theme.Slate50
 import com.ieum.design_system.topbar.TopBarForBack
 import com.ieum.presentation.model.post.PostUiModel
+import com.ieum.presentation.screen.component.CommentListSheet
 import com.ieum.presentation.screen.component.OthersProfileSection
 import com.ieum.presentation.screen.component.OthersProfileTabArea
 import com.ieum.presentation.screen.component.PostListArea
+import com.ieum.presentation.state.CommentBottomSheetState
 import kotlinx.coroutines.flow.Flow
 
 @Composable
@@ -24,6 +26,8 @@ fun OthersProfileRoute(
     onBack: () -> Unit,
     viewModel: OthersProfileViewModel = hiltViewModel(),
 ) {
+    val commentBottomSheetState = viewModel.commentState.bottomSheetState
+
     OthersProfileScreen(
         modifier = modifier,
         uiState = viewModel.uiState,
@@ -32,10 +36,17 @@ fun OthersProfileRoute(
         postListFlow = viewModel.postListFlow,
         onTabClick = viewModel::onTab,
         onMenu = {},
-        onLike = {},
-        onComment = {},
+        onLike = viewModel::togglePostLike,
+        onComment = viewModel::showCommentSheet,
         onBack = onBack,
     )
+
+    if (commentBottomSheetState is CommentBottomSheetState.Show) {
+        CommentListSheet(
+            state = commentBottomSheetState,
+            onDismissRequest = viewModel.commentState::dismiss
+        )
+    }
 }
 
 @Composable

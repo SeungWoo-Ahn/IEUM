@@ -23,6 +23,7 @@ import com.ieum.presentation.mapper.toUiModel
 import com.ieum.presentation.model.post.PostTypeUiModel
 import com.ieum.presentation.model.post.PostUiModel
 import com.ieum.presentation.state.AddressState
+import com.ieum.presentation.state.CommentState
 import com.ieum.presentation.util.GlobalValueModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -43,6 +44,7 @@ class MyProfileViewModel @Inject constructor(
     private val patchMyProfileUseCase: PatchMyProfileUseCase,
     private val getAddressListUseCase: GetAddressListUseCase,
     private val togglePostLikeUseCase: TogglePostLikeUseCase,
+    val commentState: CommentState,
     val valueModel: GlobalValueModel,
 ) : ViewModel() {
     var currentTab by mutableStateOf(MyProfileTab.PROFILE)
@@ -183,5 +185,9 @@ class MyProfileViewModel @Inject constructor(
                     _event.send(MyProfileEvent.TogglePostLike)
                 }
         }
+    }
+
+    fun showCommentSheet(post: PostUiModel) {
+        commentState.showSheet(post, viewModelScope)
     }
 }

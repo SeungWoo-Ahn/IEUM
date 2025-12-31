@@ -18,6 +18,7 @@ import com.ieum.domain.model.user.MyProfile
 import com.ieum.presentation.mapper.toUiModel
 import com.ieum.presentation.model.post.PostTypeUiModel
 import com.ieum.presentation.model.post.PostUiModel
+import com.ieum.presentation.screen.component.CommentListSheet
 import com.ieum.presentation.screen.component.ErrorComponent
 import com.ieum.presentation.screen.component.MyProfilePostTypeArea
 import com.ieum.presentation.screen.component.MyProfileSection
@@ -30,6 +31,7 @@ import com.ieum.presentation.screen.component.PatchRadiationTherapyDialog
 import com.ieum.presentation.screen.component.PatchResidenceDialog
 import com.ieum.presentation.screen.component.PatchSurgeryDialog
 import com.ieum.presentation.screen.component.PostListArea
+import com.ieum.presentation.state.CommentBottomSheetState
 import com.ieum.presentation.util.GlobalEvent
 import com.ieum.presentation.util.GlobalEventBus
 import com.ieum.presentation.util.GlobalValueModel
@@ -45,6 +47,7 @@ fun MyProfileRoute(
     viewModel: MyProfileViewModel = hiltViewModel(),
 ) {
     val dialogState = viewModel.dialogState
+    val commentBottomSheetState = viewModel.commentState.bottomSheetState
 
     MyProfileScreen(
         modifier = modifier,
@@ -65,7 +68,7 @@ fun MyProfileRoute(
         patchHospitalArea = viewModel::showPatchHospitalDialog,
         onMenu = {},
         onLike = viewModel::togglePostLike,
-        onComment = {},
+        onComment = viewModel::showCommentSheet,
         moveSetting = moveSetting,
         getMyProfile = viewModel::getMyProfile,
     )
@@ -119,6 +122,12 @@ fun MyProfileRoute(
             state = dialogState.state,
             patch = dialogState.patch,
             onDismissRequest = viewModel::dismissDialog,
+        )
+    }
+    if (commentBottomSheetState is CommentBottomSheetState.Show) {
+        CommentListSheet(
+            state = commentBottomSheetState,
+            onDismissRequest = viewModel.commentState::dismiss
         )
     }
 }

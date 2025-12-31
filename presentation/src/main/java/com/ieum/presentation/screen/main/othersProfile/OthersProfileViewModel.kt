@@ -19,6 +19,7 @@ import com.ieum.domain.usecase.user.GetOthersProfileUseCase
 import com.ieum.presentation.mapper.toUiModel
 import com.ieum.presentation.model.post.PostUiModel
 import com.ieum.presentation.navigation.MainScreen
+import com.ieum.presentation.state.CommentState
 import com.ieum.presentation.util.GlobalValueModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -34,6 +35,7 @@ class OthersProfileViewModel @Inject constructor(
     private val getOthersPostListUseCase: GetOthersPostListUseCase,
     private val togglePostLikeUseCase: TogglePostLikeUseCase,
     private val valueModel: GlobalValueModel,
+    val commentState: CommentState,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     private val id = savedStateHandle.toRoute<MainScreen.OthersProfile>().id
@@ -91,5 +93,10 @@ class OthersProfileViewModel @Inject constructor(
                     _event.send(OtherProfileEvent.TogglePostLike)
                 }
         }
+    }
+
+
+    fun showCommentSheet(post: PostUiModel) {
+        commentState.showSheet(post, viewModelScope)
     }
 }

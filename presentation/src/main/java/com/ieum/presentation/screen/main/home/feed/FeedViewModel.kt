@@ -17,6 +17,7 @@ import com.ieum.presentation.mapper.toDomain
 import com.ieum.presentation.mapper.toUiModel
 import com.ieum.presentation.model.post.DiagnoseFilterUiModel
 import com.ieum.presentation.model.post.PostUiModel
+import com.ieum.presentation.state.CommentState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -33,6 +34,7 @@ import javax.inject.Inject
 class FeedViewModel @Inject constructor(
     private val getAllPostListUseCase: GetAllPostListUseCase,
     private val togglePostLikeUseCase: TogglePostLikeUseCase,
+    val commentState: CommentState,
 ) : ViewModel() {
     var uiState by mutableStateOf<FeedUiState>(FeedUiState.Idle)
         private set
@@ -79,5 +81,9 @@ class FeedViewModel @Inject constructor(
                     _event.send(FeedEvent.TogglePostLike)
                 }
         }
+    }
+
+    fun showCommentSheet(post: PostUiModel) {
+        commentState.showSheet(post, viewModelScope)
     }
 }

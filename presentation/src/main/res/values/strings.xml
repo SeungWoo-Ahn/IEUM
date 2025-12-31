@@ -134,4 +134,7 @@
 
     <string name="empty_comment_description">첫 댓글을 남겨보세요</string>
     <string name="comment_placeholder">댓글을 남겨보세요</string>
+    
+    <string name="report">신고하기</string>
+    <string name="delete">삭제하기</string>
 </resources>
