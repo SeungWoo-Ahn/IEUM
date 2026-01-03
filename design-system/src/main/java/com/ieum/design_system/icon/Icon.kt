@@ -58,7 +58,7 @@ fun CheckCircleIcon() {
 @Composable
 fun CheckSquareIcon() {
     Icon(
-        modifier = Modifier.size(32.dp),
+        modifier = Modifier.size(24.dp),
         painter = painterResource(R.drawable.ic_check_square),
         tint = Color.Unspecified,
         contentDescription = "ic-check-square",

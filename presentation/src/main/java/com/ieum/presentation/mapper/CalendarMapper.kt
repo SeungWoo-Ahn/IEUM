@@ -1,9 +1,13 @@
 package com.ieum.presentation.mapper
 
+import android.os.Build
 import com.ieum.domain.model.post.Post
 import com.ieum.presentation.model.calendar.CalendarWellnessUiModel
 import com.ieum.presentation.model.post.AmountEatenUiModel
 import com.ieum.presentation.model.post.MoodUiModel
+import java.time.Instant
+import java.time.ZoneId
+import java.util.Calendar
 import kotlin.math.roundToInt
 
 fun List<MoodUiModel>.calcAverage(): MoodUiModel {
@@ -23,8 +27,21 @@ fun List<AmountEatenUiModel>.calcAverage(): AmountEatenUiModel? {
 
 fun Post.Wellness.toCalendarUiModel(): CalendarWellnessUiModel =
     CalendarWellnessUiModel(
-        dayOfMonth = 1,
+        dayOfMonth = getDayOfMonth(createdAt),
         mood = mood.toUiModel(),
         unusualSymptomsExist = unusualSymptoms != null,
         amountEaten = diet?.amountEaten?.toUiModel()
     )
+
+private fun getDayOfMonth(timestamp: Int): Int {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        Instant.ofEpochSecond(timestamp.toLong())
+            .atZone(ZoneId.systemDefault())
+            .dayOfMonth
+    } else {
+        val calendar = Calendar.getInstance().apply {
+            timeInMillis = timestamp.toLong() * 1_000
+        }
+        calendar.get(Calendar.DAY_OF_MONTH)
+    }
+}

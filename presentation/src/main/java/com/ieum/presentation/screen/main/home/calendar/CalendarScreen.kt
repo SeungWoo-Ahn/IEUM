@@ -12,45 +12,37 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ieum.design_system.theme.Slate50
 import com.ieum.presentation.model.calendar.CalendarFilter
 import com.ieum.presentation.model.calendar.CalendarModel
 import com.ieum.presentation.model.calendar.CalendarMonth
-import com.ieum.presentation.model.calendar.createCalendarModel
 import com.ieum.presentation.screen.component.CalendarFilterArea
 import com.ieum.presentation.screen.component.CalendarMonthsList
 import com.ieum.presentation.screen.component.CalendarTopBar
 import com.ieum.presentation.screen.component.CalendarWeekDays
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import java.util.Locale
 
 @Composable
 fun CalendarRoute(
     modifier: Modifier = Modifier,
     scope: CoroutineScope,
+    viewModel: CalendarViewModel = hiltViewModel()
 ) {
-    val calendarModel = remember { createCalendarModel(Locale.KOREA) }
-    var displayedMonth by remember {
-        val today = calendarModel.today
-        mutableStateOf(calendarModel.getMonth(today.year, today.month))
-    }
-    var selectedFilter by remember { mutableStateOf(CalendarFilter.WELLNESS) }
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     CalendarScreen(
         modifier = modifier,
         scope = scope,
-        calendarModel = calendarModel,
-        displayedMonth = displayedMonth,
-        selectedFilter = selectedFilter,
-        onDisplayedMonthChanged = { displayedMonth = it },
-        onFilterSelected = { selectedFilter = it }
+        uiState = uiState,
+        calendarModel = viewModel.calendarModel,
+        onDisplayedMonthChanged = viewModel::onDisplayedMonthChanged,
+        onFilterSelected = viewModel::onFilterSelected,
     )
 }
 
@@ -58,21 +50,20 @@ fun CalendarRoute(
 private fun CalendarScreen(
     modifier: Modifier,
     scope: CoroutineScope,
+    uiState: CalendarUiState,
     calendarModel: CalendarModel,
-    displayedMonth: CalendarMonth,
-    selectedFilter: CalendarFilter,
-    yearRange: IntRange = IntRange(2024, 2026),
     onDisplayedMonthChanged: (CalendarMonth) -> Unit,
     onFilterSelected: (CalendarFilter) -> Unit,
 ) {
     fun numberOfMonthsInRange(yearRange: IntRange) =
         (yearRange.last - yearRange.first + 1) * 12
 
-    val monthIndex = displayedMonth.indexIn(yearRange).coerceAtLeast(0)
+    val monthIndex =
+        uiState.displayedMonth.indexIn(calendarModel.yearRange).coerceAtLeast(0)
 
     val monthsPagerState = rememberPagerState(
         initialPage = monthIndex,
-        pageCount = { numberOfMonthsInRange(yearRange) }
+        pageCount = { numberOfMonthsInRange(calendarModel.yearRange) }
     )
 
     LaunchedEffect(monthsPagerState) {
@@ -82,7 +73,7 @@ private fun CalendarScreen(
                 val month = index % 12 + 1
                 onDisplayedMonthChanged(
                     calendarModel.getMonth(
-                        year = yearRange.first + yearOffset,
+                        year = calendarModel.yearRange.first + yearOffset,
                         month = month
                     )
                 )
@@ -96,7 +87,7 @@ private fun CalendarScreen(
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         CalendarTopBar(
-            displayedMonth = displayedMonth,
+            displayedMonth = uiState.displayedMonth,
             prevEnabled = monthsPagerState.canScrollBackward,
             nextEnabled = monthsPagerState.canScrollForward,
             onPrev = { scope.launch {
@@ -115,13 +106,14 @@ private fun CalendarScreen(
             verticalArrangement = Arrangement.spacedBy(20.dp),
         ) {
             CalendarFilterArea(
-                selectedFilter = selectedFilter,
+                selectedFilter = uiState.selectedFilter,
                 onFilterSelected = onFilterSelected,
             )
             CalendarWeekDays()
             CalendarMonthsList(
+                selectedFilter = uiState.selectedFilter,
+                uiStateByDayOfMonth = uiState.dateUiStateByDayOfMonth,
                 calendarModel = calendarModel,
-                yearRange = yearRange,
                 monthsPagerState = monthsPagerState,
             )
         }

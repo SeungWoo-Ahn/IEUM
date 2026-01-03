@@ -18,15 +18,16 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
+import com.ieum.design_system.icon.CheckSquareIcon
 import com.ieum.design_system.icon.LeftIcon
 import com.ieum.design_system.icon.RightIcon
+import com.ieum.design_system.icon.ThunderIcon
 import com.ieum.design_system.theme.Lime500
 import com.ieum.design_system.theme.Slate500
 import com.ieum.design_system.theme.Slate700
@@ -40,6 +41,7 @@ import com.ieum.presentation.model.calendar.CalendarFilter
 import com.ieum.presentation.model.calendar.CalendarModel
 import com.ieum.presentation.model.calendar.CalendarMonth
 import com.ieum.presentation.model.calendar.CalendarWeekDays
+import com.ieum.presentation.screen.main.home.calendar.CalendarDateUiState
 
 @Composable
 fun CalendarTopBar(
@@ -174,13 +176,12 @@ fun CalendarWeekDays(
 @Composable
 fun CalendarMonthsList(
     modifier: Modifier = Modifier,
+    selectedFilter: CalendarFilter,
+    uiStateByDayOfMonth: Map<Int, CalendarDateUiState>,
     calendarModel: CalendarModel,
-    yearRange: IntRange,
     monthsPagerState: PagerState,
 ) {
-    val firstMonth = remember(yearRange) {
-        calendarModel.getMonth(year = yearRange.first, month = 1)
-    }
+    val firstMonth = calendarModel.getMonth(year = calendarModel.yearRange.first, month = 1)
 
     HorizontalPager(
         modifier = modifier.fillMaxWidth(),
@@ -191,6 +192,8 @@ fun CalendarMonthsList(
                 calendarModel.today.month == month.month
         CalendarMonth(
             month = month,
+            selectedFilter = selectedFilter,
+            uiStateByDayOfMonth = uiStateByDayOfMonth,
             isCurrentMonth = isCurrentMonth,
             todayDayOfMonth = calendarModel.today.dayOfMonth,
         )
@@ -201,6 +204,8 @@ fun CalendarMonthsList(
 private fun CalendarMonth(
     modifier: Modifier = Modifier,
     month: CalendarMonth,
+    selectedFilter: CalendarFilter,
+    uiStateByDayOfMonth: Map<Int, CalendarDateUiState>,
     isCurrentMonth: Boolean,
     todayDayOfMonth: Int,
 ) {
@@ -229,8 +234,18 @@ private fun CalendarMonth(
                             modifier = Modifier.weight(1f),
                             dayOfMonth = dayOfMonth,
                             isToday = isToday,
-                        )
-
+                        ) {
+                            uiStateByDayOfMonth[dayOfMonth]?.let {
+                                when (selectedFilter) {
+                                    CalendarFilter.WELLNESS -> CheckSquareIcon()
+                                    CalendarFilter.MOOD -> it.averageMood.icon(24)
+                                    CalendarFilter.UNUSUAL_SYMPTOMS -> if (it.unusualSymptomsExist) {
+                                        ThunderIcon()
+                                    }
+                                    CalendarFilter.DIET -> it.averageAmountEaten?.icon?.invoke()
+                                }
+                            }
+                        }
                     } else {
                         CalendarEmptyDay(modifier = Modifier.weight(1f))
                     }
@@ -254,6 +269,7 @@ private fun CalendarDay(
     modifier: Modifier = Modifier,
     dayOfMonth: Int,
     isToday: Boolean,
+    icon: @Composable () -> Unit,
 ) {
     Box(
         modifier = modifier
@@ -279,6 +295,13 @@ private fun CalendarDay(
                 style = MaterialTheme.typography.labelMedium,
                 color = if (isToday) White else Slate800,
             )
+        }
+        Box(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 8.dp)
+        ) {
+            icon()
         }
     }
 }

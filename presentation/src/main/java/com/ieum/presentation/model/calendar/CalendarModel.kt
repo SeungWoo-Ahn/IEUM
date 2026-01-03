@@ -13,6 +13,10 @@ abstract class CalendarModel {
 
     abstract val firstDayOfWeek: Int
 
+    val yearRange: IntRange get() = 2025..today.year
+
+    val currentMonth: CalendarMonth get() = getMonth(today.year, today.month)
+
     abstract fun getMonth(year: Int, month: Int): CalendarMonth
 
     abstract fun plusMonths(from: CalendarMonth, addedMonthsCount: Int): CalendarMonth
