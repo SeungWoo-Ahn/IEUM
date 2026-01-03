@@ -63,6 +63,7 @@
     <string name="wellness_records">치료 기록</string>
     <string name="daily_records">일상 기록</string>
 
+    <string name="mood">기분</string>
     <string name="mood_happy">행복해요</string>
     <string name="mood_good">좋아요</string>
     <string name="mood_normal">평범해요</string>

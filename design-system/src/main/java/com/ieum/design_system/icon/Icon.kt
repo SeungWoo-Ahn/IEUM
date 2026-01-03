@@ -106,9 +106,9 @@ fun DailyIcon(size: Int) {
 }
 
 @Composable
-fun ThunderIcon() {
+fun ThunderIcon(size: Int = 24) {
     Icon(
-        modifier = Modifier.size(24.dp),
+        modifier = Modifier.size(size.dp),
         painter = painterResource(R.drawable.ic_thunder),
         tint = Color.Unspecified,
         contentDescription = "ic-thunder",
@@ -126,9 +126,9 @@ fun MedicineIcon() {
 }
 
 @Composable
-fun MealIcon() {
+fun MealIcon(size: Int = 24) {
     Icon(
-        modifier = Modifier.size(24.dp),
+        modifier = Modifier.size(size.dp),
         painter = painterResource(R.drawable.ic_meal),
         tint = Color.Unspecified,
         contentDescription = "ic-meal",

@@ -19,9 +19,11 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.ieum.design_system.theme.Slate50
+import com.ieum.presentation.model.calendar.CalendarFilter
 import com.ieum.presentation.model.calendar.CalendarModel
 import com.ieum.presentation.model.calendar.CalendarMonth
 import com.ieum.presentation.model.calendar.createCalendarModel
+import com.ieum.presentation.screen.component.CalendarFilterArea
 import com.ieum.presentation.screen.component.CalendarMonthsList
 import com.ieum.presentation.screen.component.CalendarTopBar
 import com.ieum.presentation.screen.component.CalendarWeekDays
@@ -39,12 +41,16 @@ fun CalendarRoute(
         val today = calendarModel.today
         mutableStateOf(calendarModel.getMonth(today.year, today.month))
     }
+    var selectedFilter by remember { mutableStateOf(CalendarFilter.WELLNESS) }
+
     CalendarScreen(
         modifier = modifier,
         scope = scope,
         calendarModel = calendarModel,
         displayedMonth = displayedMonth,
-        onDisplayedMonthChanged = { displayedMonth = it }
+        selectedFilter = selectedFilter,
+        onDisplayedMonthChanged = { displayedMonth = it },
+        onFilterSelected = { selectedFilter = it }
     )
 }
 
@@ -54,8 +60,10 @@ private fun CalendarScreen(
     scope: CoroutineScope,
     calendarModel: CalendarModel,
     displayedMonth: CalendarMonth,
+    selectedFilter: CalendarFilter,
     yearRange: IntRange = IntRange(2024, 2026),
     onDisplayedMonthChanged: (CalendarMonth) -> Unit,
+    onFilterSelected: (CalendarFilter) -> Unit,
 ) {
     fun numberOfMonthsInRange(yearRange: IntRange) =
         (yearRange.last - yearRange.first + 1) * 12
@@ -106,6 +114,10 @@ private fun CalendarScreen(
                 .padding(horizontal = 20.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp),
         ) {
+            CalendarFilterArea(
+                selectedFilter = selectedFilter,
+                onFilterSelected = onFilterSelected,
+            )
             CalendarWeekDays()
             CalendarMonthsList(
                 calendarModel = calendarModel,

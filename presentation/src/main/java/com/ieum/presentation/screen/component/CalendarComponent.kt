@@ -1,6 +1,8 @@
 package com.ieum.presentation.screen.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -18,17 +21,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
 import com.ieum.design_system.icon.LeftIcon
 import com.ieum.design_system.icon.RightIcon
+import com.ieum.design_system.theme.Lime500
+import com.ieum.design_system.theme.Slate500
 import com.ieum.design_system.theme.Slate700
 import com.ieum.design_system.theme.Slate800
 import com.ieum.design_system.theme.Slate900
+import com.ieum.design_system.theme.Slate950
 import com.ieum.design_system.theme.White
 import com.ieum.design_system.theme.screenPadding
 import com.ieum.design_system.util.noRippleClickable
+import com.ieum.presentation.model.calendar.CalendarFilter
 import com.ieum.presentation.model.calendar.CalendarModel
 import com.ieum.presentation.model.calendar.CalendarMonth
 import com.ieum.presentation.model.calendar.CalendarWeekDays
@@ -71,6 +79,64 @@ fun CalendarTopBar(
                 .align(Alignment.CenterEnd)
                 .noRippleClickable(enabled = nextEnabled, onClick = onNext),
             color = Slate900,
+        )
+    }
+}
+
+@Composable
+fun CalendarFilterArea(
+    modifier: Modifier = Modifier,
+    selectedFilter: CalendarFilter,
+    onFilterSelected: (CalendarFilter) -> Unit,
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .horizontalScroll(state = rememberScrollState()),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        CalendarFilter.entries.fastForEach { filter ->
+            CalendarFilter(
+                filter = filter,
+                selected = selectedFilter == filter,
+                onClick = { onFilterSelected(filter) },
+            )
+        }
+    }
+}
+
+@Composable
+private fun CalendarFilter(
+    modifier: Modifier = Modifier,
+    filter: CalendarFilter,
+    selected: Boolean,
+    onClick: () -> Unit,
+) {
+    Row(
+        modifier = modifier
+            .background(
+                color = White,
+                shape = MaterialTheme.shapes.large
+            )
+            .border(
+                width = 1.dp,
+                color = if (selected) Lime500 else White,
+                shape = MaterialTheme.shapes.large,
+            )
+            .padding(
+                horizontal = 12.dp,
+                vertical = 10.dp,
+            )
+            .noRippleClickable(onClick = onClick),
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        filter.icon()
+        Text(
+            text = stringResource(filter.displayName),
+            style = MaterialTheme.typography.labelMedium,
+            color = if (selected) Slate950 else Slate500,
         )
     }
 }
