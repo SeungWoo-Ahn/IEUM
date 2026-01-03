@@ -11,6 +11,6 @@ data class CalendarMonth(
     }
 
     override fun toString(): String {
-        return "$year.$month"
+        return "%d.%02d".format(year, month)
     }
 }

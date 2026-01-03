@@ -51,7 +51,9 @@ private fun HomeScreen(
                 movePostWellness = movePostWellness,
                 movePostDaily = movePostDaily,
             )
-            BottomNavigationItem.Calendar -> CalendarRoute()
+            BottomNavigationItem.Calendar -> CalendarRoute(
+                scope = scope,
+            )
             BottomNavigationItem.Profile -> MyProfileRoute(
                 scope = scope,
                 moveSetting = moveSetting,

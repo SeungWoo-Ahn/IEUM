@@ -302,21 +302,25 @@ fun RefreshBlackIcon(modifier: Modifier) {
 }
 
 @Composable
-fun LeftIcon() {
+fun LeftIcon(
+    modifier: Modifier = Modifier,
+    color: Color = White,
+) {
     Icon(
-        modifier = Modifier.size(24.dp),
+        modifier = modifier.size(24.dp),
         painter = painterResource(R.drawable.ic_left),
-        tint = White,
+        tint = color,
         contentDescription = "ic-left",
     )
 }
 
 @Composable
 fun RightIcon(
+    modifier: Modifier = Modifier,
     color: Color = White,
 ) {
     Icon(
-        modifier = Modifier.size(24.dp),
+        modifier = modifier.size(24.dp),
         painter = painterResource(R.drawable.ic_right),
         tint = color,
         contentDescription = "ic-right",

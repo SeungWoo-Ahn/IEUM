@@ -10,22 +10,22 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
-import com.ieum.design_system.icon.DownIcon
+import com.ieum.design_system.icon.LeftIcon
+import com.ieum.design_system.icon.RightIcon
 import com.ieum.design_system.theme.Slate700
 import com.ieum.design_system.theme.Slate800
+import com.ieum.design_system.theme.Slate900
 import com.ieum.design_system.theme.White
 import com.ieum.design_system.theme.screenPadding
 import com.ieum.design_system.util.noRippleClickable
@@ -37,16 +37,27 @@ import com.ieum.presentation.model.calendar.CalendarWeekDays
 fun CalendarTopBar(
     modifier: Modifier = Modifier,
     displayedMonth: CalendarMonth,
+    prevEnabled: Boolean,
+    nextEnabled: Boolean,
+    onPrev: () -> Unit,
+    onNext: () -> Unit,
     onClick: () -> Unit,
 ) {
     Box(
         modifier = modifier
             .fillMaxWidth()
             .padding(all = screenPadding),
-        contentAlignment = Alignment.CenterStart,
     ) {
+        LeftIcon(
+            modifier = Modifier
+                .align(Alignment.CenterStart)
+                .noRippleClickable(enabled = prevEnabled, onClick = onPrev),
+            color = Slate900,
+        )
         Row(
-            modifier = Modifier.noRippleClickable(onClick = onClick),
+            modifier = Modifier
+                .align(Alignment.Center)
+                .noRippleClickable(onClick = onClick),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -54,8 +65,13 @@ fun CalendarTopBar(
                 text = displayedMonth.toString(),
                 style = MaterialTheme.typography.headlineLarge,
             )
-            DownIcon()
         }
+        RightIcon(
+            modifier = Modifier
+                .align(Alignment.CenterEnd)
+                .noRippleClickable(enabled = nextEnabled, onClick = onNext),
+            color = Slate900,
+        )
     }
 }
 
@@ -93,34 +109,11 @@ fun CalendarWeekDays(
 fun CalendarMonthsList(
     modifier: Modifier = Modifier,
     calendarModel: CalendarModel,
-    displayedMonth: CalendarMonth,
-    yearRange: IntRange = IntRange(2024, 2026),
-    onDisplayedMonthChanged: (CalendarMonth) -> Unit,
+    yearRange: IntRange,
+    monthsPagerState: PagerState,
 ) {
-    fun numberOfMonthsInRange(yearRange: IntRange) =
-        (yearRange.last - yearRange.first + 1) * 12
-
-    val monthIndex = displayedMonth.indexIn(yearRange).coerceAtLeast(0)
-    val monthsPagerState = rememberPagerState(
-        initialPage = monthIndex,
-        pageCount = { numberOfMonthsInRange(yearRange) }
-    )
     val firstMonth = remember(yearRange) {
         calendarModel.getMonth(year = yearRange.first, month = 1)
-    }
-
-    LaunchedEffect(monthsPagerState) {
-        snapshotFlow { monthsPagerState.currentPage }
-            .collect { index ->
-                val yearOffset = index / 12
-                val month = index % 12 + 1
-                onDisplayedMonthChanged(
-                    calendarModel.getMonth(
-                        year = yearRange.first + yearOffset,
-                        month = month
-                    )
-                )
-            }
     }
 
     HorizontalPager(
