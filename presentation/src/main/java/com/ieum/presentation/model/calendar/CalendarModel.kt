@@ -3,10 +3,7 @@ package com.ieum.presentation.model.calendar
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.material3.CalendarLocale
-import java.text.DateFormatSymbols
-import java.time.DayOfWeek
 import java.time.LocalDate
-import java.time.format.TextStyle
 import java.time.temporal.WeekFields
 import java.util.Calendar
 import java.util.TimeZone
@@ -15,8 +12,6 @@ abstract class CalendarModel {
     abstract val today: CalendarDate
 
     abstract val firstDayOfWeek: Int
-
-    abstract val weekdayNames: List<String>
 
     abstract fun getMonth(year: Int, month: Int): CalendarMonth
 
@@ -38,9 +33,6 @@ internal class CalendarModelImpl(locale: CalendarLocale) : CalendarModel() {
         }
 
     override val firstDayOfWeek: Int = WeekFields.of(locale).firstDayOfWeek.value
-
-    override val weekdayNames: List<String> =
-        DayOfWeek.entries.map { it.getDisplayName(TextStyle.NARROW, locale) }
 
     override fun getMonth(year: Int, month: Int): CalendarMonth {
         val firstDayLocalDate = getFirstDayLocalDate(year, month)
@@ -87,14 +79,6 @@ internal class LegacyCalendarModelImpl(locale: CalendarLocale) : CalendarModel()
         }
 
     override val firstDayOfWeek: Int = dayInISO8601(Calendar.getInstance(locale).firstDayOfWeek)
-
-    override val weekdayNames: List<String> = buildList {
-        val shortWeekdays = DateFormatSymbols(locale).shortWeekdays
-        for (index in 2 until shortWeekdays.size) {
-            add(shortWeekdays[index])
-        }
-        add(shortWeekdays[1])
-    }
 
     override fun getMonth(year: Int, month: Int): CalendarMonth {
         val firstDayCalendar = getFirstDayCalendar(year, month)

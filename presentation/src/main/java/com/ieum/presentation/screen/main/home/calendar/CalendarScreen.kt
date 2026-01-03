@@ -65,10 +65,7 @@ private fun CalendarScreen(
                 .padding(horizontal = 20.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp),
         ) {
-            CalendarWeekDays(
-                firstDayOfWeek = calendarModel.firstDayOfWeek,
-                weekdays = calendarModel.weekdayNames,
-            )
+            CalendarWeekDays()
             CalendarMonthsList(
                 calendarModel = calendarModel,
                 displayedMonth = displayedMonth,

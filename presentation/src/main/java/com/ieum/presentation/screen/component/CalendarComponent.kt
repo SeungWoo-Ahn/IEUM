@@ -24,15 +24,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
 import com.ieum.design_system.icon.DownIcon
-import com.ieum.design_system.theme.Slate200
 import com.ieum.design_system.theme.Slate700
 import com.ieum.design_system.theme.Slate800
 import com.ieum.design_system.theme.White
 import com.ieum.design_system.theme.screenPadding
 import com.ieum.design_system.util.noRippleClickable
-import com.ieum.presentation.model.calendar.CalendarDate
 import com.ieum.presentation.model.calendar.CalendarModel
 import com.ieum.presentation.model.calendar.CalendarMonth
+import com.ieum.presentation.model.calendar.CalendarWeekDays
 
 @Composable
 fun CalendarTopBar(
@@ -63,35 +62,27 @@ fun CalendarTopBar(
 @Composable
 fun CalendarWeekDays(
     modifier: Modifier = Modifier,
-    firstDayOfWeek: Int,
-    weekdays: List<String>,
 ) {
-    val dayNames = mutableListOf<String>()
-    for (i in firstDayOfWeek - 1 until weekdays.size) {
-        dayNames += weekdays[i]
-    }
-    for (i in 0 until firstDayOfWeek - 1) {
-        dayNames += weekdays[i]
-    }
     Row(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceAround,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        dayNames.fastForEach {
+        CalendarWeekDays.entries.fastForEach {
             Box(
                 modifier = Modifier
                     .size(28.dp)
                     .background(
-                        color = Slate200,
+                        color = it.backgroundColor,
                         shape = CircleShape,
                     ),
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
-                    text = it,
+                    text = it.displayName,
                     style = MaterialTheme.typography.labelMedium,
                     textAlign = TextAlign.Center,
+                    color = it.color
                 )
             }
         }
@@ -137,9 +128,12 @@ fun CalendarMonthsList(
         state = monthsPagerState,
     ) {
         val month = calendarModel.plusMonths(from = firstMonth, addedMonthsCount = it)
+        val isCurrentMonth = calendarModel.today.year == month.year &&
+                calendarModel.today.month == month.month
         CalendarMonth(
             month = month,
-            today = calendarModel.today,
+            isCurrentMonth = isCurrentMonth,
+            todayDayOfMonth = calendarModel.today.dayOfMonth,
         )
     }
 }
@@ -148,7 +142,8 @@ fun CalendarMonthsList(
 private fun CalendarMonth(
     modifier: Modifier = Modifier,
     month: CalendarMonth,
-    today: CalendarDate,
+    isCurrentMonth: Boolean,
+    todayDayOfMonth: Int,
 ) {
     fun isCellInMonth(cellIndex: Int): Boolean {
         val st = month.daysFromStartOfWeekToFirstOfMonth
@@ -170,7 +165,7 @@ private fun CalendarMonth(
                     val cellIndex = weekIndex * 7 + dayIndex
                     if (isCellInMonth(cellIndex)) {
                         val dayOfMonth = cellIndex - month.daysFromStartOfWeekToFirstOfMonth + 1
-                        val isToday = CalendarDate(month.year, month.month, dayOfMonth) == today
+                        val isToday = isCurrentMonth && todayDayOfMonth == dayOfMonth
                         CalendarDay(
                             modifier = Modifier.weight(1f),
                             dayOfMonth = dayOfMonth,
