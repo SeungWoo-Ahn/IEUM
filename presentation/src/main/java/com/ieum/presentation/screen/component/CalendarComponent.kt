@@ -15,20 +15,28 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastForEach
 import com.ieum.design_system.icon.CheckSquareIcon
 import com.ieum.design_system.icon.LeftIcon
 import com.ieum.design_system.icon.RightIcon
 import com.ieum.design_system.icon.ThunderIcon
+import com.ieum.design_system.theme.Green500
+import com.ieum.design_system.theme.Green600
 import com.ieum.design_system.theme.Lime500
+import com.ieum.design_system.theme.Slate50
 import com.ieum.design_system.theme.Slate500
 import com.ieum.design_system.theme.Slate700
 import com.ieum.design_system.theme.Slate800
@@ -37,11 +45,13 @@ import com.ieum.design_system.theme.Slate950
 import com.ieum.design_system.theme.White
 import com.ieum.design_system.theme.screenPadding
 import com.ieum.design_system.util.noRippleClickable
+import com.ieum.presentation.R
 import com.ieum.presentation.model.calendar.CalendarFilter
 import com.ieum.presentation.model.calendar.CalendarModel
 import com.ieum.presentation.model.calendar.CalendarMonth
 import com.ieum.presentation.model.calendar.CalendarWeekDays
 import com.ieum.presentation.screen.main.home.calendar.CalendarDateUiState
+import com.ieum.presentation.screen.main.home.calendar.CalendarMonthSummaryUiState
 
 @Composable
 fun CalendarTopBar(
@@ -303,5 +313,92 @@ private fun CalendarDay(
         ) {
             icon()
         }
+    }
+}
+
+@Composable
+fun CalendarMonthSummary(
+    modifier: Modifier = Modifier,
+    uiState: CalendarMonthSummaryUiState,
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(
+                color = Slate50,
+                shape = RoundedCornerShape(12.dp),
+            )
+            .padding(
+                horizontal = 12.dp,
+                vertical = 20.dp,
+            ),
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        uiState.averageMood.icon(72)
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                CalendarSummaryText(
+                    dayOfMonth = uiState.dayOfMonth,
+                    postDayCount = uiState.postDayCount,
+                )
+                CalendarSummaryPercentageChip(percentage = uiState.percentage)
+            }
+            Text(
+                text = stringResource(R.string.calendar_summary_description),
+                style = MaterialTheme.typography.labelMedium,
+                color = Slate700,
+            )
+        }
+    }
+}
+
+@Composable
+private fun CalendarSummaryText(
+    dayOfMonth: Int,
+    postDayCount: Int,
+) {
+    Text(
+        text = buildAnnotatedString {
+            append("${dayOfMonth}일 중 ")
+            withStyle(style = SpanStyle(color = Green600)) {
+                append("$postDayCount")
+            }
+            append("일 작성 완료")
+        },
+        style = MaterialTheme.typography.headlineSmall,
+        fontSize = 18.sp,
+    )
+}
+
+@Composable
+private fun CalendarSummaryPercentageChip(
+    percentage: String
+) {
+    Box(
+        modifier = Modifier
+            .background(
+                color = Green500,
+                shape = RoundedCornerShape(size = 25.dp),
+            )
+            .padding(
+                horizontal = 5.dp,
+                vertical = 2.dp
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "$percentage%",
+            style = MaterialTheme.typography.bodySmall,
+            fontSize = 13.sp,
+            color = White,
+        )
     }
 }

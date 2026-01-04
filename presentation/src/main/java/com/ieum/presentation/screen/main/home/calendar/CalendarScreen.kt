@@ -17,11 +17,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ieum.design_system.theme.Slate100
 import com.ieum.design_system.theme.Slate50
 import com.ieum.presentation.model.calendar.CalendarFilter
 import com.ieum.presentation.model.calendar.CalendarModel
 import com.ieum.presentation.model.calendar.CalendarMonth
 import com.ieum.presentation.screen.component.CalendarFilterArea
+import com.ieum.presentation.screen.component.CalendarMonthSummary
 import com.ieum.presentation.screen.component.CalendarMonthsList
 import com.ieum.presentation.screen.component.CalendarTopBar
 import com.ieum.presentation.screen.component.CalendarWeekDays
@@ -83,7 +85,7 @@ private fun CalendarScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(color = Slate50),
+            .background(color = Slate100),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         CalendarTopBar(
@@ -102,7 +104,8 @@ private fun CalendarScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .verticalScroll(state = rememberScrollState())
-                .padding(horizontal = 20.dp),
+                .padding(horizontal = 20.dp)
+                .padding(bottom = 100.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp),
         ) {
             CalendarFilterArea(
@@ -115,6 +118,9 @@ private fun CalendarScreen(
                 uiStateByDayOfMonth = uiState.dateUiStateByDayOfMonth,
                 calendarModel = calendarModel,
                 monthsPagerState = monthsPagerState,
+            )
+            CalendarMonthSummary(
+                uiState = uiState.monthSummaryUiState
             )
         }
     }

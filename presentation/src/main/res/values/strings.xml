@@ -132,4 +132,6 @@
     <string name="add_surgery">수술 이력 추가</string>
     <string name="add_chemotherapy">항암치료 이력 추가</string>
     <string name="add_radiation_therapy">방사선치료 이력 추가</string>
+
+    <string name="calendar_summary_description">내 몸의 흐름을 조금씩 기록하고 있어요.\n이 기록이 회복의 리듬이 될 거에요.</string>
 </resources>
