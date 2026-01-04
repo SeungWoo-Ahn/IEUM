@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class DietDto(
     val amountEaten: String,
-    val mealContent: String?,
+    val mealContent: String? = null,
 )
