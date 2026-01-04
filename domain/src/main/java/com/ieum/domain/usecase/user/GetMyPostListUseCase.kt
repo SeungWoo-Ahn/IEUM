@@ -8,8 +8,20 @@ import javax.inject.Inject
 class GetMyPostListUseCase @Inject constructor(
     private val userRepository: UserRepository
 ) {
-    suspend operator fun invoke(page: Int, size: Int, type: PostType): Result<List<Post>> =
+    suspend operator fun invoke(
+        page: Int,
+        size: Int,
+        type: PostType,
+        fromDate: String? = null,
+        toDate: String? = null,
+    ): Result<List<Post>> =
         runCatching {
-            userRepository.getMyPostList(page = page, size = size, type = type)
+            userRepository.getMyPostList(
+                page = page,
+                size = size,
+                type = type,
+                fromDate = fromDate,
+                toDate = toDate,
+            )
         }
 }

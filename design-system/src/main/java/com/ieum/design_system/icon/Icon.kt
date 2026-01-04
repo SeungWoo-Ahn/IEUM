@@ -56,6 +56,16 @@ fun CheckCircleIcon() {
 }
 
 @Composable
+fun CheckSquareIcon() {
+    Icon(
+        modifier = Modifier.size(32.dp),
+        painter = painterResource(R.drawable.ic_check_square),
+        tint = Color.Unspecified,
+        contentDescription = "ic-check-square",
+    )
+}
+
+@Composable
 fun CloseIcon() {
     Icon(
         modifier = Modifier.size(24.dp),
@@ -96,9 +106,9 @@ fun DailyIcon(size: Int) {
 }
 
 @Composable
-fun ThunderIcon() {
+fun ThunderIcon(size: Int = 24) {
     Icon(
-        modifier = Modifier.size(24.dp),
+        modifier = Modifier.size(size.dp),
         painter = painterResource(R.drawable.ic_thunder),
         tint = Color.Unspecified,
         contentDescription = "ic-thunder",
@@ -116,9 +126,9 @@ fun MedicineIcon() {
 }
 
 @Composable
-fun MealIcon() {
+fun MealIcon(size: Int = 24) {
     Icon(
-        modifier = Modifier.size(24.dp),
+        modifier = Modifier.size(size.dp),
         painter = painterResource(R.drawable.ic_meal),
         tint = Color.Unspecified,
         contentDescription = "ic-meal",
@@ -292,21 +302,25 @@ fun RefreshBlackIcon(modifier: Modifier) {
 }
 
 @Composable
-fun LeftIcon() {
+fun LeftIcon(
+    modifier: Modifier = Modifier,
+    color: Color = White,
+) {
     Icon(
-        modifier = Modifier.size(24.dp),
+        modifier = modifier.size(24.dp),
         painter = painterResource(R.drawable.ic_left),
-        tint = White,
+        tint = color,
         contentDescription = "ic-left",
     )
 }
 
 @Composable
 fun RightIcon(
+    modifier: Modifier = Modifier,
     color: Color = White,
 ) {
     Icon(
-        modifier = Modifier.size(24.dp),
+        modifier = modifier.size(24.dp),
         painter = painterResource(R.drawable.ic_right),
         tint = color,
         contentDescription = "ic-right",
@@ -314,6 +328,11 @@ fun RightIcon(
 }
 
 @Composable
+fun DownIcon() {
+    Icon(
+        modifier = Modifier.size(24.dp),
+        painter = painterResource(R.drawable.ic_down),
+        contentDescription = "ic-down",
 fun UpIcon() {
     Icon(
         modifier = Modifier.size(24.dp),

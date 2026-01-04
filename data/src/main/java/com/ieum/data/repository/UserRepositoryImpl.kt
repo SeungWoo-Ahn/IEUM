@@ -38,9 +38,15 @@ class UserRepositoryImpl @Inject constructor(
             .getOthersProfile(id)
             .toDomain()
 
-    override suspend fun getMyPostList(page: Int, size: Int, type: PostType): List<Post> =
+    override suspend fun getMyPostList(
+        page: Int,
+        size: Int,
+        type: PostType,
+        fromDate: String?,
+        toDate: String?,
+    ): List<Post> =
         userDataSource
-            .getMyPostList(page = page, size = size, type = type.key)
+            .getMyPostList(page = page, size = size, type = type.key, fromDate = fromDate, toDate = toDate)
             .posts
             .map(MyPostDto::toDomain)
 

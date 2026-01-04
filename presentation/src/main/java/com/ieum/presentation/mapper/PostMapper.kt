@@ -18,7 +18,7 @@ import com.ieum.presentation.model.post.PostTypeUiModel
 import com.ieum.presentation.model.post.PostUiModel
 import com.ieum.presentation.model.post.PostWellnessUiModel
 
-private fun Mood.toUiModel(): MoodUiModel =
+fun Mood.toUiModel(): MoodUiModel =
     when (this) {
         Mood.HAPPY -> MoodUiModel.HAPPY
         Mood.GOOD -> MoodUiModel.GOOD
@@ -36,7 +36,7 @@ private fun MoodUiModel.toDomain(): Mood =
         MoodUiModel.HAPPY -> Mood.HAPPY
     }
 
-private fun AmountEaten.toUiModel(): AmountEatenUiModel =
+fun AmountEaten.toUiModel(): AmountEatenUiModel =
     when (this) {
         AmountEaten.WELL -> AmountEatenUiModel.WELL
         AmountEaten.SMALL -> AmountEatenUiModel.SMALL

@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ieum.presentation.screen.component.BottomNavigation
 import com.ieum.presentation.screen.component.BottomNavigationItem
+import com.ieum.presentation.screen.main.home.calendar.CalendarRoute
 import com.ieum.presentation.screen.main.home.feed.FeedRoute
 import com.ieum.presentation.screen.main.home.myProfile.MyProfileRoute
 import kotlinx.coroutines.CoroutineScope
@@ -55,7 +56,9 @@ private fun HomeScreen(
                 moveOthersProfile = moveOthersProfile,
                 moveMyProfile = { onBottomNavigationItemClick(BottomNavigationItem.Profile) }
             )
-            BottomNavigationItem.Calendar -> {}
+            BottomNavigationItem.Calendar -> CalendarRoute(
+                scope = scope,
+            )
             BottomNavigationItem.Profile -> MyProfileRoute(
                 scope = scope,
                 moveEditWellness = movePostWellness,
