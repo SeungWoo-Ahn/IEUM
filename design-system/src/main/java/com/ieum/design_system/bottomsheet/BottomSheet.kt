@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
@@ -14,6 +15,7 @@ import com.ieum.design_system.theme.White
 @Composable
 fun IEUMBottomSheet(
     sheetState: SheetState,
+    needDragHandle: Boolean = false,
     onDismissRequest: () -> Unit,
     content: @Composable (ColumnScope.() -> Unit),
 ) {
@@ -21,7 +23,7 @@ fun IEUMBottomSheet(
         sheetState = sheetState,
         onDismissRequest = onDismissRequest,
         containerColor = White,
-        dragHandle = null,
+        dragHandle = { if (needDragHandle) BottomSheetDefaults.DragHandle() },
         contentWindowInsets = {
             WindowInsets(
                 bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()

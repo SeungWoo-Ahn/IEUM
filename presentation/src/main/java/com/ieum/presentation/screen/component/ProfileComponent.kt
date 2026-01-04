@@ -359,6 +359,9 @@ fun OthersProfileSection(
         ProfileBox {
             if (profile.openedDataEmpty) {
                 Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 30.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(

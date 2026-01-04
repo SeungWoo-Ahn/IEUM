@@ -2,10 +2,14 @@ package com.ieum.presentation.screen.component
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -21,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.ieum.design_system.bottomsheet.IEUMBottomSheet
 import com.ieum.design_system.button.DarkButton
 import com.ieum.design_system.selector.SingleSelectorState
@@ -36,6 +41,8 @@ import com.ieum.presentation.model.post.AmountEatenUiModel
 import com.ieum.presentation.model.post.DietUiModel
 import com.ieum.presentation.model.user.CancerDiagnoseUiModel
 import com.ieum.presentation.model.user.CancerStageUiModel
+import com.ieum.presentation.state.CommentBottomSheetEvent
+import com.ieum.presentation.state.CommentBottomSheetState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -306,6 +313,61 @@ fun CancerStageSheet(
                         }
                     )
                 }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CommentListSheet(
+    modifier: Modifier = Modifier,
+    state: CommentBottomSheetState.Show,
+    onDismissRequest: () -> Unit,
+) {
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val commentList = state.commentList.collectAsLazyPagingItems()
+    val commentPostEnabled by remember { derivedStateOf {
+        state.isLoading.not() && state.typedCommentState.validate()
+    } }
+
+    LaunchedEffect(Unit) {
+        state.event.collect {
+            when (it) {
+                CommentBottomSheetEvent.RefreshCommentList -> commentList.refresh()
+            }
+        }
+    }
+
+    IEUMBottomSheet(
+        sheetState = sheetState,
+        needDragHandle = true,
+        onDismissRequest = onDismissRequest,
+    ) {
+        Column(
+            modifier = modifier
+                .fillMaxWidth()
+                .fillMaxHeight(fraction = 0.6f)
+        ) {
+            Box(
+                modifier = Modifier.weight(1f)
+            ) {
+                CommentListArea(
+                    commentList = commentList,
+                    onMenu = state::onMenu
+                )
+            }
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .imePadding()
+                    .navigationBarsPadding()
+            ) {
+                TypeCommentArea(
+                    state = state.typedCommentState,
+                    postEnabled = commentPostEnabled,
+                    onPost = state::postComment,
+                )
             }
         }
     }

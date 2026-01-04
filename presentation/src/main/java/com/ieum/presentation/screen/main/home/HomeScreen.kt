@@ -17,8 +17,9 @@ import kotlinx.coroutines.CoroutineScope
 fun HomeRoute(
     modifier: Modifier = Modifier,
     scope: CoroutineScope,
-    movePostWellness: () -> Unit,
-    movePostDaily: () -> Unit,
+    movePostWellness: (Int?) -> Unit,
+    movePostDaily: (Int?) -> Unit,
+    moveOthersProfile: (Int) -> Unit,
     moveSetting: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
@@ -29,6 +30,7 @@ fun HomeRoute(
         onBottomNavigationItemClick = viewModel::onBottomNavigationItemClick,
         movePostWellness = movePostWellness,
         movePostDaily = movePostDaily,
+        moveOthersProfile = moveOthersProfile,
         moveSetting = moveSetting,
     )
 }
@@ -39,8 +41,9 @@ private fun HomeScreen(
     scope: CoroutineScope,
     selectedBottomNavigationItem: BottomNavigationItem,
     onBottomNavigationItemClick: (BottomNavigationItem) -> Unit,
-    movePostWellness: () -> Unit,
-    movePostDaily: () -> Unit,
+    movePostWellness: (Int?) -> Unit,
+    movePostDaily: (Int?) -> Unit,
+    moveOthersProfile: (Int) -> Unit,
     moveSetting: () -> Unit,
 ) {
     Box(
@@ -50,12 +53,16 @@ private fun HomeScreen(
             BottomNavigationItem.Feed -> FeedRoute(
                 movePostWellness = movePostWellness,
                 movePostDaily = movePostDaily,
+                moveOthersProfile = moveOthersProfile,
+                moveMyProfile = { onBottomNavigationItemClick(BottomNavigationItem.Profile) }
             )
             BottomNavigationItem.Calendar -> CalendarRoute(
                 scope = scope,
             )
             BottomNavigationItem.Profile -> MyProfileRoute(
                 scope = scope,
+                moveEditWellness = movePostWellness,
+                moveEditDaily = movePostDaily,
                 moveSetting = moveSetting,
             )
         }

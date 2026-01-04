@@ -22,6 +22,7 @@ fun NavGraphBuilder.nestedMainGraph(appState: IEUMAppState) {
                 movePostWellness = navController::navigateToPostWellnessScreen,
                 movePostDaily = navController::navigateToPostDailyScreen,
                 moveSetting = {},
+                moveOthersProfile = navController::navigateToOthersProfile
             )
         }
         composable<MainScreen.PostWellness> {
@@ -52,3 +53,6 @@ fun NavController.navigateToPostWellnessScreen(id: Int? = null) =
 
 fun NavController.navigateToPostDailyScreen(id: Int? = null) =
     navigate(MainScreen.PostDaily(id))
+
+fun NavController.navigateToOthersProfile(id: Int) =
+    navigate(MainScreen.OthersProfile(id))

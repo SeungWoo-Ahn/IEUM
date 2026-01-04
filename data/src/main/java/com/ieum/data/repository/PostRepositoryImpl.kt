@@ -4,8 +4,11 @@ import com.ieum.data.datasource.post.PostDataSource
 import com.ieum.data.mapper.asBody
 import com.ieum.data.mapper.toDomain
 import com.ieum.data.network.model.post.AllPostDto
+import com.ieum.data.network.model.post.CommentDto
 import com.ieum.domain.model.image.ImageSource
+import com.ieum.domain.model.post.Comment
 import com.ieum.domain.model.post.Post
+import com.ieum.domain.model.post.PostCommentRequest
 import com.ieum.domain.model.post.PostDailyRequest
 import com.ieum.domain.model.post.PostType
 import com.ieum.domain.model.post.PostWellnessRequest
@@ -68,4 +71,42 @@ class PostRepositoryImpl @Inject constructor(
         postDataSource
             .getPost(id, type.key)
             .toDomain()
+
+    override suspend fun likePost(id: Int, type: PostType) =
+        postDataSource.likePost(id, type.key)
+
+    override suspend fun unlikePost(id: Int, type: PostType) =
+        postDataSource.unlikePost(id, type.key)
+
+    override suspend fun getCommentList(
+        page: Int,
+        size: Int,
+        postId: Int,
+        type: PostType
+    ): List<Comment> =
+        postDataSource
+            .getCommentList(
+                page = page,
+                size = size,
+                postId = postId,
+                type = type.key
+            )
+            .comments
+            .map(CommentDto::toDomain)
+
+    override suspend fun postComment(request: PostCommentRequest) =
+        postDataSource
+            .postComment(
+                postId = request.postId,
+                type = request.postType.key,
+                body = request.asBody()
+            )
+
+    override suspend fun deleteComment(postId: Int, type: PostType, commentId: Int) =
+        postDataSource
+            .deleteComment(
+                postId = postId,
+                type = type.key,
+                commentId = commentId,
+            )
 }

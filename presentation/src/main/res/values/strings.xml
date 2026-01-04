@@ -134,4 +134,11 @@
     <string name="add_radiation_therapy">방사선치료 이력 추가</string>
 
     <string name="calendar_summary_description">내 몸의 흐름을 조금씩 기록하고 있어요.\n이 기록이 회복의 리듬이 될 거에요.</string>
+
+    <string name="empty_comment_description">첫 댓글을 남겨보세요</string>
+    <string name="comment_placeholder">댓글을 남겨보세요</string>
+    
+    <string name="report">신고하기</string>
+    <string name="edit">수정하기</string>
+    <string name="delete">삭제하기</string>
 </resources>

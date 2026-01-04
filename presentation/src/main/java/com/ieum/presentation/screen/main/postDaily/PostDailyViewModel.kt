@@ -16,6 +16,8 @@ import com.ieum.domain.usecase.post.GetDailyUseCase
 import com.ieum.domain.usecase.post.PatchDailyUseCase
 import com.ieum.domain.usecase.post.PostDailyUseCase
 import com.ieum.presentation.navigation.MainScreen
+import com.ieum.presentation.util.GlobalEvent
+import com.ieum.presentation.util.GlobalEventBus
 import com.ieum.presentation.util.ImageUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -61,6 +63,7 @@ class PostDailyViewModel @Inject constructor(
                     titleState.typeText(daily.title)
                     contentState.typeText(daily.content)
                     daily.imageList?.let { _imageList.addAll(it) }
+                    shareCommunity = daily.shared
                 }
                 .onFailure {
                     // 데이터 로드 실패 시
@@ -117,6 +120,7 @@ class PostDailyViewModel @Inject constructor(
     private suspend fun postDaily(request: PostDailyRequest) {
         postDailyUseCase(request)
             .onSuccess {
+                GlobalEventBus.emitGlobalEvent(GlobalEvent.AddMyPost)
                 _event.send(PostDailyEvent.MoveBack)
             }
             .onFailure {
@@ -127,6 +131,7 @@ class PostDailyViewModel @Inject constructor(
     private suspend fun patchDaily(id: Int, request: PostDailyRequest) {
         patchDailyUseCase(id, request)
             .onSuccess {
+                GlobalEventBus.emitGlobalEvent(GlobalEvent.AddMyPost)
                 _event.send(PostDailyEvent.MoveBack)
             }
             .onFailure {

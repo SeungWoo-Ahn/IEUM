@@ -2,6 +2,7 @@ package com.ieum.presentation.mapper
 
 import com.ieum.domain.model.image.ImageSource
 import com.ieum.domain.model.post.AmountEaten
+import com.ieum.domain.model.post.Comment
 import com.ieum.domain.model.post.Diet
 import com.ieum.domain.model.post.Mood
 import com.ieum.domain.model.post.Post
@@ -9,6 +10,7 @@ import com.ieum.domain.model.post.PostType
 import com.ieum.domain.model.post.PostWellnessRequest
 import com.ieum.domain.model.user.Diagnosis
 import com.ieum.presentation.model.post.AmountEatenUiModel
+import com.ieum.presentation.model.post.CommentUiModel
 import com.ieum.presentation.model.post.DiagnoseFilterUiModel
 import com.ieum.presentation.model.post.DietUiModel
 import com.ieum.presentation.model.post.MoodUiModel
@@ -67,7 +69,7 @@ fun Post.Wellness.toUiModel(): PostWellnessUiModel =
         medicationTaken = medicationTaken,
         diet = diet?.toUiModel(),
         memo = memo ?: "",
-        imageList = emptyList(), // TODO: 이미지 삭제 추가 후 수정
+        imageList = imageList ?: emptyList(), // TODO: 이미지 삭제 추가 후 수정
         shared = shared,
     )
 
@@ -94,6 +96,8 @@ fun Post.toUiModel(): PostUiModel =
             memo = memo,
             imageList = imageList,
             shared = shared,
+            isLiked = isLiked,
+            isMine = isMine,
             createdAt = formatDate(DateFormatStrategy.FullDate(createdAt))
         )
         is Post.Daily -> PostUiModel.Daily(
@@ -103,6 +107,8 @@ fun Post.toUiModel(): PostUiModel =
             content = content,
             imageList = imageList,
             shared = shared,
+            isLiked = isLiked,
+            isMine = isMine,
             createdAt = formatDate(DateFormatStrategy.FullDate(createdAt))
         )
     }
@@ -121,3 +127,11 @@ fun PostTypeUiModel.toDomain(): PostType =
         PostTypeUiModel.WELLNESS -> PostType.WELLNESS
         PostTypeUiModel.DAILY -> PostType.DAILY
     }
+
+fun Comment.toUiModel(): CommentUiModel =
+    CommentUiModel(
+        id = id,
+        nickname = nickname,
+        content = content,
+        isMine = isMine
+    )

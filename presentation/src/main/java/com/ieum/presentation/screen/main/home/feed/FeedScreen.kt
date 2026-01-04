@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,40 +16,78 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ieum.design_system.theme.screenPadding
 import com.ieum.design_system.topbar.FeedTopBar
+import com.ieum.domain.model.post.PostType
 import com.ieum.presentation.model.post.DiagnoseFilterUiModel
 import com.ieum.presentation.model.post.PostUiModel
 import com.ieum.presentation.screen.component.AddPostDialog
+import com.ieum.presentation.screen.component.CommentListSheet
 import com.ieum.presentation.screen.component.DiagnoseFilterArea
+import com.ieum.presentation.screen.component.DropDownMenu
 import com.ieum.presentation.screen.component.PostListArea
 import com.ieum.presentation.screen.component.WriteFAB
+import com.ieum.presentation.state.CommentBottomSheetState
+import com.ieum.presentation.util.GlobalEvent
+import com.ieum.presentation.util.GlobalEventBus
 
 @Composable
 fun FeedRoute(
     modifier: Modifier = Modifier,
-    movePostWellness: () -> Unit,
-    movePostDaily: () -> Unit,
+    movePostWellness: (Int?) -> Unit,
+    movePostDaily: (Int?) -> Unit,
+    moveOthersProfile: (Int) -> Unit,
+    moveMyProfile: () -> Unit,
     viewModel: FeedViewModel = hiltViewModel(),
 ) {
     val uiState = viewModel.uiState
     val selectedFilter by viewModel.selectedFilter.collectAsStateWithLifecycle()
     val postList = viewModel.postListFlow.collectAsLazyPagingItems()
+    val commentBottomSheetState = viewModel.commentState.bottomSheetState
+
+    LaunchedEffect(Unit) {
+        GlobalEventBus.eventFlow.collect {
+            when (it) {
+                GlobalEvent.AddMyPost -> postList.refresh()
+            }
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.event.collect {
+            when (it) {
+                FeedEvent.TogglePostLike -> postList.refresh()
+                FeedEvent.DeletePost -> postList.refresh()
+                FeedEvent.MoveMyProfile -> moveMyProfile()
+                is FeedEvent.MoveOthersProfile -> moveOthersProfile(it.userId)
+                is FeedEvent.MoveEditPost -> when (it.type) {
+                    PostType.WELLNESS -> movePostWellness(it.postId)
+                    PostType.DAILY -> movePostDaily(it.postId)
+                }
+            }
+        }
+    }
 
     FeedScreen(
         modifier = modifier,
         selectedFilter = selectedFilter,
         postList = postList,
         onFilter = viewModel::onFilter,
-        onNickname = {},
-        onMenu = {},
-        onLike = {},
-        onComment = {},
+        onNickname = viewModel::onPostNickname,
+        onMenu = viewModel::onPostMenu,
+        onLike = viewModel::togglePostLike,
+        onComment = viewModel::showCommentSheet,
         showAddPostDialog = viewModel::showAddPostDialog
     )
     if (uiState is FeedUiState.ShowAddPostDialog) {
         AddPostDialog(
-            movePostWellness = movePostWellness,
-            movePostDaily = movePostDaily,
+            movePostWellness = { movePostWellness(null) },
+            movePostDaily = { movePostDaily(null) },
             onDismissRequest = viewModel::resetUiState,
+        )
+    }
+    if (commentBottomSheetState is CommentBottomSheetState.Show) {
+        CommentListSheet(
+            state = commentBottomSheetState,
+            onDismissRequest = viewModel.commentState::dismiss
         )
     }
 }
@@ -59,10 +98,10 @@ private fun FeedScreen(
     selectedFilter: DiagnoseFilterUiModel,
     postList: LazyPagingItems<PostUiModel>,
     onFilter: (DiagnoseFilterUiModel) -> Unit,
-    onNickname: (Int) -> Unit,
-    onMenu: (Int) -> Unit,
-    onLike: (Int) -> Unit,
-    onComment: (Int) -> Unit,
+    onNickname: (Boolean, Int) -> Unit,
+    onMenu: (PostUiModel, DropDownMenu) -> Unit,
+    onLike: (PostUiModel) -> Unit,
+    onComment: (PostUiModel) -> Unit,
     showAddPostDialog: () -> Unit,
 ) {
     Box(
