@@ -16,7 +16,13 @@ interface UserRepository {
 
     suspend fun getOthersProfile(id: Int): OthersProfile
 
-    suspend fun getMyPostList(page: Int, size: Int, type: PostType): List<Post>
+    suspend fun getMyPostList(
+        page: Int,
+        size: Int,
+        type: PostType,
+        fromDate: String?,
+        toDate: String?,
+    ): List<Post>
 
     suspend fun getOthersPostList(page: Int, size: Int, id: Int): List<Post>
 }
