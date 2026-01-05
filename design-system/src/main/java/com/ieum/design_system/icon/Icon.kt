@@ -333,6 +333,10 @@ fun DownIcon() {
         modifier = Modifier.size(24.dp),
         painter = painterResource(R.drawable.ic_down),
         contentDescription = "ic-down",
+    )
+}
+
+@Composable
 fun UpIcon() {
     Icon(
         modifier = Modifier.size(24.dp),
