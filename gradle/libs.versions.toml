@@ -43,7 +43,6 @@ androidx-navigation = { group = "androidx.navigation", name = "navigation-compos
 androidx-datastore-proto = { group = "androidx.datastore", name = "datastore", version.ref = "datastore-proto" }
 androidx-exifinterface = { group = "androidx.exifinterface", name = "exifinterface", version.ref = "exifinterface" }
 androidx-paging3 = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging3" }
-androidx-paging3-common = { group = "androidx.paging", name = "paging-common", version.ref = "paging3" }
 androidx-paging3-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging3" }
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }

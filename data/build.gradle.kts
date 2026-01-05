@@ -71,7 +71,4 @@ dependencies {
 
     // timber
     implementation(libs.timber)
-
-    // paging-common
-    implementation(libs.androidx.paging3.common)
 }
