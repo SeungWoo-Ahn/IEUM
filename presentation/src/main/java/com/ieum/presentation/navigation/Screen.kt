@@ -25,4 +25,7 @@ sealed interface MainScreen {
 
     @Serializable
     data class OthersProfile(val id: Int) : MainScreen
+
+    @Serializable
+    data object Setting : MainScreen
 }
