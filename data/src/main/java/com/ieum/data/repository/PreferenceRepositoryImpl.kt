@@ -38,8 +38,9 @@ class PreferenceRepositoryImpl @Inject constructor(
         tokenDataStore.updateData { token }
     }
 
-    override suspend fun clearToken() {
+    override suspend fun clear() {
         tokenDataStore.updateData { null }
+        cachedMyId.update { null }
     }
 
     override fun getMyId(): Int? {
