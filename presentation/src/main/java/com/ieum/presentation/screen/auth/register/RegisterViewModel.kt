@@ -17,18 +17,19 @@ import com.ieum.presentation.model.user.SexUiModel
 import com.ieum.presentation.model.user.UserTypeUiModel
 import com.ieum.presentation.state.AddressState
 import com.ieum.presentation.state.DiagnoseState
+import com.ieum.presentation.util.ExceptionCollector
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
     getAddressListUseCase: GetAddressListUseCase,
     private val registerUseCase: RegisterUseCase,
+    private val exceptionCollector: ExceptionCollector,
 ) : ViewModel() {
     var uiState by mutableStateOf<RegisterUiState>(RegisterUiState.Idle)
         private set
@@ -112,9 +113,8 @@ class RegisterViewModel @Inject constructor(
                     _event.send(RegisterEvent.MoveWelcome)
                 }
                 .onFailure { t ->
-                    // 회원 가입 실패
+                    exceptionCollector.sendException(t)
                     uiState = RegisterUiState.Idle
-                    Timber.e(t)
                 }
         }
     }
