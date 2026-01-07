@@ -26,6 +26,7 @@ paging3 = "3.3.6"
 kakao = "2.21.4"
 timber = "5.0.1"
 coil = "3.3.0"
+splashscreen = "1.2.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -44,6 +45,7 @@ androidx-datastore-proto = { group = "androidx.datastore", name = "datastore", v
 androidx-exifinterface = { group = "androidx.exifinterface", name = "exifinterface", version.ref = "exifinterface" }
 androidx-paging3 = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging3" }
 androidx-paging3-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging3" }
+androidx-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashscreen" }
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
 hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigation" }
