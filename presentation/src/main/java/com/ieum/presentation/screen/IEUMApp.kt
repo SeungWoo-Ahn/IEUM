@@ -11,6 +11,7 @@ import com.ieum.presentation.navigation.IEUMNavHost
 @Composable
 fun IEUMApp(
     appState: IEUMAppState,
+    isAuthenticated: Boolean,
 ) {
     Box(
         modifier = Modifier
@@ -18,6 +19,9 @@ fun IEUMApp(
             .statusBarsPadding()
             .navigationBarsPadding(),
     ) {
-        IEUMNavHost(appState = appState)
+        IEUMNavHost(
+            appState = appState,
+            isAuthenticated = isAuthenticated,
+        )
     }
 }
