@@ -3,6 +3,7 @@ package com.ieum.presentation.screen.main.othersProfile
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -21,10 +22,14 @@ import com.ieum.presentation.model.post.PostUiModel
 import com.ieum.presentation.navigation.MainScreen
 import com.ieum.presentation.screen.component.DropDownMenu
 import com.ieum.presentation.state.CommentState
+import com.ieum.presentation.util.CustomException
+import com.ieum.presentation.util.ExceptionCollector
 import com.ieum.presentation.util.GlobalValueModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -36,6 +41,7 @@ class OthersProfileViewModel @Inject constructor(
     private val getOthersPostListUseCase: GetOthersPostListUseCase,
     private val togglePostLikeUseCase: TogglePostLikeUseCase,
     private val valueModel: GlobalValueModel,
+    private val exceptionCollector: ExceptionCollector,
     val commentState: CommentState,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
@@ -51,19 +57,24 @@ class OthersProfileViewModel @Inject constructor(
     val event: Flow<OtherProfileEvent> = _event.receiveAsFlow()
 
     val postListFlow: Flow<PagingData<PostUiModel>> =
-        Pager(
-            config = PagingConfig(pageSize = 5),
-            pagingSourceFactory = { OthersPostPagerSource(
-                getOthersPostListUseCase = getOthersPostListUseCase,
-                id = id,
-            ) }
-        )
-            .flow
+        snapshotFlow { currentTab }
+            .flatMapLatest { tab ->
+                when (tab) {
+                    OthersProfileTab.PROFILE -> emptyFlow()
+                    OthersProfileTab.POST_LIST -> Pager(
+                        config = PagingConfig(pageSize = 5),
+                        pagingSourceFactory = { OthersPostPagerSource(
+                            getOthersPostListUseCase = getOthersPostListUseCase,
+                            id = id,
+                        ) }
+                    )
+                        .flow
+                }
+            }
             .map { pagingData ->
                 pagingData.map(Post::toUiModel)
             }
             .cachedIn(viewModelScope)
-
 
     init {
         getOthersProfile()
@@ -78,7 +89,8 @@ class OthersProfileViewModel @Inject constructor(
                     )
                 }
                 .onFailure {
-                    // 불러오기 실패
+                    exceptionCollector.sendException(CustomException("데이터 로드에 실패했습니다"))
+                    _event.send(OtherProfileEvent.MoveBack)
                 }
         }
     }

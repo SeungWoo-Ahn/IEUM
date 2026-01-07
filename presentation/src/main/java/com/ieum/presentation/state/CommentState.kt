@@ -21,6 +21,7 @@ import com.ieum.presentation.mapper.toUiModel
 import com.ieum.presentation.model.post.CommentUiModel
 import com.ieum.presentation.model.post.PostUiModel
 import com.ieum.presentation.screen.component.DropDownMenu
+import com.ieum.presentation.util.ExceptionCollector
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -39,6 +40,7 @@ sealed class CommentBottomSheetState {
         private val getCommentListUseCase: GetCommentListUseCase,
         private val postCommentUseCase: PostCommentUseCase,
         private val deleteCommentUseCase: DeleteCommentUseCase,
+        private val exceptionCollector: ExceptionCollector,
     ) : CommentBottomSheetState() {
         private val _event = Channel<CommentBottomSheetEvent>()
         val event: Flow<CommentBottomSheetEvent> = _event.receiveAsFlow()
@@ -76,8 +78,8 @@ sealed class CommentBottomSheetState {
                         _event.send(CommentBottomSheetEvent.RefreshCommentList)
                         typedCommentState.resetText()
                     }
-                    .onFailure {
-                        // 댓글 추가 실패
+                    .onFailure { t ->
+                        exceptionCollector.sendException(t)
                     }
                 isLoading = false
             }
@@ -100,6 +102,8 @@ sealed class CommentBottomSheetState {
                     commentId = commentId
                 ).onSuccess {
                     _event.send(CommentBottomSheetEvent.RefreshCommentList)
+                }.onFailure { t ->
+                    exceptionCollector.sendException(t)
                 }
                 isLoading = false
             }
@@ -115,6 +119,7 @@ class CommentState @Inject constructor(
     private val getCommentListUseCase: GetCommentListUseCase,
     private val postCommentUseCase: PostCommentUseCase,
     private val deleteCommentUseCase: DeleteCommentUseCase,
+    private val exceptionCollector: ExceptionCollector,
 ) {
     var bottomSheetState by mutableStateOf<CommentBottomSheetState>(CommentBottomSheetState.Idle)
         private set
@@ -131,6 +136,7 @@ class CommentState @Inject constructor(
             getCommentListUseCase = getCommentListUseCase,
             postCommentUseCase = postCommentUseCase,
             deleteCommentUseCase = deleteCommentUseCase,
+            exceptionCollector = exceptionCollector,
         )
     }
 }
