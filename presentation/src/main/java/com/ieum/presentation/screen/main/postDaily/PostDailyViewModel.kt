@@ -16,6 +16,8 @@ import com.ieum.domain.usecase.post.GetDailyUseCase
 import com.ieum.domain.usecase.post.PatchDailyUseCase
 import com.ieum.domain.usecase.post.PostDailyUseCase
 import com.ieum.presentation.navigation.MainScreen
+import com.ieum.presentation.util.CustomException
+import com.ieum.presentation.util.ExceptionCollector
 import com.ieum.presentation.util.GlobalEvent
 import com.ieum.presentation.util.GlobalEventBus
 import com.ieum.presentation.util.ImageUtil
@@ -32,6 +34,7 @@ class PostDailyViewModel @Inject constructor(
     private val postDailyUseCase: PostDailyUseCase,
     private val patchDailyUseCase: PatchDailyUseCase,
     private val imageUtil: ImageUtil,
+    private val exceptionCollector: ExceptionCollector,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     private val id = savedStateHandle.toRoute<MainScreen.PostDaily>().id
@@ -66,7 +69,7 @@ class PostDailyViewModel @Inject constructor(
                     shareCommunity = daily.shared
                 }
                 .onFailure {
-                    // 데이터 로드 실패 시
+                    exceptionCollector.sendException(CustomException("데이터 로드에 실패했습니다"))
                     _event.send(PostDailyEvent.MoveBack)
                 }
         }
@@ -123,8 +126,8 @@ class PostDailyViewModel @Inject constructor(
                 GlobalEventBus.emitGlobalEvent(GlobalEvent.AddMyPost)
                 _event.send(PostDailyEvent.MoveBack)
             }
-            .onFailure {
-                // 게시 실패 시
+            .onFailure { t ->
+                exceptionCollector.sendException(t)
             }
     }
 
@@ -134,8 +137,9 @@ class PostDailyViewModel @Inject constructor(
                 GlobalEventBus.emitGlobalEvent(GlobalEvent.AddMyPost)
                 _event.send(PostDailyEvent.MoveBack)
             }
-            .onFailure {
+            .onFailure { t ->
                 // 수정 실패 시
+                exceptionCollector.sendException(t)
             }
     }
 }

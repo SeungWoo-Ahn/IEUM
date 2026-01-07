@@ -17,6 +17,8 @@ import com.ieum.presentation.mapper.toRequest
 import com.ieum.presentation.mapper.toUiModel
 import com.ieum.presentation.model.post.PostWellnessUiModel
 import com.ieum.presentation.navigation.MainScreen
+import com.ieum.presentation.util.CustomException
+import com.ieum.presentation.util.ExceptionCollector
 import com.ieum.presentation.util.ImageUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -31,6 +33,7 @@ class PostWellnessViewModel @Inject constructor(
     private val postWellnessUseCase: PostWellnessUseCase,
     private val patchWellnessUseCase: PatchWellnessUseCase,
     private val imageUtil: ImageUtil,
+    private val exceptionCollector: ExceptionCollector,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     private val id = savedStateHandle.toRoute<MainScreen.PostWellness>().id
@@ -57,7 +60,7 @@ class PostWellnessViewModel @Inject constructor(
                     uiModel = wellness.toUiModel()
                 }
                 .onFailure {
-                    // TODO: 로드 실패
+                    exceptionCollector.sendException(CustomException("데이터 로드에 실패했습니다"))
                     _event.send(PostWellnessEvent.MoveBack)
                 }
         }
@@ -137,8 +140,8 @@ class PostWellnessViewModel @Inject constructor(
             .onSuccess {
                 _event.send(PostWellnessEvent.MoveBack)
             }
-            .onFailure {
-                // 치료 기록 게시 실패
+            .onFailure { t ->
+                exceptionCollector.sendException(t)
             }
     }
 
@@ -147,8 +150,8 @@ class PostWellnessViewModel @Inject constructor(
             .onSuccess {
                 _event.send(PostWellnessEvent.MoveBack)
             }
-            .onFailure {
-                // 치료 기록 수정 실패
+            .onFailure { t ->
+                exceptionCollector.sendException(t)
             }
     }
 }
