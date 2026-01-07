@@ -1,10 +1,12 @@
 package com.ieum.presentation
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -30,6 +32,13 @@ class MainActivity : ComponentActivity() {
 
                 if (uiState is MainActivityUiState.Success) {
                     val appState = rememberIEUMAppState()
+
+                    LaunchedEffect(Unit) {
+                        viewModel.exceptionCollector.exceptionMessageFlow.collect {
+                            showToast(it)
+                        }
+                    }
+
                     IEUMApp(
                         appState = appState,
                         isAuthenticated = (uiState as MainActivityUiState.Success).isAuthenticated
@@ -37,5 +46,9 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }
