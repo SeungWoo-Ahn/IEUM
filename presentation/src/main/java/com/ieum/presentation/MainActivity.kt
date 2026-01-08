@@ -13,6 +13,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ieum.design_system.theme.IEUMTheme
 import com.ieum.presentation.screen.IEUMApp
 import com.ieum.presentation.screen.rememberIEUMAppState
+import com.ieum.presentation.util.ExceptionCollector
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -34,7 +35,7 @@ class MainActivity : ComponentActivity() {
                     val appState = rememberIEUMAppState()
 
                     LaunchedEffect(Unit) {
-                        viewModel.exceptionCollector.exceptionMessageFlow.collect {
+                        ExceptionCollector.exceptionMessageFlow.collect {
                             showToast(it)
                         }
                     }

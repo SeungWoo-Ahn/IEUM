@@ -34,7 +34,6 @@ class PostDailyViewModel @Inject constructor(
     private val postDailyUseCase: PostDailyUseCase,
     private val patchDailyUseCase: PatchDailyUseCase,
     private val imageUtil: ImageUtil,
-    private val exceptionCollector: ExceptionCollector,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     private val id = savedStateHandle.toRoute<MainScreen.PostDaily>().id
@@ -69,7 +68,7 @@ class PostDailyViewModel @Inject constructor(
                     shareCommunity = daily.shared
                 }
                 .onFailure {
-                    exceptionCollector.sendException(CustomException("데이터 로드에 실패했습니다"))
+                    ExceptionCollector.sendException(CustomException("데이터 로드에 실패했습니다"))
                     _event.send(PostDailyEvent.MoveBack)
                 }
         }
@@ -127,7 +126,7 @@ class PostDailyViewModel @Inject constructor(
                 _event.send(PostDailyEvent.MoveBack)
             }
             .onFailure { t ->
-                exceptionCollector.sendException(t)
+                ExceptionCollector.sendException(t)
             }
     }
 
@@ -138,8 +137,7 @@ class PostDailyViewModel @Inject constructor(
                 _event.send(PostDailyEvent.MoveBack)
             }
             .onFailure { t ->
-                // 수정 실패 시
-                exceptionCollector.sendException(t)
+                ExceptionCollector.sendException(t)
             }
     }
 }

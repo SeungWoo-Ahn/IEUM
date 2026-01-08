@@ -48,7 +48,6 @@ class MyProfileViewModel @Inject constructor(
     private val getAddressListUseCase: GetAddressListUseCase,
     private val togglePostLikeUseCase: TogglePostLikeUseCase,
     private val deletePostUseCase: DeletePostUseCase,
-    private val exceptionCollector: ExceptionCollector,
     val commentState: CommentState,
     val valueModel: GlobalValueModel,
 ) : ViewModel() {
@@ -100,7 +99,7 @@ class MyProfileViewModel @Inject constructor(
                 }
                 .onFailure { t ->
                     uiState = MyProfileUiState.Error
-                    exceptionCollector.sendException(t)
+                    ExceptionCollector.sendException(t)
                 }
         }
     }
@@ -175,7 +174,7 @@ class MyProfileViewModel @Inject constructor(
                 }
                 .onFailure { t ->
                     onFailure()
-                    exceptionCollector.sendException(t)
+                    ExceptionCollector.sendException(t)
                 }
         }
     }
@@ -210,7 +209,7 @@ class MyProfileViewModel @Inject constructor(
                             _event.send(MyProfileEvent.DeletePost)
                         }
                         .onFailure { t ->
-                            exceptionCollector.sendException(t)
+                            ExceptionCollector.sendException(t)
                         }
                 }
             }

@@ -5,14 +5,11 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
-import javax.inject.Inject
-import javax.inject.Singleton
 
 class CustomException(override val message: String) : RuntimeException(message)
 
-@Singleton
-class ExceptionCollector @Inject constructor() {
-    private val exceptionChannel = Channel<Throwable>()
+object ExceptionCollector {
+    private val exceptionChannel = Channel<Throwable>(Channel.BUFFERED)
     val exceptionMessageFlow: Flow<String> =
         exceptionChannel
             .receiveAsFlow()

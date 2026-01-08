@@ -41,7 +41,6 @@ class OthersProfileViewModel @Inject constructor(
     private val getOthersPostListUseCase: GetOthersPostListUseCase,
     private val togglePostLikeUseCase: TogglePostLikeUseCase,
     private val valueModel: GlobalValueModel,
-    private val exceptionCollector: ExceptionCollector,
     val commentState: CommentState,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
@@ -89,7 +88,7 @@ class OthersProfileViewModel @Inject constructor(
                     )
                 }
                 .onFailure {
-                    exceptionCollector.sendException(CustomException("데이터 로드에 실패했습니다"))
+                    ExceptionCollector.sendException(CustomException("데이터 로드에 실패했습니다"))
                     _event.send(OtherProfileEvent.MoveBack)
                 }
         }

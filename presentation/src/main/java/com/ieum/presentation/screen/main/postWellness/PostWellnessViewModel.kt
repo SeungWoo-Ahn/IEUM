@@ -33,7 +33,6 @@ class PostWellnessViewModel @Inject constructor(
     private val postWellnessUseCase: PostWellnessUseCase,
     private val patchWellnessUseCase: PatchWellnessUseCase,
     private val imageUtil: ImageUtil,
-    private val exceptionCollector: ExceptionCollector,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     private val id = savedStateHandle.toRoute<MainScreen.PostWellness>().id
@@ -60,7 +59,7 @@ class PostWellnessViewModel @Inject constructor(
                     uiModel = wellness.toUiModel()
                 }
                 .onFailure {
-                    exceptionCollector.sendException(CustomException("데이터 로드에 실패했습니다"))
+                    ExceptionCollector.sendException(CustomException("데이터 로드에 실패했습니다"))
                     _event.send(PostWellnessEvent.MoveBack)
                 }
         }
@@ -141,7 +140,7 @@ class PostWellnessViewModel @Inject constructor(
                 _event.send(PostWellnessEvent.MoveBack)
             }
             .onFailure { t ->
-                exceptionCollector.sendException(t)
+                ExceptionCollector.sendException(t)
             }
     }
 
@@ -151,7 +150,7 @@ class PostWellnessViewModel @Inject constructor(
                 _event.send(PostWellnessEvent.MoveBack)
             }
             .onFailure { t ->
-                exceptionCollector.sendException(t)
+                ExceptionCollector.sendException(t)
             }
     }
 }

@@ -38,7 +38,6 @@ class FeedViewModel @Inject constructor(
     private val getAllPostListUseCase: GetAllPostListUseCase,
     private val togglePostLikeUseCase: TogglePostLikeUseCase,
     private val deletePostUseCase: DeletePostUseCase,
-    private val exceptionCollector: ExceptionCollector,
     val commentState: CommentState,
 ) : ViewModel() {
     var uiState by mutableStateOf<FeedUiState>(FeedUiState.Idle)
@@ -115,7 +114,7 @@ class FeedViewModel @Inject constructor(
                             _event.send(FeedEvent.DeletePost)
                         }
                         .onFailure { t ->
-                            exceptionCollector.sendException(t)
+                            ExceptionCollector.sendException(t)
                         }
                 }
             }

@@ -40,7 +40,6 @@ sealed class CommentBottomSheetState {
         private val getCommentListUseCase: GetCommentListUseCase,
         private val postCommentUseCase: PostCommentUseCase,
         private val deleteCommentUseCase: DeleteCommentUseCase,
-        private val exceptionCollector: ExceptionCollector,
     ) : CommentBottomSheetState() {
         private val _event = Channel<CommentBottomSheetEvent>()
         val event: Flow<CommentBottomSheetEvent> = _event.receiveAsFlow()
@@ -79,7 +78,7 @@ sealed class CommentBottomSheetState {
                         typedCommentState.resetText()
                     }
                     .onFailure { t ->
-                        exceptionCollector.sendException(t)
+                        ExceptionCollector.sendException(t)
                     }
                 isLoading = false
             }
@@ -103,7 +102,7 @@ sealed class CommentBottomSheetState {
                 ).onSuccess {
                     _event.send(CommentBottomSheetEvent.RefreshCommentList)
                 }.onFailure { t ->
-                    exceptionCollector.sendException(t)
+                    ExceptionCollector.sendException(t)
                 }
                 isLoading = false
             }
@@ -119,7 +118,6 @@ class CommentState @Inject constructor(
     private val getCommentListUseCase: GetCommentListUseCase,
     private val postCommentUseCase: PostCommentUseCase,
     private val deleteCommentUseCase: DeleteCommentUseCase,
-    private val exceptionCollector: ExceptionCollector,
 ) {
     var bottomSheetState by mutableStateOf<CommentBottomSheetState>(CommentBottomSheetState.Idle)
         private set
@@ -136,7 +134,6 @@ class CommentState @Inject constructor(
             getCommentListUseCase = getCommentListUseCase,
             postCommentUseCase = postCommentUseCase,
             deleteCommentUseCase = deleteCommentUseCase,
-            exceptionCollector = exceptionCollector,
         )
     }
 }

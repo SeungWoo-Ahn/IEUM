@@ -19,7 +19,6 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
-    private val exceptionCollector: ExceptionCollector,
 ) : ViewModel() {
     var uiState by mutableStateOf<LoginUiState>(LoginUiState.Idle)
         private set
@@ -35,7 +34,7 @@ class LoginViewModel @Inject constructor(
                     login(oAuthRequest)
                 }
                 .onFailure {
-                    exceptionCollector.sendException(CustomException("카카오 인증에 실패했습니다"))
+                    ExceptionCollector.sendException(CustomException("카카오 인증에 실패했습니다"))
                 }
             uiState = LoginUiState.Idle
         }
@@ -51,7 +50,7 @@ class LoginViewModel @Inject constructor(
                 }
             }
             .onFailure { t ->
-                exceptionCollector.sendException(t)
+                ExceptionCollector.sendException(t)
             }
     }
 }

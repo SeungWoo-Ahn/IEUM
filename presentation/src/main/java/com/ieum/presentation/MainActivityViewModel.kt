@@ -3,7 +3,6 @@ package com.ieum.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ieum.domain.usecase.auth.GetTokenFlowUseCase
-import com.ieum.presentation.util.ExceptionCollector
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -13,7 +12,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
-    val exceptionCollector: ExceptionCollector,
     getTokenFlowUseCase: GetTokenFlowUseCase,
 ) : ViewModel() {
     val uiState: StateFlow<MainActivityUiState> =

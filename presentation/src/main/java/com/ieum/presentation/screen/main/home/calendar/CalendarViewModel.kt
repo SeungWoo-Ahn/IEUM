@@ -21,7 +21,6 @@ import javax.inject.Inject
 @HiltViewModel
 class CalendarViewModel @Inject constructor(
     private val getMyWellnessListByMonthUseCase: GetMyWellnessListByMonthUseCase,
-    private val exceptionCollector: ExceptionCollector,
 ) : ViewModel() {
     val calendarModel = createCalendarModel(Locale.KOREA)
 
@@ -49,7 +48,7 @@ class CalendarViewModel @Inject constructor(
                     }
                 }
                 .onFailure { t ->
-                    exceptionCollector.sendException(t)
+                    ExceptionCollector.sendException(t)
                 }
         }
     }

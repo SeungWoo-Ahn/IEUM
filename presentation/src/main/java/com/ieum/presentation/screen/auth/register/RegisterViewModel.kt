@@ -29,7 +29,6 @@ import javax.inject.Inject
 class RegisterViewModel @Inject constructor(
     getAddressListUseCase: GetAddressListUseCase,
     private val registerUseCase: RegisterUseCase,
-    private val exceptionCollector: ExceptionCollector,
 ) : ViewModel() {
     var uiState by mutableStateOf<RegisterUiState>(RegisterUiState.Idle)
         private set
@@ -113,7 +112,7 @@ class RegisterViewModel @Inject constructor(
                     _event.send(RegisterEvent.MoveWelcome)
                 }
                 .onFailure { t ->
-                    exceptionCollector.sendException(t)
+                    ExceptionCollector.sendException(t)
                     uiState = RegisterUiState.Idle
                 }
         }
