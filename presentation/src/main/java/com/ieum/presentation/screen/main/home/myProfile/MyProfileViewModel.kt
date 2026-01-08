@@ -27,7 +27,6 @@ import com.ieum.presentation.screen.component.DropDownMenu
 import com.ieum.presentation.state.AddressState
 import com.ieum.presentation.state.CommentState
 import com.ieum.presentation.util.ExceptionCollector
-import com.ieum.presentation.util.GlobalValueModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -49,7 +48,6 @@ class MyProfileViewModel @Inject constructor(
     private val togglePostLikeUseCase: TogglePostLikeUseCase,
     private val deletePostUseCase: DeletePostUseCase,
     val commentState: CommentState,
-    val valueModel: GlobalValueModel,
 ) : ViewModel() {
     var currentTab by mutableStateOf(MyProfileTab.PROFILE)
         private set

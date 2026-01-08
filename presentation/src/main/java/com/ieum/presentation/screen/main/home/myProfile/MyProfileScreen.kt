@@ -36,7 +36,6 @@ import com.ieum.presentation.screen.component.PostListArea
 import com.ieum.presentation.state.CommentBottomSheetState
 import com.ieum.presentation.util.GlobalEvent
 import com.ieum.presentation.util.GlobalEventCollector
-import com.ieum.presentation.util.GlobalValueModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
@@ -57,7 +56,6 @@ fun MyProfileRoute(
         modifier = modifier,
         currentTab = viewModel.currentTab,
         uiState = viewModel.uiState,
-        valueModel = viewModel.valueModel,
         postTypeFlow = viewModel.postType,
         event = viewModel.event,
         postListFlow = viewModel.postListFlow,
@@ -147,7 +145,6 @@ private fun MyProfileScreen(
     modifier: Modifier,
     currentTab: MyProfileTab,
     uiState: MyProfileUiState,
-    valueModel: GlobalValueModel,
     postTypeFlow: StateFlow<PostTypeUiModel>,
     event: Flow<MyProfileEvent>,
     postListFlow: Flow<PagingData<PostUiModel>>,
@@ -183,7 +180,7 @@ private fun MyProfileScreen(
                     MyProfileUiState.Loading -> IEUMLoadingComponent()
                     MyProfileUiState.Error -> ErrorComponent(onRetry = getMyProfile)
                     is MyProfileUiState.Success -> MyProfileSection(
-                        profile = uiState.profile.toUiModel(valueModel),
+                        profile = uiState.profile.toUiModel(),
                         patchDiagnose = { patchDiagnose(uiState.profile) },
                         patchSurgery = { patchSurgery(uiState.profile) },
                         patchChemotherapy = { patchChemotherapy(uiState.profile) },

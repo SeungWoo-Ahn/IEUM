@@ -24,7 +24,6 @@ import com.ieum.presentation.model.user.MyProfileUiModel
 import com.ieum.presentation.model.user.OthersProfileUiModel
 import com.ieum.presentation.model.user.SexUiModel
 import com.ieum.presentation.model.user.UserTypeUiModel
-import com.ieum.presentation.util.GlobalValueModel
 
 fun UserTypeUiModel.toDomain(): UserType =
     when (this) {
@@ -101,17 +100,10 @@ fun Diagnosis.toUiKey(): DiagnoseUiKeys =
         Diagnosis.OTHERS -> DiagnoseUiKey.OTHERS
     }
 
-private fun Diagnose.toUiModel(valueModel: GlobalValueModel): String =
+private fun Diagnose.toUiModel(): String =
     when (this) {
-        is CancerDiagnose -> {
-            val diagnose = name.toUiKey()
-            val cancerStage = cancerStage.toUiModel()
-            "${valueModel.getString(diagnose.displayName)}: ${valueModel.getString(cancerStage.description)}"
-        }
-        else -> {
-            val diagnose = name.toUiKey()
-            valueModel.getString(diagnose.displayName)
-        }
+        is CancerDiagnose -> "${name.toUiKey().displayName}: ${cancerStage.toUiModel().description}"
+        else -> name.toUiKey().displayName
     }
 
 private fun Surgery.toUiModel(): String = "$description ($date)"
@@ -124,11 +116,11 @@ private fun RadiationTherapy.toUiModel(): String = if (endDate == null) {
     "$startDate ~ $endDate"
 }
 
-fun OthersProfile.toUiModel(valueModel: GlobalValueModel): OthersProfileUiModel =
+fun OthersProfile.toUiModel(): OthersProfileUiModel =
     OthersProfileUiModel(
         id = id,
         nickname = nickname,
-        diagnoses = diagnoses?.map { it.toUiModel(valueModel) },
+        diagnoses = diagnoses?.map(Diagnose::toUiModel),
         surgery = surgery?.map(Surgery::toUiModel),
         chemotherapy = chemotherapy?.map(Chemotherapy::toUiModel),
         radiationTherapy = radiationTherapy?.map(RadiationTherapy::toUiModel),
@@ -143,12 +135,12 @@ private fun <T, R> ProfileProperty<T>.map(mapping: (T) -> R): ProfileProperty<R>
         open = open,
     )
 
-fun MyProfile.toUiModel(valueModel: GlobalValueModel): MyProfileUiModel =
+fun MyProfile.toUiModel(): MyProfileUiModel =
     MyProfileUiModel(
         id = id,
         email = email,
         nickname = nickname,
-        diagnoses = diagnoses.map { property -> property.map { it.toUiModel(valueModel) } },
+        diagnoses = diagnoses.map { property -> property.map(Diagnose::toUiModel) },
         surgery = surgery.map { property -> property.map(Surgery::toUiModel) },
         chemotherapy = chemotherapy.map { property -> property.map(Chemotherapy::toUiModel) },
         radiationTherapy = radiationTherapy.map {

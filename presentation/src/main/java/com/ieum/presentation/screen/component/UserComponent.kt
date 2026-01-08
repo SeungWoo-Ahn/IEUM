@@ -173,9 +173,9 @@ fun SelectDiagnose(
     ) {
         state.cancerDiagnoseState.itemList.forEach { diagnose ->
             UserSelector(
-                name = stringResource(diagnose.key.displayName) + when (diagnose.stage) {
+                name = diagnose.key.displayName + when (diagnose.stage) {
                     CancerStageUiModel.STAGE_UNKNOWN -> ""
-                    else -> stringResource(diagnose.stage.description)
+                    else -> diagnose.stage.description
                 },
                 isSelected = diagnose.isSelected,
                 onClick = { showCancerStageSheet(diagnose) }
@@ -183,7 +183,7 @@ fun SelectDiagnose(
         }
         state.commonDiagnoseState.itemList.forEach { diagnose ->
             UserSelector(
-                name = stringResource(diagnose.displayName),
+                name = diagnose.displayName,
                 isSelected = state.commonDiagnoseState.isSelected(diagnose),
                 onClick = { state.commonDiagnoseState.selectItem(diagnose) }
             )
