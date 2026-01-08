@@ -35,7 +35,7 @@ import com.ieum.presentation.screen.component.PatchSurgeryDialog
 import com.ieum.presentation.screen.component.PostListArea
 import com.ieum.presentation.state.CommentBottomSheetState
 import com.ieum.presentation.util.GlobalEvent
-import com.ieum.presentation.util.GlobalEventBus
+import com.ieum.presentation.util.GlobalEventCollector
 import com.ieum.presentation.util.GlobalValueModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -199,7 +199,7 @@ private fun MyProfileScreen(
                 val postList = postListFlow.collectAsLazyPagingItems()
 
                 LaunchedEffect(Unit) {
-                    GlobalEventBus.eventFlow.collect {
+                    GlobalEventCollector.globalEventFlow.collect {
                         when (it) {
                             GlobalEvent.AddMyPost -> postList.refresh()
                         }

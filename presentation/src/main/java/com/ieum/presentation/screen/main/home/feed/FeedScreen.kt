@@ -27,7 +27,7 @@ import com.ieum.presentation.screen.component.PostListArea
 import com.ieum.presentation.screen.component.WriteFAB
 import com.ieum.presentation.state.CommentBottomSheetState
 import com.ieum.presentation.util.GlobalEvent
-import com.ieum.presentation.util.GlobalEventBus
+import com.ieum.presentation.util.GlobalEventCollector
 
 @Composable
 fun FeedRoute(
@@ -44,7 +44,7 @@ fun FeedRoute(
     val commentBottomSheetState = viewModel.commentState.bottomSheetState
 
     LaunchedEffect(Unit) {
-        GlobalEventBus.eventFlow.collect {
+        GlobalEventCollector.globalEventFlow.collect {
             when (it) {
                 GlobalEvent.AddMyPost -> postList.refresh()
             }

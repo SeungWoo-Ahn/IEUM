@@ -19,6 +19,8 @@ import com.ieum.presentation.model.post.PostWellnessUiModel
 import com.ieum.presentation.navigation.MainScreen
 import com.ieum.presentation.util.CustomException
 import com.ieum.presentation.util.ExceptionCollector
+import com.ieum.presentation.util.GlobalEvent
+import com.ieum.presentation.util.GlobalEventCollector
 import com.ieum.presentation.util.ImageUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -137,6 +139,7 @@ class PostWellnessViewModel @Inject constructor(
     private suspend fun postWellness(request: PostWellnessRequest) {
         postWellnessUseCase(request)
             .onSuccess {
+                GlobalEventCollector.sendGlobalEvent(GlobalEvent.AddMyPost)
                 _event.send(PostWellnessEvent.MoveBack)
             }
             .onFailure { t ->
@@ -147,6 +150,7 @@ class PostWellnessViewModel @Inject constructor(
     private suspend fun patchWellness(id: Int, request: PostWellnessRequest) {
         patchWellnessUseCase(id, request)
             .onSuccess {
+                GlobalEventCollector.sendGlobalEvent(GlobalEvent.AddMyPost)
                 _event.send(PostWellnessEvent.MoveBack)
             }
             .onFailure { t ->
