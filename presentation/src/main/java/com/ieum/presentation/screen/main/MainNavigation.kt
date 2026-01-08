@@ -11,6 +11,7 @@ import com.ieum.presentation.screen.main.home.HomeRoute
 import com.ieum.presentation.screen.main.othersProfile.OthersProfileRoute
 import com.ieum.presentation.screen.main.postDaily.PostDailyRoute
 import com.ieum.presentation.screen.main.postWellness.PostWellnessRoute
+import com.ieum.presentation.screen.main.setting.SettingRoute
 
 fun NavGraphBuilder.nestedMainGraph(appState: IEUMAppState) {
     val navController = appState.navController
@@ -21,7 +22,7 @@ fun NavGraphBuilder.nestedMainGraph(appState: IEUMAppState) {
                 scope = appState.coroutineScope,
                 movePostWellness = navController::navigateToPostWellnessScreen,
                 movePostDaily = navController::navigateToPostDailyScreen,
-                moveSetting = {},
+                moveSetting = navController::navigateToSetting,
                 moveOthersProfile = navController::navigateToOthersProfile
             )
         }
@@ -41,6 +42,11 @@ fun NavGraphBuilder.nestedMainGraph(appState: IEUMAppState) {
                 onBack = navController::popBackStack,
             )
         }
+        composable<MainScreen.Setting> {
+            SettingRoute(
+                moveBack = navController::popBackStack
+            )
+        }
     }
 }
 
@@ -56,3 +62,6 @@ fun NavController.navigateToPostDailyScreen(id: Int? = null) =
 
 fun NavController.navigateToOthersProfile(id: Int) =
     navigate(MainScreen.OthersProfile(id))
+
+fun NavController.navigateToSetting() =
+    navigate(MainScreen.Setting)

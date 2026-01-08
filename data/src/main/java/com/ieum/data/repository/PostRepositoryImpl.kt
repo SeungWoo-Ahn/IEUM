@@ -58,7 +58,7 @@ class PostRepositoryImpl @Inject constructor(
     }
 
     override suspend fun deleteDaily(id: Int) {
-        postDataSource.deleteWellness(id)
+        postDataSource.deleteDaily(id)
     }
 
     override suspend fun getAllPostList(page: Int, size: Int, diagnosis: Diagnosis?): List<Post> =

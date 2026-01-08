@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ieum.design_system.progressbar.IEUMLoadingComponent
 import com.ieum.design_system.theme.Slate50
@@ -19,7 +19,6 @@ import com.ieum.presentation.screen.component.OthersProfileSection
 import com.ieum.presentation.screen.component.OthersProfileTabArea
 import com.ieum.presentation.screen.component.PostListArea
 import com.ieum.presentation.state.CommentBottomSheetState
-import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun OthersProfileRoute(
@@ -27,14 +26,23 @@ fun OthersProfileRoute(
     onBack: () -> Unit,
     viewModel: OthersProfileViewModel = hiltViewModel(),
 ) {
+    val postList = viewModel.postListFlow.collectAsLazyPagingItems()
     val commentBottomSheetState = viewModel.commentState.bottomSheetState
+
+    LaunchedEffect(Unit) {
+        viewModel.event.collect {
+            when (it) {
+                OtherProfileEvent.MoveBack -> onBack()
+                OtherProfileEvent.TogglePostLike -> postList.refresh()
+            }
+        }
+    }
 
     OthersProfileScreen(
         modifier = modifier,
         uiState = viewModel.uiState,
         currentTab = viewModel.currentTab,
-        event = viewModel.event,
-        postListFlow = viewModel.postListFlow,
+        postList = postList,
         onTabClick = viewModel::onTab,
         onMenu = viewModel::onPostMenu,
         onLike = viewModel::togglePostLike,
@@ -55,8 +63,7 @@ private fun OthersProfileScreen(
     modifier: Modifier,
     uiState: OthersProfileUiState,
     currentTab: OthersProfileTab,
-    event: Flow<OtherProfileEvent>,
-    postListFlow: Flow<PagingData<PostUiModel>>,
+    postList: LazyPagingItems<PostUiModel>,
     onTabClick: (OthersProfileTab) -> Unit,
     onMenu: (PostUiModel, DropDownMenu) -> Unit,
     onLike: (PostUiModel) -> Unit,
@@ -75,24 +82,12 @@ private fun OthersProfileScreen(
                 OthersProfileTabArea(currentTab = currentTab, onTabClick = onTabClick)
                 when (currentTab) {
                     OthersProfileTab.PROFILE -> OthersProfileSection(profile = uiState.profile)
-                    OthersProfileTab.POST_LIST -> {
-                        val postList = postListFlow.collectAsLazyPagingItems()
-
-                        LaunchedEffect(Unit) {
-                            event.collect {
-                                when (it) {
-                                    OtherProfileEvent.TogglePostLike -> postList.refresh()
-                                }
-                            }
-                        }
-
-                        PostListArea(
-                            postList = postList,
-                            onMenu = onMenu,
-                            onLike = onLike,
-                            onComment = onComment,
-                        )
-                    }
+                    OthersProfileTab.POST_LIST -> PostListArea(
+                        postList = postList,
+                        onMenu = onMenu,
+                        onLike = onLike,
+                        onComment = onComment,
+                    )
                 }
             }
         }

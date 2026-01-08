@@ -36,12 +36,6 @@
     <string name="liver_transplant">간이식</string>
     <string name="others">기타</string>
 
-    <string name="cancer_stage_1">1기</string>
-    <string name="cancer_stage_2">2기</string>
-    <string name="cancer_stage_3">3기</string>
-    <string name="cancer_stage_4">4기</string>
-    <string name="cancer_stage_unknown">모르겠어요</string>
-
     <string name="description_under_30">30대 이하</string>
     <string name="description_40s">40대</string>
     <string name="description_50s">50대</string>
@@ -141,4 +135,7 @@
     <string name="report">신고하기</string>
     <string name="edit">수정하기</string>
     <string name="delete">삭제하기</string>
+
+    <string name="setting">설정</string>
+    <string name="logout">로그아웃</string>
 </resources>

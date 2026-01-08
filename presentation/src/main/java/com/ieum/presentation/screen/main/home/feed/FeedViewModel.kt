@@ -20,6 +20,7 @@ import com.ieum.presentation.model.post.DiagnoseFilterUiModel
 import com.ieum.presentation.model.post.PostUiModel
 import com.ieum.presentation.screen.component.DropDownMenu
 import com.ieum.presentation.state.CommentState
+import com.ieum.presentation.util.ExceptionCollector
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -112,8 +113,8 @@ class FeedViewModel @Inject constructor(
                         .onSuccess {
                             _event.send(FeedEvent.DeletePost)
                         }
-                        .onFailure {
-                            // 삭제 실패
+                        .onFailure { t ->
+                            ExceptionCollector.sendException(t)
                         }
                 }
             }

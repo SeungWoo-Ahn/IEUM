@@ -78,4 +78,7 @@ dependencies {
     // paging3
     implementation(libs.androidx.paging3)
     implementation(libs.androidx.paging3.compose)
+
+    // splashscreen
+    implementation(libs.androidx.splashscreen)
 }

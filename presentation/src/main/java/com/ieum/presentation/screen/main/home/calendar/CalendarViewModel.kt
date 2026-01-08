@@ -8,6 +8,7 @@ import com.ieum.presentation.mapper.toCalendarUiModel
 import com.ieum.presentation.model.calendar.CalendarFilter
 import com.ieum.presentation.model.calendar.CalendarMonth
 import com.ieum.presentation.model.calendar.createCalendarModel
+import com.ieum.presentation.util.ExceptionCollector
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -46,8 +47,8 @@ class CalendarViewModel @Inject constructor(
                         )
                     }
                 }
-                .onFailure {
-                    // 데이터 로드 실패
+                .onFailure { t ->
+                    ExceptionCollector.sendException(t)
                 }
         }
     }

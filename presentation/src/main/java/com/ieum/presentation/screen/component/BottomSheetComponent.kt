@@ -290,7 +290,7 @@ fun CancerStageSheet(
             verticalArrangement = Arrangement.spacedBy(32.dp),
         ) {
             Text(
-                text = stringResource(R.string.guide_select_cancer_stage, stringResource(data.key.displayName)),
+                text = stringResource(R.string.guide_select_cancer_stage, data.key.displayName),
                 style = MaterialTheme.typography.headlineLarge,
             )
             Column(
@@ -299,7 +299,7 @@ fun CancerStageSheet(
             ) {
                 selectorState.itemList.forEach { cancerStage ->
                     UserSelector(
-                        name = stringResource(cancerStage.description),
+                        name = cancerStage.description,
                         isSelected = selectorState.isSelected(cancerStage),
                         onClick = {
                             scope

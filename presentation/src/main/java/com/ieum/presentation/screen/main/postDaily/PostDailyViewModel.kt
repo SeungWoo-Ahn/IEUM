@@ -16,8 +16,10 @@ import com.ieum.domain.usecase.post.GetDailyUseCase
 import com.ieum.domain.usecase.post.PatchDailyUseCase
 import com.ieum.domain.usecase.post.PostDailyUseCase
 import com.ieum.presentation.navigation.MainScreen
+import com.ieum.presentation.util.CustomException
+import com.ieum.presentation.util.ExceptionCollector
 import com.ieum.presentation.util.GlobalEvent
-import com.ieum.presentation.util.GlobalEventBus
+import com.ieum.presentation.util.GlobalEventCollector
 import com.ieum.presentation.util.ImageUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -66,7 +68,7 @@ class PostDailyViewModel @Inject constructor(
                     shareCommunity = daily.shared
                 }
                 .onFailure {
-                    // 데이터 로드 실패 시
+                    ExceptionCollector.sendException(CustomException("데이터 로드에 실패했습니다"))
                     _event.send(PostDailyEvent.MoveBack)
                 }
         }
@@ -120,22 +122,22 @@ class PostDailyViewModel @Inject constructor(
     private suspend fun postDaily(request: PostDailyRequest) {
         postDailyUseCase(request)
             .onSuccess {
-                GlobalEventBus.emitGlobalEvent(GlobalEvent.AddMyPost)
+                GlobalEventCollector.sendGlobalEvent(GlobalEvent.AddMyPost)
                 _event.send(PostDailyEvent.MoveBack)
             }
-            .onFailure {
-                // 게시 실패 시
+            .onFailure { t ->
+                ExceptionCollector.sendException(t)
             }
     }
 
     private suspend fun patchDaily(id: Int, request: PostDailyRequest) {
         patchDailyUseCase(id, request)
             .onSuccess {
-                GlobalEventBus.emitGlobalEvent(GlobalEvent.AddMyPost)
+                GlobalEventCollector.sendGlobalEvent(GlobalEvent.AddMyPost)
                 _event.send(PostDailyEvent.MoveBack)
             }
-            .onFailure {
-                // 수정 실패 시
+            .onFailure { t ->
+                ExceptionCollector.sendException(t)
             }
     }
 }

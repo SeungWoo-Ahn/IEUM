@@ -26,7 +26,7 @@ import com.ieum.presentation.model.post.PostUiModel
 import com.ieum.presentation.screen.component.DropDownMenu
 import com.ieum.presentation.state.AddressState
 import com.ieum.presentation.state.CommentState
-import com.ieum.presentation.util.GlobalValueModel
+import com.ieum.presentation.util.ExceptionCollector
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -48,7 +48,6 @@ class MyProfileViewModel @Inject constructor(
     private val togglePostLikeUseCase: TogglePostLikeUseCase,
     private val deletePostUseCase: DeletePostUseCase,
     val commentState: CommentState,
-    val valueModel: GlobalValueModel,
 ) : ViewModel() {
     var currentTab by mutableStateOf(MyProfileTab.PROFILE)
         private set
@@ -96,8 +95,9 @@ class MyProfileViewModel @Inject constructor(
                 .onSuccess {
                     uiState = MyProfileUiState.Success(it)
                 }
-                .onFailure {
+                .onFailure { t ->
                     uiState = MyProfileUiState.Error
+                    ExceptionCollector.sendException(t)
                 }
         }
     }
@@ -170,9 +170,9 @@ class MyProfileViewModel @Inject constructor(
                     uiState = MyProfileUiState.Success(it)
                     dismissDialog()
                 }
-                .onFailure {
+                .onFailure { t ->
                     onFailure()
-                    // 수정 실패
+                    ExceptionCollector.sendException(t)
                 }
         }
     }
@@ -206,8 +206,8 @@ class MyProfileViewModel @Inject constructor(
                         .onSuccess {
                             _event.send(MyProfileEvent.DeletePost)
                         }
-                        .onFailure {
-                            // 삭제 실패
+                        .onFailure { t ->
+                            ExceptionCollector.sendException(t)
                         }
                 }
             }

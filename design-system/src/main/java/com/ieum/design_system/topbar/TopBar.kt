@@ -23,6 +23,7 @@ private val topBarHeight = 52.dp
 @Composable
 fun TopBarForBack(
     modifier: Modifier = Modifier,
+    title: String? = null,
     onBack: () -> Unit,
 ) {
     Box(
@@ -36,6 +37,13 @@ fun TopBarForBack(
             onClick = onBack,
         ) {
             BackIcon()
+        }
+        title?.let {
+            Text(
+                modifier = Modifier.align(Alignment.Center),
+                text = it,
+                style = MaterialTheme.typography.headlineSmall,
+            )
         }
     }
 }

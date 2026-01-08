@@ -7,12 +7,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ieum.domain.model.auth.OAuthRequest
 import com.ieum.domain.usecase.auth.LoginUseCase
+import com.ieum.presentation.util.CustomException
+import com.ieum.presentation.util.ExceptionCollector
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,9 +33,8 @@ class LoginViewModel @Inject constructor(
                 .onSuccess { oAuthRequest ->
                     login(oAuthRequest)
                 }
-                .onFailure { t ->
-                    // OAuth 로그인 실패
-                    Timber.e(t)
+                .onFailure {
+                    ExceptionCollector.sendException(CustomException("카카오 인증에 실패했습니다"))
                 }
             uiState = LoginUiState.Idle
         }
@@ -50,8 +50,7 @@ class LoginViewModel @Inject constructor(
                 }
             }
             .onFailure { t ->
-                // 로그인 API 실패
-                Timber.e(t)
+                ExceptionCollector.sendException(t)
             }
     }
 }

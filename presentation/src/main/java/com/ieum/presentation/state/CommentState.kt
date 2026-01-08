@@ -21,6 +21,7 @@ import com.ieum.presentation.mapper.toUiModel
 import com.ieum.presentation.model.post.CommentUiModel
 import com.ieum.presentation.model.post.PostUiModel
 import com.ieum.presentation.screen.component.DropDownMenu
+import com.ieum.presentation.util.ExceptionCollector
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -76,8 +77,8 @@ sealed class CommentBottomSheetState {
                         _event.send(CommentBottomSheetEvent.RefreshCommentList)
                         typedCommentState.resetText()
                     }
-                    .onFailure {
-                        // 댓글 추가 실패
+                    .onFailure { t ->
+                        ExceptionCollector.sendException(t)
                     }
                 isLoading = false
             }
@@ -100,6 +101,8 @@ sealed class CommentBottomSheetState {
                     commentId = commentId
                 ).onSuccess {
                     _event.send(CommentBottomSheetEvent.RefreshCommentList)
+                }.onFailure { t ->
+                    ExceptionCollector.sendException(t)
                 }
                 isLoading = false
             }
