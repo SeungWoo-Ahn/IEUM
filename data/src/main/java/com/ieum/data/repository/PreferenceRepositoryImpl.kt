@@ -45,7 +45,10 @@ class PreferenceRepositoryImpl @Inject constructor(
     }
 
     override suspend fun savePendingToken() {
-        pendingToken?.let { saveToken(it) }
+        pendingToken?.let { token ->
+            cachedToken.update { token }
+            saveToken(token)
+        }
     }
 
     override fun getMyId(): Int? {

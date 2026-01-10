@@ -10,8 +10,9 @@ class RegisterUseCase @Inject constructor(
     private val userRepository: UserRepository,
     private val preferenceRepository: PreferenceRepository,
 ) {
-    suspend operator fun invoke(registerRequest: RegisterRequest): Result<Unit> = runCatchingExceptCancel {
-        userRepository.register(registerRequest)
-        preferenceRepository.savePendingToken()
-    }
+    suspend operator fun invoke(registerRequest: RegisterRequest): Result<Unit> =
+        runCatchingExceptCancel {
+            preferenceRepository.savePendingToken()
+            userRepository.register(registerRequest)
+        }
 }
