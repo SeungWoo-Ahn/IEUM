@@ -10,9 +10,13 @@ interface PreferenceRepository {
 
     suspend fun saveToken(token: Token)
 
-    suspend fun clear()
+    fun setPendingToken(token: Token)
+
+    suspend fun savePendingToken()
 
     fun getMyId(): Int?
 
     fun setMyId(id: Int)
+
+    suspend fun clear()
 }

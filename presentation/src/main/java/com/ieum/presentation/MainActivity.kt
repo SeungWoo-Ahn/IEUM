@@ -30,21 +30,22 @@ class MainActivity : ComponentActivity() {
         setContent {
             IEUMTheme {
                 val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-                if (uiState is MainActivityUiState.Success) {
-                    val appState = rememberIEUMAppState()
-
-                    LaunchedEffect(Unit) {
-                        ExceptionCollector.exceptionMessageFlow.collect {
-                            showToast(it)
-                        }
-                    }
-
-                    IEUMApp(
-                        appState = appState,
-                        isAuthenticated = (uiState as MainActivityUiState.Success).isAuthenticated
-                    )
+                val isAuthenticated = when (val state = uiState) {
+                    MainActivityUiState.Loading -> return@IEUMTheme
+                    is MainActivityUiState.Success -> state.isAuthenticated
                 }
+                val appState = rememberIEUMAppState()
+
+                LaunchedEffect(Unit) {
+                    ExceptionCollector.exceptionMessageFlow.collect {
+                        showToast(it)
+                    }
+                }
+
+                IEUMApp(
+                    appState = appState,
+                    isAuthenticated = isAuthenticated
+                )
             }
         }
     }
