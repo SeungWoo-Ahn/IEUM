@@ -13,7 +13,11 @@ class LoginUseCase @Inject constructor(
     suspend operator fun invoke(oAuthRequest: OAuthRequest): Result<Boolean> =
         runCatchingExceptCancel {
             val (token, oAuthUser) = authRepository.login(oAuthRequest)
-            preferenceRepository.saveToken(token)
+            if (oAuthUser.isRegistered) {
+                preferenceRepository.saveToken(token)
+            } else {
+                preferenceRepository.setPendingToken(token)
+            }
             oAuthUser.isRegistered
         }
 }
