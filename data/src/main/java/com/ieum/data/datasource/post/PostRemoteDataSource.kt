@@ -146,11 +146,6 @@ class PostRemoteDataSource @Inject constructor(
             }
             .body<GetPostListResponse<AllPostDto>>()
 
-    override suspend fun getPost(id: Int, type: String): AllPostDto =
-        ktorClient
-            .get("api/v1/posts/${type}/${id}")
-            .body<AllPostDto>()
-
     override suspend fun likePost(id: Int, type: String) {
         ktorClient.post("api/v1/posts/${type}/${id}/like")
     }

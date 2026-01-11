@@ -35,8 +35,6 @@ interface PostDataSource {
         diagnosis: String?
     ): GetPostListResponse<AllPostDto>
 
-    suspend fun getPost(id: Int, type: String): AllPostDto
-
     suspend fun likePost(id: Int, type: String)
 
     suspend fun unlikePost(id: Int, type: String)
