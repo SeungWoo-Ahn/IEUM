@@ -49,7 +49,7 @@ class PostDailyViewModel @Inject constructor(
     private val _imageList = mutableStateListOf<ImageSource>()
     val imageList: List<ImageSource> get() = _imageList
 
-    var shareCommunity by mutableStateOf(false)
+    var shareCommunity by mutableStateOf(true)
         private set
 
     init {
