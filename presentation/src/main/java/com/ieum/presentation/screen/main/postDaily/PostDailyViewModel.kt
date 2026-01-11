@@ -12,7 +12,7 @@ import androidx.navigation.toRoute
 import com.ieum.design_system.textfield.TextFieldState
 import com.ieum.domain.model.image.ImageSource
 import com.ieum.domain.model.post.PostDailyRequest
-import com.ieum.domain.usecase.post.GetDailyUseCase
+import com.ieum.domain.usecase.user.GetMyDailyUseCase
 import com.ieum.domain.usecase.post.PatchDailyUseCase
 import com.ieum.domain.usecase.post.PostDailyUseCase
 import com.ieum.presentation.navigation.MainScreen
@@ -30,7 +30,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PostDailyViewModel @Inject constructor(
-    private val getDailyUseCase: GetDailyUseCase,
+    private val getMyDailyUseCase: GetMyDailyUseCase,
     private val postDailyUseCase: PostDailyUseCase,
     private val patchDailyUseCase: PatchDailyUseCase,
     private val imageUtil: ImageUtil,
@@ -60,7 +60,7 @@ class PostDailyViewModel @Inject constructor(
 
     private fun loadDaily(id: Int) {
         viewModelScope.launch {
-            getDailyUseCase(id)
+            getMyDailyUseCase(id)
                 .onSuccess { daily ->
                     titleState.typeText(daily.title)
                     contentState.typeText(daily.content)
