@@ -24,5 +24,7 @@ interface UserRepository {
         toDate: String?,
     ): List<Post>
 
+    suspend fun getMyPost(id: Int, type: PostType): Post
+
     suspend fun getOthersPostList(page: Int, size: Int, id: Int): List<Post>
 }

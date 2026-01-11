@@ -25,5 +25,7 @@ interface UserDataSource {
         toDate: String?,
     ): GetPostListResponse<MyPostDto>
 
+    suspend fun getMyPost(id: Int, type: String): MyPostDto
+
     suspend fun getOtherPostList(page: Int, size: Int, id: Int): GetPostListResponse<OtherPostDto>
 }
