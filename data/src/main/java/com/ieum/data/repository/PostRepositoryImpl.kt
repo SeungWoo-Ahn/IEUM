@@ -67,11 +67,6 @@ class PostRepositoryImpl @Inject constructor(
             .posts
             .map(AllPostDto::toDomain)
 
-    override suspend fun getPost(id: Int, type: PostType): Post =
-        postDataSource
-            .getPost(id, type.key)
-            .toDomain()
-
     override suspend fun likePost(id: Int, type: PostType) =
         postDataSource.likePost(id, type.key)
 

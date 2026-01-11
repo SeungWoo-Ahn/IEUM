@@ -21,7 +21,7 @@ data class PostWellnessUiModel(
             diet = null,
             memo = "",
             imageList = emptyList(),
-            shared = false,
+            shared = true,
         )
     }
 }

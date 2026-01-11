@@ -23,8 +23,6 @@ interface PostRepository {
 
     suspend fun getAllPostList(page: Int, size: Int, diagnosis: Diagnosis?): List<Post>
 
-    suspend fun getPost(id: Int, type: PostType): Post
-
     suspend fun likePost(id: Int, type: PostType)
 
     suspend fun unlikePost(id: Int, type: PostType)

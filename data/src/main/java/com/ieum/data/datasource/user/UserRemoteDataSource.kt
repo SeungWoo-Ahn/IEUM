@@ -63,6 +63,11 @@ class UserRemoteDataSource @Inject constructor(
             }
             .body<GetPostListResponse<MyPostDto>>()
 
+    override suspend fun getMyPost(id: Int, type: String): MyPostDto =
+        ktorClient
+            .get("api/v1/users/posts/${type}/${id}")
+            .body<MyPostDto>()
+
     override suspend fun getOtherPostList(
         page: Int,
         size: Int,

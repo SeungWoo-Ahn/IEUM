@@ -50,6 +50,11 @@ class UserRepositoryImpl @Inject constructor(
             .posts
             .map(MyPostDto::toDomain)
 
+    override suspend fun getMyPost(id: Int, type: PostType): Post =
+        userDataSource
+            .getMyPost(id = id, type = type.key)
+            .toDomain()
+
     override suspend fun getOthersPostList(page: Int, size: Int, id: Int): List<Post> =
         userDataSource
             .getOtherPostList(page = page, size = size, id = id)
