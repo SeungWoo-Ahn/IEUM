@@ -2,6 +2,7 @@ package com.ieum.data.database
 
 import androidx.room.Database
 import androidx.room.TypeConverters
+import com.ieum.data.database.dao.PostDao
 import com.ieum.data.database.model.PostEntity
 import com.ieum.data.database.util.PostTypeConverters
 
@@ -12,5 +13,6 @@ import com.ieum.data.database.util.PostTypeConverters
     version = 1
 )
 @TypeConverters(PostTypeConverters::class)
-class RoomDatabase {
+abstract class RoomDatabase {
+    abstract fun postDao(): PostDao
 }
