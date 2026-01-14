@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.room.Room
 import com.ieum.data.database.IeumDatabase
 import com.ieum.data.database.dao.PostDao
-import com.ieum.data.database.util.PostTypeConverters
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,7 +25,6 @@ internal object DatabaseModule {
                 klass = IeumDatabase::class.java,
                 name = "ieum_database.db"
             )
-            .addTypeConverter(PostTypeConverters())
             .fallbackToDestructiveMigration(true)
             .build()
 
