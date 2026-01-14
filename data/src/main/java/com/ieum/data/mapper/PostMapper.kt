@@ -1,5 +1,6 @@
 package com.ieum.data.mapper
 
+import com.ieum.data.database.model.PostEntity
 import com.ieum.data.network.model.post.AllPostDto
 import com.ieum.data.network.model.post.CommentDto
 import com.ieum.data.network.model.post.DietDto
@@ -69,7 +70,6 @@ fun AllPostDto.toDomain(): Post =
             isLiked = isLiked,
             isMine = false,
             createdAt = createdAt,
-            updatedAt = updatedAt,
         )
         PostType.DAILY.key -> Post.Daily(
             id = id,
@@ -81,7 +81,6 @@ fun AllPostDto.toDomain(): Post =
             isLiked = isLiked,
             isMine = false,
             createdAt = createdAt,
-            updatedAt = updatedAt,
         )
         else -> throw IllegalArgumentException("Unknown post type: $type")
     }
@@ -101,7 +100,6 @@ fun MyPostDto.toDomain(): Post =
             isLiked = isLiked,
             isMine = true,
             createdAt = createdAt,
-            updatedAt = updatedAt,
         )
         PostType.DAILY.key -> Post.Daily(
             id = id,
@@ -113,7 +111,6 @@ fun MyPostDto.toDomain(): Post =
             isLiked = isLiked,
             isMine = true,
             createdAt = createdAt,
-            updatedAt = updatedAt,
         )
         else -> throw IllegalArgumentException("Unknown post type: $type")
     }
@@ -133,7 +130,6 @@ fun OtherPostDto.toDomain(): Post =
             isLiked = isLiked,
             isMine = false,
             createdAt = createdAt,
-            updatedAt = updatedAt,
         )
         PostType.DAILY.key -> Post.Daily(
             id = id,
@@ -145,9 +141,61 @@ fun OtherPostDto.toDomain(): Post =
             isLiked = isLiked,
             isMine = false,
             createdAt = createdAt,
-            updatedAt = updatedAt,
         )
         else -> throw IllegalArgumentException("Unknown post type: $type")
+    }
+
+fun AllPostDto.toEntity(): PostEntity =
+    PostEntity(
+        id = id,
+        type = type,
+        userId = userId,
+        userNickname = userNickname,
+        diagnosis = diagnosis,
+        mood = mood,
+        unusualSymptoms = unusualSymptoms,
+        medicationTaken = medicationTaken,
+        diet = diet,
+        memo = memo,
+        title = title,
+        content = content,
+        images = images?.map(PostImageDto::url),
+        shared = true,
+        isLiked = isLiked,
+        createdAt = createdAt,
+    )
+
+fun PostEntity.toDomain(): Post =
+    when (PostType.fromKey(type)) {
+        PostType.WELLNESS -> Post.Wellness(
+            id = id,
+            userInfo = if (userId != null && userNickname != null) {
+                PostUserInfo(userId, userNickname)
+            } else null,
+            mood = Mood.fromKey(requireNotNull(mood)),
+            unusualSymptoms = unusualSymptoms,
+            medicationTaken = requireNotNull(medicationTaken),
+            diet = diet?.toDomain(),
+            memo = memo,
+            imageList = images?.map(ImageSource::Remote),
+            shared = shared,
+            isLiked = isLiked,
+            isMine = false,
+            createdAt = createdAt,
+        )
+        PostType.DAILY -> Post.Daily(
+            id = id,
+            userInfo = if (userId != null && userNickname != null) {
+                PostUserInfo(userId, userNickname)
+            } else null,
+            title = requireNotNull(title),
+            content = requireNotNull(content),
+            imageList = images?.map(ImageSource::Remote),
+            shared = shared,
+            isLiked = isLiked,
+            isMine = false,
+            createdAt = createdAt,
+        )
     }
 
 fun CommentDto.toDomain(): Comment =
