@@ -1,10 +1,19 @@
 package com.ieum.data.repository
 
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.map
+import com.ieum.data.database.IeumDatabase
+import com.ieum.data.database.dao.PostDao
+import com.ieum.data.database.model.PostEntity
 import com.ieum.data.datasource.post.PostDataSource
 import com.ieum.data.mapper.asBody
 import com.ieum.data.mapper.toDomain
 import com.ieum.data.network.model.post.AllPostDto
 import com.ieum.data.network.model.post.CommentDto
+import com.ieum.data.repository.mediator.AllPostMediator
 import com.ieum.domain.model.image.ImageSource
 import com.ieum.domain.model.post.Comment
 import com.ieum.domain.model.post.Post
@@ -14,12 +23,16 @@ import com.ieum.domain.model.post.PostType
 import com.ieum.domain.model.post.PostWellnessRequest
 import com.ieum.domain.model.user.Diagnosis
 import com.ieum.domain.repository.PostRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class PostRepositoryImpl @Inject constructor(
-    private val postDataSource: PostDataSource
+    private val db: IeumDatabase,
+    private val postDataSource: PostDataSource,
+    private val postDao: PostDao,
 ) : PostRepository {
     override suspend fun postWellness(request: PostWellnessRequest): Int =
         postDataSource
@@ -64,8 +77,25 @@ class PostRepositoryImpl @Inject constructor(
     override suspend fun getAllPostList(page: Int, size: Int, diagnosis: Diagnosis?): List<Post> =
         postDataSource
             .getAllPostList(page = page, size = size, diagnosis = diagnosis?.key)
-            .posts
             .map(AllPostDto::toDomain)
+
+    @OptIn(ExperimentalPagingApi::class)
+    override fun getAllPostListFlow(diagnosis: Diagnosis?): Flow<PagingData<Post>> =
+        Pager(
+            config = PagingConfig(pageSize = 5),
+            pagingSourceFactory = { postDao.getAllPostPagingSource(diagnosis?.key) },
+            remoteMediator = AllPostMediator(
+                db = db,
+                diagnosis = diagnosis,
+                getAllPostList = postDataSource::getAllPostList,
+                deleteAllPostList = postDao::deleteAllPostList,
+                insertAll = postDao::insertAll,
+            )
+        )
+            .flow
+            .map { pagingData ->
+                pagingData.map(PostEntity::toDomain)
+            }
 
     override suspend fun getPost(id: Int, type: PostType): Post =
         postDataSource

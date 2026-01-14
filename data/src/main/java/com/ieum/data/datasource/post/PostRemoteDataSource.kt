@@ -137,7 +137,7 @@ class PostRemoteDataSource @Inject constructor(
         page: Int,
         size: Int,
         diagnosis: String?,
-    ): GetPostListResponse<AllPostDto> =
+    ): List<AllPostDto> =
         ktorClient
             .get("api/v1/posts") {
                 parameter("page", page)
@@ -145,6 +145,7 @@ class PostRemoteDataSource @Inject constructor(
                 diagnosis?.let { parameter("diagnosis", it) }
             }
             .body<GetPostListResponse<AllPostDto>>()
+            .posts
 
     override suspend fun getPost(id: Int, type: String): AllPostDto =
         ktorClient

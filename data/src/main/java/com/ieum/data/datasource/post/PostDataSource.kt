@@ -2,7 +2,6 @@ package com.ieum.data.datasource.post
 
 import com.ieum.data.network.model.post.AllPostDto
 import com.ieum.data.network.model.post.GetCommentListResponse
-import com.ieum.data.network.model.post.GetPostListResponse
 import com.ieum.data.network.model.post.PostCommentRequestBody
 import com.ieum.data.network.model.post.PostDailyRequestBody
 import com.ieum.data.network.model.post.PostDailyResponse
@@ -33,7 +32,7 @@ interface PostDataSource {
         page: Int,
         size: Int,
         diagnosis: String?
-    ): GetPostListResponse<AllPostDto>
+    ): List<AllPostDto>
 
     suspend fun getPost(id: Int, type: String): AllPostDto
 
