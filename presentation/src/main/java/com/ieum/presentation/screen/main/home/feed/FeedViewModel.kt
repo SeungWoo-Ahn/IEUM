@@ -5,13 +5,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.ieum.domain.model.post.Post
 import com.ieum.domain.usecase.post.DeletePostUseCase
+import com.ieum.domain.usecase.post.GetAllPostListFlowUseCase
 import com.ieum.domain.usecase.post.GetAllPostListUseCase
 import com.ieum.domain.usecase.post.TogglePostLikeUseCase
 import com.ieum.presentation.mapper.toDomain
@@ -35,6 +34,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FeedViewModel @Inject constructor(
+    private val getAllPostListFlowUseCase: GetAllPostListFlowUseCase,
     private val getAllPostListUseCase: GetAllPostListUseCase,
     private val togglePostLikeUseCase: TogglePostLikeUseCase,
     private val deletePostUseCase: DeletePostUseCase,
@@ -52,14 +52,15 @@ class FeedViewModel @Inject constructor(
     val postListFlow: Flow<PagingData<PostUiModel>> =
         selectedFilter
             .flatMapLatest { filter ->
-                Pager(
+                getAllPostListFlowUseCase(diagnosis = filter.toDomain())
+/*                Pager(
                     config = PagingConfig(pageSize = 5),
                     pagingSourceFactory = { AllPostPagerSource(
                         getAllPostListUseCase = getAllPostListUseCase,
                         diagnosis = filter.toDomain(),
                     ) }
                 )
-                    .flow
+                    .flow*/
             }
             .map { pagingData ->
                 pagingData.map(Post::toUiModel)
