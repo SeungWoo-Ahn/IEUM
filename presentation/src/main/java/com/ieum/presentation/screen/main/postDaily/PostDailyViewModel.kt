@@ -18,8 +18,6 @@ import com.ieum.domain.usecase.post.PostDailyUseCase
 import com.ieum.presentation.navigation.MainScreen
 import com.ieum.presentation.util.CustomException
 import com.ieum.presentation.util.ExceptionCollector
-import com.ieum.presentation.util.GlobalEvent
-import com.ieum.presentation.util.GlobalEventCollector
 import com.ieum.presentation.util.ImageUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -122,7 +120,6 @@ class PostDailyViewModel @Inject constructor(
     private suspend fun postDaily(request: PostDailyRequest) {
         postDailyUseCase(request)
             .onSuccess {
-                GlobalEventCollector.sendGlobalEvent(GlobalEvent.AddMyPost)
                 _event.send(PostDailyEvent.MoveBack)
             }
             .onFailure { t ->
@@ -133,7 +130,6 @@ class PostDailyViewModel @Inject constructor(
     private suspend fun patchDaily(id: Int, request: PostDailyRequest) {
         patchDailyUseCase(id, request)
             .onSuccess {
-                GlobalEventCollector.sendGlobalEvent(GlobalEvent.AddMyPost)
                 _event.send(PostDailyEvent.MoveBack)
             }
             .onFailure { t ->

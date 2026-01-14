@@ -11,7 +11,6 @@ import androidx.paging.map
 import com.ieum.domain.model.post.Post
 import com.ieum.domain.usecase.post.DeletePostUseCase
 import com.ieum.domain.usecase.post.GetAllPostListFlowUseCase
-import com.ieum.domain.usecase.post.GetAllPostListUseCase
 import com.ieum.domain.usecase.post.TogglePostLikeUseCase
 import com.ieum.presentation.mapper.toDomain
 import com.ieum.presentation.mapper.toUiModel
@@ -35,7 +34,6 @@ import javax.inject.Inject
 @HiltViewModel
 class FeedViewModel @Inject constructor(
     private val getAllPostListFlowUseCase: GetAllPostListFlowUseCase,
-    private val getAllPostListUseCase: GetAllPostListUseCase,
     private val togglePostLikeUseCase: TogglePostLikeUseCase,
     private val deletePostUseCase: DeletePostUseCase,
     val commentState: CommentState,
@@ -53,14 +51,6 @@ class FeedViewModel @Inject constructor(
         selectedFilter
             .flatMapLatest { filter ->
                 getAllPostListFlowUseCase(diagnosis = filter.toDomain())
-/*                Pager(
-                    config = PagingConfig(pageSize = 5),
-                    pagingSourceFactory = { AllPostPagerSource(
-                        getAllPostListUseCase = getAllPostListUseCase,
-                        diagnosis = filter.toDomain(),
-                    ) }
-                )
-                    .flow*/
             }
             .map { pagingData ->
                 pagingData.map(Post::toUiModel)
@@ -112,9 +102,6 @@ class FeedViewModel @Inject constructor(
                 }
                 DropDownMenu.DELETE -> {
                     deletePostUseCase(post.id, post.type)
-                        .onSuccess {
-                            _event.send(FeedEvent.DeletePost)
-                        }
                         .onFailure { t ->
                             ExceptionCollector.sendException(t)
                         }

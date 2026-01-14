@@ -183,10 +183,11 @@ class MyProfileViewModel @Inject constructor(
 
     fun togglePostLike(post: PostUiModel) {
         viewModelScope.launch {
-            togglePostLikeUseCase(id = post.id, type = post.type, isLiked = post.isLiked)
-                .onSuccess {
-                    _event.send(MyProfileEvent.TogglePostLike)
-                }
+            togglePostLikeUseCase(
+                id = post.id,
+                type = post.type,
+                isLiked = post.isLiked
+            )
         }
     }
 
@@ -203,9 +204,6 @@ class MyProfileViewModel @Inject constructor(
                 }
                 DropDownMenu.DELETE -> {
                     deletePostUseCase(post.id, post.type)
-                        .onSuccess {
-                            _event.send(MyProfileEvent.DeletePost)
-                        }
                         .onFailure { t ->
                             ExceptionCollector.sendException(t)
                         }

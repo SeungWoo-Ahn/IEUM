@@ -33,7 +33,6 @@ fun OthersProfileRoute(
         viewModel.event.collect {
             when (it) {
                 OtherProfileEvent.MoveBack -> onBack()
-                OtherProfileEvent.TogglePostLike -> postList.refresh()
             }
         }
     }
