@@ -23,8 +23,6 @@ interface PostRepository {
 
     suspend fun deleteDaily(id: Int)
 
-    suspend fun getAllPostList(page: Int, size: Int, diagnosis: Diagnosis?): List<Post>
-
     fun getAllPostListFlow(diagnosis: Diagnosis?): Flow<PagingData<Post>>
 
     suspend fun getPost(id: Int, type: PostType): Post

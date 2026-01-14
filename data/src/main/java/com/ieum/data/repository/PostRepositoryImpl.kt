@@ -11,7 +11,6 @@ import com.ieum.data.database.model.PostEntity
 import com.ieum.data.datasource.post.PostDataSource
 import com.ieum.data.mapper.asBody
 import com.ieum.data.mapper.toDomain
-import com.ieum.data.network.model.post.AllPostDto
 import com.ieum.data.network.model.post.CommentDto
 import com.ieum.data.repository.mediator.AllPostMediator
 import com.ieum.domain.model.image.ImageSource
@@ -73,11 +72,6 @@ class PostRepositoryImpl @Inject constructor(
     override suspend fun deleteDaily(id: Int) {
         postDataSource.deleteDaily(id)
     }
-
-    override suspend fun getAllPostList(page: Int, size: Int, diagnosis: Diagnosis?): List<Post> =
-        postDataSource
-            .getAllPostList(page = page, size = size, diagnosis = diagnosis?.key)
-            .map(AllPostDto::toDomain)
 
     @OptIn(ExperimentalPagingApi::class)
     override fun getAllPostListFlow(diagnosis: Diagnosis?): Flow<PagingData<Post>> =
