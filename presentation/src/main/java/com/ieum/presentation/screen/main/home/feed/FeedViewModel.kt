@@ -81,10 +81,11 @@ class FeedViewModel @Inject constructor(
 
     fun togglePostLike(post: PostUiModel) {
         viewModelScope.launch {
-            togglePostLikeUseCase(id = post.id, type = post.type, isLiked = post.isLiked)
-                .onSuccess {
-                    _event.send(FeedEvent.TogglePostLike)
-                }
+            togglePostLikeUseCase(
+                id = post.id,
+                type = post.type,
+                isLiked = post.isLiked
+            )
         }
     }
 

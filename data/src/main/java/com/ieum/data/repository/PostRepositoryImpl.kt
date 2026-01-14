@@ -102,11 +102,25 @@ class PostRepositoryImpl @Inject constructor(
             .getPost(id, type.key)
             .toDomain()
 
-    override suspend fun likePost(id: Int, type: PostType) =
-        postDataSource.likePost(id, type.key)
+    override suspend fun likePost(id: Int, type: PostType) {
+        postDao.likePost(id, type.key)
+        try {
+            postDataSource.likePost(id, type.key)
+        } catch (e: Exception) {
+            postDao.unLikePost(id, type.key)
+            throw e
+        }
+    }
 
-    override suspend fun unlikePost(id: Int, type: PostType) =
-        postDataSource.unlikePost(id, type.key)
+    override suspend fun unlikePost(id: Int, type: PostType) {
+        postDao.unLikePost(id, type.key)
+        try {
+            postDataSource.unlikePost(id, type.key)
+        } catch (e: Exception) {
+            postDao.likePost(id, type.key)
+            throw e
+        }
+    }
 
     override suspend fun getCommentList(
         page: Int,

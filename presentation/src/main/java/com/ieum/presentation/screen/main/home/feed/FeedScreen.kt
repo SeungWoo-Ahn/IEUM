@@ -54,7 +54,6 @@ fun FeedRoute(
     LaunchedEffect(Unit) {
         viewModel.event.collect {
             when (it) {
-                FeedEvent.TogglePostLike -> postList.refresh()
                 FeedEvent.DeletePost -> postList.refresh()
                 FeedEvent.MoveMyProfile -> moveMyProfile()
                 is FeedEvent.MoveOthersProfile -> moveOthersProfile(it.userId)

@@ -41,4 +41,18 @@ interface PostDao {
 
     @Query("DELETE FROM posts WHERE userId = :userId")
     suspend fun deleteOthersPostList(userId: Int)
+
+    @Query("""
+        UPDATE posts
+        SET isLiked = 1
+        WHERE id = :id AND type = :type
+    """)
+    suspend fun likePost(id: Int, type: String)
+
+    @Query("""
+        UPDATE posts
+        SET isLiked = 0
+        WHERE id = :id AND type = :type
+    """)
+    suspend fun unLikePost(id: Int, type: String)
 }
