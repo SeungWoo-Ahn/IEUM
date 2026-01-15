@@ -80,8 +80,13 @@ class PostRepositoryImpl @Inject constructor(
             pagingSourceFactory = { postDao.getAllPostPagingSource(diagnosis?.key) },
             remoteMediator = AllPostMediator(
                 db = db,
-                diagnosis = diagnosis,
-                getAllPostList = postDataSource::getAllPostList,
+                getAllPostList = { page, size ->
+                    postDataSource.getAllPostList(
+                        page = page,
+                        size = size,
+                        diagnosis = diagnosis?.key
+                    )
+                },
                 deleteAllPostList = postDao::deleteAllPostList,
                 insertAll = postDao::insertAll,
             )

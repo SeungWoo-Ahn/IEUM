@@ -165,7 +165,27 @@ fun AllPostDto.toEntity(): PostEntity =
         createdAt = createdAt,
     )
 
-fun PostEntity.toDomain(): Post =
+fun MyPostDto.toEntity(): PostEntity =
+    PostEntity(
+        id = id,
+        type = type,
+        userId = null,
+        userNickname = null,
+        diagnosis = diagnosis,
+        mood = mood,
+        unusualSymptoms = unusualSymptoms,
+        medicationTaken = medicationTaken,
+        diet = diet,
+        memo = memo,
+        title = title,
+        content = content,
+        images = images?.map(PostImageDto::url),
+        shared = shared,
+        isLiked = isLiked,
+        createdAt = createdAt
+    )
+
+fun PostEntity.toDomain(isMine: Boolean = false): Post =
     when (PostType.fromKey(type)) {
         PostType.WELLNESS -> Post.Wellness(
             id = id,
@@ -180,7 +200,7 @@ fun PostEntity.toDomain(): Post =
             imageList = images?.map(ImageSource::Remote),
             shared = shared,
             isLiked = isLiked,
-            isMine = false,
+            isMine = isMine,
             createdAt = createdAt,
         )
         PostType.DAILY -> Post.Daily(
@@ -193,7 +213,7 @@ fun PostEntity.toDomain(): Post =
             imageList = images?.map(ImageSource::Remote),
             shared = shared,
             isLiked = isLiked,
-            isMine = false,
+            isMine = isMine,
             createdAt = createdAt,
         )
     }

@@ -9,13 +9,11 @@ import com.ieum.data.database.IeumDatabase
 import com.ieum.data.database.model.PostEntity
 import com.ieum.data.mapper.toEntity
 import com.ieum.data.network.model.post.AllPostDto
-import com.ieum.domain.model.user.Diagnosis
 
 @OptIn(ExperimentalPagingApi::class)
 class AllPostMediator(
     private val db: IeumDatabase,
-    private val diagnosis: Diagnosis?,
-    private  val getAllPostList: suspend (page: Int, size: Int, diagnosis: String?) -> List<AllPostDto>,
+    private  val getAllPostList: suspend (page: Int, size: Int) -> List<AllPostDto>,
     private val deleteAllPostList: suspend () -> Unit,
     private val insertAll: suspend (posts: List<PostEntity>) -> Unit,
 ) : RemoteMediator<Int, PostEntity>() {
@@ -32,7 +30,7 @@ class AllPostMediator(
                     if (lastItem == null) 1 else (state.pages.size + 1)
                 }
             }
-            val response = getAllPostList(page, state.config.pageSize, diagnosis?.key)
+            val response = getAllPostList(page, state.config.pageSize)
 
             db.withTransaction {
                 if (loadType == LoadType.REFRESH) {
