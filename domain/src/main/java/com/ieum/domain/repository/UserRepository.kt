@@ -28,5 +28,5 @@ interface UserRepository {
 
     fun getMyPostListFlow(type: PostType): Flow<PagingData<Post>>
 
-    suspend fun getOthersPostList(page: Int, size: Int, id: Int): List<Post>
+    fun getOthersPostListFlow(id: Int): Flow<PagingData<Post>>
 }

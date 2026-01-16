@@ -1,6 +1,5 @@
 package com.ieum.data.datasource.user
 
-import com.ieum.data.network.model.post.GetPostListResponse
 import com.ieum.data.network.model.post.MyPostDto
 import com.ieum.data.network.model.post.OtherPostDto
 import com.ieum.data.network.model.user.MyProfileDto
@@ -25,5 +24,5 @@ interface UserDataSource {
         toDate: String?,
     ): List<MyPostDto>
 
-    suspend fun getOtherPostList(page: Int, size: Int, id: Int): GetPostListResponse<OtherPostDto>
+    suspend fun getOtherPostList(page: Int, size: Int, id: Int): List<OtherPostDto>
 }

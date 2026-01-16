@@ -115,36 +115,6 @@ fun MyPostDto.toDomain(): Post =
         else -> throw IllegalArgumentException("Unknown post type: $type")
     }
 
-fun OtherPostDto.toDomain(): Post =
-    when (type) {
-        PostType.WELLNESS.key -> Post.Wellness(
-            id = id,
-            userInfo = null,
-            mood = Mood.fromKey(requireNotNull(mood)),
-            unusualSymptoms = unusualSymptoms,
-            medicationTaken = requireNotNull(medicationTaken),
-            diet = diet?.toDomain(),
-            memo = memo,
-            imageList = images?.map(PostImageDto::toDomain),
-            shared = true,
-            isLiked = isLiked,
-            isMine = false,
-            createdAt = createdAt,
-        )
-        PostType.DAILY.key -> Post.Daily(
-            id = id,
-            userInfo = null,
-            title = requireNotNull(title),
-            content = requireNotNull(content),
-            imageList = images?.map(PostImageDto::toDomain),
-            shared = true,
-            isLiked = isLiked,
-            isMine = false,
-            createdAt = createdAt,
-        )
-        else -> throw IllegalArgumentException("Unknown post type: $type")
-    }
-
 fun AllPostDto.toEntity(myId: Int): PostEntity =
     PostEntity(
         id = id,
@@ -184,6 +154,27 @@ fun MyPostDto.toEntity(): PostEntity =
         shared = shared,
         isLiked = isLiked,
         isMine = true,
+        createdAt = createdAt
+    )
+
+fun OtherPostDto.toEntity(userId: Int): PostEntity =
+    PostEntity(
+        id = id,
+        type = type,
+        userId = userId,
+        userNickname = null,
+        diagnosis = diagnosis,
+        mood = mood,
+        unusualSymptoms = unusualSymptoms,
+        medicationTaken = medicationTaken,
+        diet = diet,
+        memo = memo,
+        title = title,
+        content = content,
+        images = images?.map(PostImageDto::url),
+        shared = true,
+        isLiked = isLiked,
+        isMine = false,
         createdAt = createdAt
     )
 

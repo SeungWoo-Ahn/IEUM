@@ -12,8 +12,8 @@ import com.ieum.data.datasource.user.UserDataSource
 import com.ieum.data.mapper.asBody
 import com.ieum.data.mapper.toDomain
 import com.ieum.data.network.model.post.MyPostDto
-import com.ieum.data.network.model.post.OtherPostDto
 import com.ieum.data.repository.mediator.MyPostMediator
+import com.ieum.data.repository.mediator.OthersPostMediator
 import com.ieum.domain.model.post.Post
 import com.ieum.domain.model.post.PostType
 import com.ieum.domain.model.user.MyProfile
@@ -87,9 +87,25 @@ class UserRepositoryImpl @Inject constructor(
                 pagingData.map(PostEntity::toDomain)
             }
 
-    override suspend fun getOthersPostList(page: Int, size: Int, id: Int): List<Post> =
-        userDataSource
-            .getOtherPostList(page = page, size = size, id = id)
-            .posts
-            .map(OtherPostDto::toDomain)
+    @OptIn(ExperimentalPagingApi::class)
+    override fun getOthersPostListFlow(id: Int): Flow<PagingData<Post>> =
+        Pager(
+            config = PagingConfig(pageSize = 5),
+            pagingSourceFactory = { postDao.getOthersPostPagingSource(id) },
+            remoteMediator = OthersPostMediator(
+                db = db,
+                userId = id,
+                getOthersPostList = { page, size -> userDataSource.getOtherPostList(
+                    page = page,
+                    size = size,
+                    id = id
+                ) },
+                deleteOthersPostList = { postDao.deleteOthersPostList(id) },
+                insertAll = postDao::insertAll
+            )
+        )
+            .flow
+            .map { pagingData ->
+                pagingData.map(PostEntity::toDomain)
+            }
 }
