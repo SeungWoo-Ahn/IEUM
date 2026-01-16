@@ -74,12 +74,16 @@ class PostRepositoryImpl @Inject constructor(
     }
 
     @OptIn(ExperimentalPagingApi::class)
-    override fun getAllPostListFlow(diagnosis: Diagnosis?): Flow<PagingData<Post>> =
+    override fun getAllPostListFlow(
+        diagnosis: Diagnosis?,
+        getMyId: suspend () -> Result<Int>
+    ): Flow<PagingData<Post>> =
         Pager(
             config = PagingConfig(pageSize = 5),
             pagingSourceFactory = { postDao.getAllPostPagingSource(diagnosis?.key) },
             remoteMediator = AllPostMediator(
                 db = db,
+                getMyId = getMyId,
                 getAllPostList = { page, size ->
                     postDataSource.getAllPostList(
                         page = page,
