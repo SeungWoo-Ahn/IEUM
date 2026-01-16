@@ -26,7 +26,7 @@ interface UserRepository {
         toDate: String?,
     ): List<Post>
 
-    fun getMyPostListFlow(userId: Int, type: PostType): Flow<PagingData<Post>>
+    fun getMyPostListFlow(type: PostType): Flow<PagingData<Post>>
 
     suspend fun getOthersPostList(page: Int, size: Int, id: Int): List<Post>
 }

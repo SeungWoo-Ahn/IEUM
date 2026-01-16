@@ -7,6 +7,7 @@ import androidx.paging.PagingData
 import androidx.paging.map
 import com.ieum.data.database.IeumDatabase
 import com.ieum.data.database.dao.PostDao
+import com.ieum.data.database.model.PostEntity
 import com.ieum.data.datasource.user.UserDataSource
 import com.ieum.data.mapper.asBody
 import com.ieum.data.mapper.toDomain
@@ -62,13 +63,10 @@ class UserRepositoryImpl @Inject constructor(
             .map(MyPostDto::toDomain)
 
     @OptIn(ExperimentalPagingApi::class)
-    override fun getMyPostListFlow(
-        userId: Int,
-        type: PostType
-    ): Flow<PagingData<Post>> =
+    override fun getMyPostListFlow(type: PostType): Flow<PagingData<Post>> =
         Pager(
             config = PagingConfig(pageSize = 5),
-            pagingSourceFactory = { postDao.getMyPostPagingSource(userId, type.key) },
+            pagingSourceFactory = { postDao.getMyPostPagingSource(type.key) },
             remoteMediator = MyPostMediator(
                 db = db,
                 getMyPostList = { page, size ->
@@ -80,13 +78,13 @@ class UserRepositoryImpl @Inject constructor(
                         toDate = null,
                     )
                 },
-                deleteMyPostList = { postDao.deleteMyPostList(userId, type.key) },
+                deleteMyPostList = { postDao.deleteMyPostList(type.key) },
                 insertAll = postDao::insertAll
             )
         )
             .flow
             .map { pagingData ->
-                pagingData.map { it.toDomain(isMine = true) }
+                pagingData.map(PostEntity::toDomain)
             }
 
     override suspend fun getOthersPostList(page: Int, size: Int, id: Int): List<Post> =
