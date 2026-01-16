@@ -18,10 +18,10 @@ interface PostDao {
 
     @Query("""
         SELECT * FROM posts
-        WHERE userId = :userId AND type = :type
+        WHERE isMine = 1 AND type = :type
         ORDER BY createdAt DESC
     """)
-    fun getMyPostPagingSource(userId: Int, type: String): PagingSource<Int, PostEntity>
+    fun getMyPostPagingSource(type: String): PagingSource<Int, PostEntity>
 
     @Query("""
         SELECT * FROM posts
@@ -36,8 +36,8 @@ interface PostDao {
     @Query("DELETE FROM posts")
     suspend fun deleteAllPostList()
 
-    @Query("DELETE FROM posts WHERE userId = :userId AND type = :type")
-    suspend fun deleteMyPostList(userId: Int, type: String)
+    @Query("DELETE FROM posts WHERE isMine = 1 AND type = :type")
+    suspend fun deleteMyPostList(type: String)
 
     @Query("DELETE FROM posts WHERE userId = :userId")
     suspend fun deleteOthersPostList(userId: Int)

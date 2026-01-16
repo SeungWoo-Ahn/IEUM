@@ -24,5 +24,6 @@ data class PostEntity(
     val images: List<String>? = null,
     val shared: Boolean,
     val isLiked: Boolean,
+    val isMine: Boolean,
     val createdAt: Int,
 )

@@ -145,7 +145,7 @@ fun OtherPostDto.toDomain(): Post =
         else -> throw IllegalArgumentException("Unknown post type: $type")
     }
 
-fun AllPostDto.toEntity(): PostEntity =
+fun AllPostDto.toEntity(myId: Int): PostEntity =
     PostEntity(
         id = id,
         type = type,
@@ -162,6 +162,7 @@ fun AllPostDto.toEntity(): PostEntity =
         images = images?.map(PostImageDto::url),
         shared = true,
         isLiked = isLiked,
+        isMine = userId == myId,
         createdAt = createdAt,
     )
 
@@ -182,10 +183,11 @@ fun MyPostDto.toEntity(): PostEntity =
         images = images?.map(PostImageDto::url),
         shared = shared,
         isLiked = isLiked,
+        isMine = true,
         createdAt = createdAt
     )
 
-fun PostEntity.toDomain(isMine: Boolean = false): Post =
+fun PostEntity.toDomain(): Post =
     when (PostType.fromKey(type)) {
         PostType.WELLNESS -> Post.Wellness(
             id = id,
