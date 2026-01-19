@@ -8,6 +8,7 @@ import com.ieum.data.network.model.post.MyPostDto
 import com.ieum.data.network.model.post.OtherPostDto
 import com.ieum.data.network.model.post.PostCommentRequestBody
 import com.ieum.data.network.model.post.PostDailyRequestBody
+import com.ieum.data.network.model.post.PostDailyResponse
 import com.ieum.data.network.model.post.PostImageDto
 import com.ieum.data.network.model.post.PostWellnessRequestBody
 import com.ieum.data.network.model.post.PostWellnessResponse
@@ -226,6 +227,27 @@ fun PostWellnessResponse.toEntity(): PostEntity =
         memo = memo,
         title = null,
         content = null,
+        images = images?.map(PostImageDto::url),
+        shared = shared,
+        isLiked = false,
+        isMine = true,
+        createdAt = createdAt
+    )
+
+fun PostDailyResponse.toEntity(): PostEntity =
+    PostEntity(
+        id = id,
+        type = type,
+        userId = null,
+        userNickname = null,
+        diagnosis = null,
+        mood = null,
+        unusualSymptoms = null,
+        medicationTaken = null,
+        diet = null,
+        memo = null,
+        title = title,
+        content = content,
         images = images?.map(PostImageDto::url),
         shared = shared,
         isLiked = false,

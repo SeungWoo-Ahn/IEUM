@@ -57,13 +57,16 @@ class PostRepositoryImpl @Inject constructor(
         postDataSource.deleteWellness(id)
     }
 
-    override suspend fun postDaily(request: PostDailyRequest): Int =
+    override suspend fun postDaily(request: PostDailyRequest) {
         postDataSource
             .postDaily(
                 body = request.asBody(),
                 fileList = request.imageList.map(ImageSource.Local::file)
             )
-            .id
+            .also {
+                postDao.insert(it.toEntity())
+            }
+    }
 
     override suspend fun patchDaily(id: Int, request: PostDailyRequest) {
         postDataSource.patchDaily(

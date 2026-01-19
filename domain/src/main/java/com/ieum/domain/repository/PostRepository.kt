@@ -17,7 +17,7 @@ interface PostRepository {
 
     suspend fun deleteWellness(id: Int)
 
-    suspend fun postDaily(request: PostDailyRequest): Int
+    suspend fun postDaily(request: PostDailyRequest)
 
     suspend fun patchDaily(id: Int, request: PostDailyRequest)
 
