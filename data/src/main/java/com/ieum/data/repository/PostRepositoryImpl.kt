@@ -11,6 +11,7 @@ import com.ieum.data.database.model.PostEntity
 import com.ieum.data.datasource.post.PostDataSource
 import com.ieum.data.mapper.asBody
 import com.ieum.data.mapper.toDomain
+import com.ieum.data.mapper.toEntity
 import com.ieum.data.network.model.post.CommentDto
 import com.ieum.data.repository.mediator.AllPostMediator
 import com.ieum.domain.model.image.ImageSource
@@ -33,13 +34,16 @@ class PostRepositoryImpl @Inject constructor(
     private val postDataSource: PostDataSource,
     private val postDao: PostDao,
 ) : PostRepository {
-    override suspend fun postWellness(request: PostWellnessRequest): Int =
+    override suspend fun postWellness(request: PostWellnessRequest) {
         postDataSource
             .postWellness(
                 body = request.asBody(),
                 fileList = request.imageList.map(ImageSource.Local::file)
             )
-            .id
+            .also {
+                postDao.insert(it.toEntity())
+            }
+    }
 
     override suspend fun patchWellness(id: Int, request: PostWellnessRequest) {
         postDataSource.patchWellness(

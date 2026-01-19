@@ -11,7 +11,7 @@ import com.ieum.domain.model.user.Diagnosis
 import kotlinx.coroutines.flow.Flow
 
 interface PostRepository {
-    suspend fun postWellness(request: PostWellnessRequest): Int
+    suspend fun postWellness(request: PostWellnessRequest)
 
     suspend fun patchWellness(id: Int, request: PostWellnessRequest)
 

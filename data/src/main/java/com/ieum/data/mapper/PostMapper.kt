@@ -10,6 +10,7 @@ import com.ieum.data.network.model.post.PostCommentRequestBody
 import com.ieum.data.network.model.post.PostDailyRequestBody
 import com.ieum.data.network.model.post.PostImageDto
 import com.ieum.data.network.model.post.PostWellnessRequestBody
+import com.ieum.data.network.model.post.PostWellnessResponse
 import com.ieum.domain.model.image.ImageSource
 import com.ieum.domain.model.post.AmountEaten
 import com.ieum.domain.model.post.Comment
@@ -210,6 +211,27 @@ fun PostEntity.toDomain(): Post =
             createdAt = createdAt,
         )
     }
+
+fun PostWellnessResponse.toEntity(): PostEntity =
+    PostEntity(
+        id = id,
+        type = type,
+        userId = null,
+        userNickname = null,
+        diagnosis = diagnosis,
+        mood = mood,
+        unusualSymptoms = unusualSymptoms,
+        medicationTaken = medicationTaken,
+        diet = diet,
+        memo = memo,
+        title = null,
+        content = null,
+        images = images?.map(PostImageDto::url),
+        shared = shared,
+        isLiked = false,
+        isMine = true,
+        createdAt = createdAt
+    )
 
 fun CommentDto.toDomain(): Comment =
     Comment(
