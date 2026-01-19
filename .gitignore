@@ -96,6 +96,7 @@ obj/
 .idea/jarRepositories.xml
 .idea/navEditor.xml
 .idea/inspectionProfiles/*
+.idea/copilot*.xml
 
 # Legacy Eclipse project files
 .classpath
