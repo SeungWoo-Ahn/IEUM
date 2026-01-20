@@ -10,7 +10,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.ieum.domain.model.image.ImageSource
 import com.ieum.domain.model.post.PostWellnessRequest
-import com.ieum.domain.usecase.post.GetWellnessUseCase
+import com.ieum.domain.usecase.user.GetMyWellnessUseCase
 import com.ieum.domain.usecase.post.PatchWellnessUseCase
 import com.ieum.domain.usecase.post.PostWellnessUseCase
 import com.ieum.presentation.mapper.toRequest
@@ -29,7 +29,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PostWellnessViewModel @Inject constructor(
-    private val getWellnessUseCase: GetWellnessUseCase,
+    private val getMyWellnessUseCase: GetMyWellnessUseCase,
     private val postWellnessUseCase: PostWellnessUseCase,
     private val patchWellnessUseCase: PatchWellnessUseCase,
     private val imageUtil: ImageUtil,
@@ -54,7 +54,7 @@ class PostWellnessViewModel @Inject constructor(
 
     private fun loadWellness(id: Int) {
         viewModelScope.launch {
-            getWellnessUseCase(id)
+            getMyWellnessUseCase(id)
                 .onSuccess { wellness ->
                     uiModel = wellness.toUiModel()
                 }

@@ -29,5 +29,5 @@ sealed class MainActivityUiState {
 
     data class Success(val isAuthenticated: Boolean) : MainActivityUiState()
 
-    val shouldKeepSplashScreen = this is Loading
+    val shouldKeepSplashScreen get() = this is Loading
 }

@@ -62,6 +62,11 @@ class UserRepositoryImpl @Inject constructor(
             .getMyPostList(page = page, size = size, type = type.key, fromDate = fromDate, toDate = toDate)
             .map(MyPostDto::toDomain)
 
+    override suspend fun getMyPost(id: Int, type: PostType): Post =
+        userDataSource
+            .getMyPost(id = id, type = type.key)
+            .toDomain()
+
     @OptIn(ExperimentalPagingApi::class)
     override fun getMyPostListFlow(type: PostType): Flow<PagingData<Post>> =
         Pager(

@@ -28,8 +28,6 @@ interface PostRepository {
         getMyId: suspend () -> Result<Int>
     ): Flow<PagingData<Post>>
 
-    suspend fun getPost(id: Int, type: PostType): Post
-
     suspend fun likePost(id: Int, type: PostType)
 
     suspend fun unlikePost(id: Int, type: PostType)
