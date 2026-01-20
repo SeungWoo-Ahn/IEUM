@@ -2,11 +2,17 @@ package com.ieum.data.database.model
 
 import androidx.room.Embedded
 import androidx.room.Entity
+import androidx.room.Index
 import com.ieum.data.network.model.post.DietDto
 
 @Entity(
     tableName = "posts",
-    primaryKeys = ["id", "type"]
+    primaryKeys = ["id", "type"],
+    indices = [
+        Index(value = ["shared", "createdAt"]),
+        Index(value = ["isMine", "type", "createdAt"]),
+        Index(value = ["userId", "createdAt"]),
+    ]
 )
 data class PostEntity(
     val id: Int,
