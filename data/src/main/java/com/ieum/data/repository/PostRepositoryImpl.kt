@@ -188,11 +188,15 @@ class PostRepositoryImpl @Inject constructor(
             }
     }
 
-    override suspend fun deleteComment(postId: Int, type: PostType, commentId: Int) =
+    override suspend fun deleteComment(postId: Int, type: PostType, commentId: Int) {
         postDataSource
             .deleteComment(
                 postId = postId,
                 type = type.key,
                 commentId = commentId,
             )
+            .also {
+                commentDao.deleteById(commentId)
+            }
+    }
 }
