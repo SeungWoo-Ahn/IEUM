@@ -3,6 +3,7 @@ package com.ieum.data.database.di
 import android.content.Context
 import androidx.room.Room
 import com.ieum.data.database.IeumDatabase
+import com.ieum.data.database.dao.CommentDao
 import com.ieum.data.database.dao.PostDao
 import dagger.Module
 import dagger.Provides
@@ -31,4 +32,8 @@ internal object DatabaseModule {
     @Provides
     @Singleton
     fun providesPostDao(db: IeumDatabase): PostDao = db.postDao()
+
+    @Provides
+    @Singleton
+    fun providesCommentDao(db: IeumDatabase): CommentDao = db.commentDao()
 }
