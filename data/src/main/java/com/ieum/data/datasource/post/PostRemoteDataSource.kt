@@ -91,14 +91,14 @@ class PostRemoteDataSource @Inject constructor(
         id: Int,
         body: PostWellnessRequestBody,
         fileList: List<File>
-    ) {
+    ): PostWellnessResponse =
         submitFormWithImages(
             httpMethod = HttpMethod.Patch,
             url = "api/v1/posts/wellness/${id}",
             body = body,
             fileList = fileList,
         )
-    }
+            .body<PostWellnessResponse>()
 
     override suspend fun deleteWellness(id: Int) {
         ktorClient.delete("api/v1/posts/wellness/${id}")
@@ -120,14 +120,14 @@ class PostRemoteDataSource @Inject constructor(
         id: Int,
         body: PostDailyRequestBody,
         fileList: List<File>,
-    ) {
+    ): PostDailyResponse =
         submitFormWithImages(
             httpMethod = HttpMethod.Patch,
             url = "api/v1/posts/daily/${id}",
             body = body,
             fileList = fileList,
         )
-    }
+            .body<PostDailyResponse>()
 
     override suspend fun deleteDaily(id: Int) {
         ktorClient.delete("api/v1/posts/daily/${id}")

@@ -160,7 +160,7 @@ fun PostListArea(
         ) {
             items(
                 count = postList.itemCount,
-                key = postList.itemKey { it.id },
+                key = postList.itemKey { "${it.type.key}_${it.id}" },
                 contentType = postList.itemContentType { it.type.key }
             ) { index ->
                 postList[index]?.let { post ->

@@ -15,7 +15,11 @@ interface PostDataSource {
         fileList: List<File>,
     ): PostWellnessResponse
 
-    suspend fun patchWellness(id: Int, body: PostWellnessRequestBody, fileList: List<File>)
+    suspend fun patchWellness(
+        id: Int,
+        body: PostWellnessRequestBody,
+        fileList: List<File>
+    ): PostWellnessResponse
 
     suspend fun deleteWellness(id: Int)
 
@@ -24,7 +28,11 @@ interface PostDataSource {
         fileList: List<File>,
     ): PostDailyResponse
 
-    suspend fun patchDaily(id: Int, body: PostDailyRequestBody, fileList: List<File>)
+    suspend fun patchDaily(
+        id: Int,
+        body: PostDailyRequestBody,
+        fileList: List<File>
+    ): PostDailyResponse
 
     suspend fun deleteDaily(id: Int)
 
