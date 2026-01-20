@@ -13,6 +13,7 @@ interface PostDao {
     @Query("""
         SELECT * FROM posts
         WHERE (:diagnosis IS NULL OR diagnosis LIKE '%' || :diagnosis || '%')
+        AND shared = 1
         ORDER BY createdAt DESC
     """)
     fun getAllPostPagingSource(diagnosis: String?): PagingSource<Int, PostEntity>
