@@ -55,6 +55,9 @@ class PostRepositoryImpl @Inject constructor(
 
     override suspend fun deleteWellness(id: Int) {
         postDataSource.deleteWellness(id)
+            .also {
+                postDao.deleteById(id, PostType.WELLNESS.key)
+            }
     }
 
     override suspend fun postDaily(request: PostDailyRequest) {
@@ -78,6 +81,9 @@ class PostRepositoryImpl @Inject constructor(
 
     override suspend fun deleteDaily(id: Int) {
         postDataSource.deleteDaily(id)
+            .also {
+                postDao.deleteById(id, PostType.DAILY.key)
+            }
     }
 
     @OptIn(ExperimentalPagingApi::class)
