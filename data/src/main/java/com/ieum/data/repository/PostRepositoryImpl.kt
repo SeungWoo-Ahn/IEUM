@@ -6,14 +6,16 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.ieum.data.database.IeumDatabase
+import com.ieum.data.database.dao.CommentDao
 import com.ieum.data.database.dao.PostDao
+import com.ieum.data.database.model.CommentEntity
 import com.ieum.data.database.model.PostEntity
 import com.ieum.data.datasource.post.PostDataSource
 import com.ieum.data.mapper.asBody
 import com.ieum.data.mapper.toDomain
 import com.ieum.data.mapper.toEntity
-import com.ieum.data.network.model.post.CommentDto
 import com.ieum.data.repository.mediator.AllPostMediator
+import com.ieum.data.repository.mediator.CommentMediator
 import com.ieum.domain.model.image.ImageSource
 import com.ieum.domain.model.post.Comment
 import com.ieum.domain.model.post.Post
@@ -33,6 +35,7 @@ class PostRepositoryImpl @Inject constructor(
     private val db: IeumDatabase,
     private val postDataSource: PostDataSource,
     private val postDao: PostDao,
+    private val commentDao: CommentDao,
 ) : PostRepository {
     override suspend fun postWellness(request: PostWellnessRequest) {
         postDataSource
@@ -146,21 +149,32 @@ class PostRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getCommentList(
-        page: Int,
-        size: Int,
+    @OptIn(ExperimentalPagingApi::class)
+    override fun getCommentListFlow(
         postId: Int,
-        type: PostType
-    ): List<Comment> =
-        postDataSource
-            .getCommentList(
-                page = page,
-                size = size,
-                postId = postId,
-                type = type.key
+        type: PostType,
+        getMyId: suspend () -> Result<Int>,
+    ): Flow<PagingData<Comment>> =
+        Pager(
+            config = PagingConfig(pageSize = 20),
+            pagingSourceFactory = { commentDao.getCommentPagingSource() },
+            remoteMediator = CommentMediator(
+                db = db,
+                getMyId = getMyId,
+                getCommentList = { page, size -> postDataSource.getCommentList(
+                    page = page,
+                    size = size,
+                    postId = postId,
+                    type = type.key
+                ) },
+                deleteAll = commentDao::deleteAll,
+                insertAll = commentDao::insertAll,
             )
-            .comments
-            .map(CommentDto::toDomain)
+        )
+            .flow
+            .map { pagingData ->
+                pagingData.map(CommentEntity::toDomain)
+            }
 
     override suspend fun postComment(request: PostCommentRequest) =
         postDataSource

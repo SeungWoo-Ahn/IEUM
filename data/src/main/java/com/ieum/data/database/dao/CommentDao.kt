@@ -11,7 +11,7 @@ import com.ieum.data.database.model.CommentEntity
 interface CommentDao {
     @Query("""
         SELECT * FROM comments
-        ORDER BY createdAt DESC
+        ORDER BY createdAt
     """)
     fun getCommentPagingSource(): PagingSource<Int, CommentEntity>
 

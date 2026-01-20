@@ -1,5 +1,6 @@
 package com.ieum.data.mapper
 
+import com.ieum.data.database.model.CommentEntity
 import com.ieum.data.database.model.PostEntity
 import com.ieum.data.network.model.post.AllPostDto
 import com.ieum.data.network.model.post.CommentDto
@@ -255,14 +256,24 @@ fun PostDailyResponse.toEntity(): PostEntity =
         createdAt = createdAt
     )
 
-fun CommentDto.toDomain(): Comment =
+fun CommentDto.toEntity(myId: Int): CommentEntity =
+    CommentEntity(
+        id = id,
+        userId = userId,
+        nickname = nickname,
+        content = content,
+        createdAt = createdAt,
+        isMine = userId == myId
+    )
+
+fun CommentEntity.toDomain(): Comment =
     Comment(
         id = id,
         userId = userId,
         nickname = nickname,
         content = content,
         createdAt = createdAt,
-        isMine = false
+        isMine = isMine
     )
 
 fun PostCommentRequest.asBody(): PostCommentRequestBody =

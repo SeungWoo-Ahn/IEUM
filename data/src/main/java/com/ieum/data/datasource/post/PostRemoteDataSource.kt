@@ -3,6 +3,7 @@ package com.ieum.data.datasource.post
 import com.ieum.data.network.di.IEUMNetwork
 import com.ieum.data.network.di.NetworkSource
 import com.ieum.data.network.model.post.AllPostDto
+import com.ieum.data.network.model.post.CommentDto
 import com.ieum.data.network.model.post.GetCommentListResponse
 import com.ieum.data.network.model.post.GetPostListResponse
 import com.ieum.data.network.model.post.PostCommentRequestBody
@@ -165,10 +166,11 @@ class PostRemoteDataSource @Inject constructor(
         size: Int,
         postId: Int,
         type: String
-    ): GetCommentListResponse =
+    ): List<CommentDto> =
         ktorClient
             .get("api/v1/posts/${type}/${postId}/comments")
             .body<GetCommentListResponse>()
+            .comments
 
     override suspend fun postComment(
         postId: Int,

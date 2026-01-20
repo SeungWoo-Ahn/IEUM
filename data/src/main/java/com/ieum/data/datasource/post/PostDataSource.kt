@@ -1,7 +1,7 @@
 package com.ieum.data.datasource.post
 
 import com.ieum.data.network.model.post.AllPostDto
-import com.ieum.data.network.model.post.GetCommentListResponse
+import com.ieum.data.network.model.post.CommentDto
 import com.ieum.data.network.model.post.PostCommentRequestBody
 import com.ieum.data.network.model.post.PostDailyRequestBody
 import com.ieum.data.network.model.post.PostDailyResponse
@@ -53,7 +53,7 @@ interface PostDataSource {
         size: Int,
         postId: Int,
         type: String,
-    ): GetCommentListResponse
+    ): List<CommentDto>
 
     suspend fun postComment(postId: Int, type: String, body: PostCommentRequestBody)
 

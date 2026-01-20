@@ -34,7 +34,11 @@ interface PostRepository {
 
     suspend fun unlikePost(id: Int, type: PostType)
 
-    suspend fun getCommentList(page: Int, size: Int, postId: Int, type: PostType): List<Comment>
+    fun getCommentListFlow(
+        postId: Int,
+        type: PostType,
+        getMyId: suspend () -> Result<Int>,
+    ): Flow<PagingData<Comment>>
 
     suspend fun postComment(request: PostCommentRequest)
 
