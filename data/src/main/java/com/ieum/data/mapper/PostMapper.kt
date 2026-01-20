@@ -256,14 +256,14 @@ fun PostDailyResponse.toEntity(): PostEntity =
         createdAt = createdAt
     )
 
-fun CommentDto.toEntity(myId: Int): CommentEntity =
+fun CommentDto.toEntity(myId: Int? = null): CommentEntity =
     CommentEntity(
         id = id,
         userId = userId,
         nickname = nickname,
         content = content,
         createdAt = createdAt,
-        isMine = userId == myId
+        isMine = myId?.let { it == userId } ?: false
     )
 
 fun CommentEntity.toDomain(): Comment =

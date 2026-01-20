@@ -176,13 +176,17 @@ class PostRepositoryImpl @Inject constructor(
                 pagingData.map(CommentEntity::toDomain)
             }
 
-    override suspend fun postComment(request: PostCommentRequest) =
+    override suspend fun postComment(request: PostCommentRequest) {
         postDataSource
             .postComment(
                 postId = request.postId,
                 type = request.postType.key,
                 body = request.asBody()
             )
+            .also {
+                commentDao.insert(it.toEntity())
+            }
+    }
 
     override suspend fun deleteComment(postId: Int, type: PostType, commentId: Int) =
         postDataSource

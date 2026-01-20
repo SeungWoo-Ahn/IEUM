@@ -176,12 +176,12 @@ class PostRemoteDataSource @Inject constructor(
         postId: Int,
         type: String,
         body: PostCommentRequestBody
-    ) {
+    ): CommentDto =
         ktorClient
             .post("api/v1/posts/${type}/${postId}/comments") {
                 setBody(body)
             }
-    }
+            .body<CommentDto>()
 
     override suspend fun deleteComment(
         postId: Int,

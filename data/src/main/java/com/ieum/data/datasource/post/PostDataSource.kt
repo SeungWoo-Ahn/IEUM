@@ -55,7 +55,7 @@ interface PostDataSource {
         type: String,
     ): List<CommentDto>
 
-    suspend fun postComment(postId: Int, type: String, body: PostCommentRequestBody)
+    suspend fun postComment(postId: Int, type: String, body: PostCommentRequestBody): CommentDto
 
     suspend fun deleteComment(postId: Int, type: String, commentId: Int)
 }

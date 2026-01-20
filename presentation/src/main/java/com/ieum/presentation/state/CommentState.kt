@@ -19,10 +19,8 @@ import com.ieum.presentation.model.post.PostUiModel
 import com.ieum.presentation.screen.component.DropDownMenu
 import com.ieum.presentation.util.ExceptionCollector
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -37,9 +35,6 @@ sealed class CommentBottomSheetState {
         private val postCommentUseCase: PostCommentUseCase,
         private val deleteCommentUseCase: DeleteCommentUseCase,
     ) : CommentBottomSheetState() {
-        private val _event = Channel<CommentBottomSheetEvent>()
-        val event: Flow<CommentBottomSheetEvent> = _event.receiveAsFlow()
-
         var isLoading by mutableStateOf(false)
             private set
 
@@ -62,7 +57,6 @@ sealed class CommentBottomSheetState {
                 isLoading = true
                 postCommentUseCase(request)
                     .onSuccess {
-                        _event.send(CommentBottomSheetEvent.RefreshCommentList)
                         typedCommentState.resetText()
                     }
                     .onFailure { t ->
@@ -87,19 +81,13 @@ sealed class CommentBottomSheetState {
                     postId = postId,
                     type = type,
                     commentId = commentId
-                ).onSuccess {
-                    _event.send(CommentBottomSheetEvent.RefreshCommentList)
-                }.onFailure { t ->
+                ).onFailure { t ->
                     ExceptionCollector.sendException(t)
                 }
                 isLoading = false
             }
         }
     }
-}
-
-sealed class CommentBottomSheetEvent {
-    data object RefreshCommentList : CommentBottomSheetEvent()
 }
 
 class CommentState @Inject constructor(
