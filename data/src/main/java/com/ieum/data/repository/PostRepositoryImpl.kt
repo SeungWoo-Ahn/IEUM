@@ -103,7 +103,7 @@ class PostRepositoryImpl @Inject constructor(
         getMyId: suspend () -> Result<Int>
     ): Flow<PagingData<Post>> =
         Pager(
-            config = PagingConfig(pageSize = 5),
+            config = PagingConfig(pageSize = 10),
             pagingSourceFactory = { postDao.getAllPostPagingSource(diagnosis?.key) },
             remoteMediator = AllPostMediator(
                 db = db,
@@ -123,11 +123,6 @@ class PostRepositoryImpl @Inject constructor(
             .map { pagingData ->
                 pagingData.map(PostEntity::toDomain)
             }
-
-    override suspend fun getPost(id: Int, type: PostType): Post =
-        postDataSource
-            .getPost(id, type.key)
-            .toDomain()
 
     override suspend fun likePost(id: Int, type: PostType) {
         postDao.likePost(id, type.key)

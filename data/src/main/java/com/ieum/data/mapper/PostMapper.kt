@@ -58,36 +58,6 @@ fun PostDailyRequest.asBody(): PostDailyRequestBody =
         shared = shared,
     )
 
-fun AllPostDto.toDomain(): Post =
-    when (type) {
-        PostType.WELLNESS.key -> Post.Wellness(
-            id = id,
-            userInfo = PostUserInfo(userId, userNickname),
-            mood = Mood.fromKey(requireNotNull(mood)),
-            unusualSymptoms = unusualSymptoms,
-            medicationTaken = requireNotNull(medicationTaken),
-            diet = diet?.toDomain(),
-            memo = memo,
-            imageList = images?.map(PostImageDto::toDomain),
-            shared = true,
-            isLiked = isLiked,
-            isMine = false,
-            createdAt = createdAt,
-        )
-        PostType.DAILY.key -> Post.Daily(
-            id = id,
-            userInfo = PostUserInfo(userId, userNickname),
-            title = requireNotNull(title),
-            content = requireNotNull(content),
-            imageList = images?.map(PostImageDto::toDomain),
-            shared = true,
-            isLiked = isLiked,
-            isMine = false,
-            createdAt = createdAt,
-        )
-        else -> throw IllegalArgumentException("Unknown post type: $type")
-    }
-
 fun MyPostDto.toDomain(): Post =
     when (type) {
         PostType.WELLNESS.key -> Post.Wellness(
