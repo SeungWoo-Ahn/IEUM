@@ -18,21 +18,23 @@ class CommentMediator(
     private val deleteAll: suspend () -> Unit,
     private val insertAll: suspend (comments: List<CommentEntity>) -> Unit,
 ): RemoteMediator<Int, CommentEntity>() {
+    private var lastRequestedPage = 1
+
     override suspend fun load(
         loadType: LoadType,
         state: PagingState<Int, CommentEntity>
     ): MediatorResult {
         return try {
             val page = when (loadType) {
-                LoadType.REFRESH -> 1
+                LoadType.REFRESH -> 1.also { lastRequestedPage = it }
                 LoadType.PREPEND -> return MediatorResult.Success(endOfPaginationReached = true)
-                LoadType.APPEND -> {
-                    val lastItem = state.lastItemOrNull()
-                    if (lastItem == null) 1 else (state.pages.size + 1)
-                }
+                LoadType.APPEND -> lastRequestedPage + 1
             }
             val myId = getMyId().getOrThrow()
             val response = getCommentList(page, state.config.pageSize)
+            if (response.isNotEmpty()) {
+                lastRequestedPage = page
+            }
 
             db.withTransaction {
                 if (loadType == LoadType.REFRESH) {

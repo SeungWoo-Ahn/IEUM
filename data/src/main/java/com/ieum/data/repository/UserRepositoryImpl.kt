@@ -70,7 +70,7 @@ class UserRepositoryImpl @Inject constructor(
     @OptIn(ExperimentalPagingApi::class)
     override fun getMyPostListFlow(type: PostType): Flow<PagingData<Post>> =
         Pager(
-            config = PagingConfig(pageSize = 5),
+            config = PagingConfig(pageSize = 10, enablePlaceholders = false),
             pagingSourceFactory = { postDao.getMyPostPagingSource(type.key) },
             remoteMediator = MyPostMediator(
                 db = db,
@@ -95,7 +95,7 @@ class UserRepositoryImpl @Inject constructor(
     @OptIn(ExperimentalPagingApi::class)
     override fun getOthersPostListFlow(id: Int): Flow<PagingData<Post>> =
         Pager(
-            config = PagingConfig(pageSize = 5),
+            config = PagingConfig(pageSize = 10, enablePlaceholders = false),
             pagingSourceFactory = { postDao.getOthersPostPagingSource(id) },
             remoteMediator = OthersPostMediator(
                 db = db,

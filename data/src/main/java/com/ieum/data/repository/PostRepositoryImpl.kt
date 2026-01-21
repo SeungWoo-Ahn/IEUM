@@ -103,7 +103,7 @@ class PostRepositoryImpl @Inject constructor(
         getMyId: suspend () -> Result<Int>
     ): Flow<PagingData<Post>> =
         Pager(
-            config = PagingConfig(pageSize = 10),
+            config = PagingConfig(pageSize = 10, enablePlaceholders = false),
             pagingSourceFactory = { postDao.getAllPostPagingSource(diagnosis?.key) },
             remoteMediator = AllPostMediator(
                 db = db,
@@ -151,7 +151,7 @@ class PostRepositoryImpl @Inject constructor(
         getMyId: suspend () -> Result<Int>,
     ): Flow<PagingData<Comment>> =
         Pager(
-            config = PagingConfig(pageSize = 20),
+            config = PagingConfig(pageSize = 20, enablePlaceholders = false),
             pagingSourceFactory = { commentDao.getCommentPagingSource() },
             remoteMediator = CommentMediator(
                 db = db,

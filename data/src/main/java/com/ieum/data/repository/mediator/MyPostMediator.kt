@@ -18,20 +18,22 @@ class MyPostMediator(
     private val deleteMyPostList: suspend () -> Unit,
     private val insertAll: suspend (posts: List<PostEntity>) -> Unit,
 ) : RemoteMediator<Int, PostEntity>() {
+    private var lastRequestedPage = 1
+
     override suspend fun load(
         loadType: LoadType,
         state: PagingState<Int, PostEntity>
     ): MediatorResult {
         return try {
             val page = when (loadType) {
-                LoadType.REFRESH -> 1
+                LoadType.REFRESH -> 1.also { lastRequestedPage = it }
                 LoadType.PREPEND -> return MediatorResult.Success(endOfPaginationReached = true)
-                LoadType.APPEND -> {
-                    val lastItem = state.lastItemOrNull()
-                    if (lastItem == null) 1 else (state.pages.size + 1)
-                }
+                LoadType.APPEND -> lastRequestedPage + 1
             }
             val response = getMyPostList(page, state.config.pageSize)
+            if (response.isNotEmpty()) {
+                lastRequestedPage = page
+            }
 
             db.withTransaction {
                 if (loadType == LoadType.REFRESH) {
