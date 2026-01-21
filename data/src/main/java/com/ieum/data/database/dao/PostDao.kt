@@ -12,8 +12,12 @@ import com.ieum.data.database.model.PostEntity
 interface PostDao {
     @Query("""
         SELECT * FROM posts
-        WHERE (:diagnosis IS NULL OR diagnosis LIKE '%' || :diagnosis || '%')
-        AND shared = 1
+        WHERE shared = 1
+        AND (
+            (type = 'wellness' AND (:diagnosis IS NULL OR diagnosis LIKE '%' || :diagnosis || '%'))
+            OR
+            type = 'daily'
+        )
         ORDER BY createdAt DESC
     """)
     fun getAllPostPagingSource(diagnosis: String?): PagingSource<Int, PostEntity>

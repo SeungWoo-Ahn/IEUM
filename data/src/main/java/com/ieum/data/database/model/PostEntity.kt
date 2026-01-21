@@ -9,7 +9,7 @@ import com.ieum.data.network.model.post.DietDto
     tableName = "posts",
     primaryKeys = ["id", "type"],
     indices = [
-        Index(value = ["shared", "createdAt"]),
+        Index(value = ["shared", "type", "createdAt"]),
         Index(value = ["isMine", "type", "createdAt"]),
         Index(value = ["userId", "createdAt"]),
     ]
