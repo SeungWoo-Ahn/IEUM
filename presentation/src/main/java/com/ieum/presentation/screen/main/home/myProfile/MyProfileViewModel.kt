@@ -5,8 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
@@ -15,6 +13,7 @@ import com.ieum.domain.model.user.MyProfile
 import com.ieum.domain.usecase.address.GetAddressListUseCase
 import com.ieum.domain.usecase.post.DeletePostUseCase
 import com.ieum.domain.usecase.post.TogglePostLikeUseCase
+import com.ieum.domain.usecase.user.GetMyPostListFlowUseCase
 import com.ieum.domain.usecase.user.GetMyPostListUseCase
 import com.ieum.domain.usecase.user.GetMyProfileUseCase
 import com.ieum.domain.usecase.user.PatchMyProfileUseCase
@@ -42,6 +41,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MyProfileViewModel @Inject constructor(
     private val getMyProfileUseCase: GetMyProfileUseCase,
+    private val getMyPostListFlowUseCase: GetMyPostListFlowUseCase,
     private val getMyPostListUseCase: GetMyPostListUseCase,
     private val patchMyProfileUseCase: PatchMyProfileUseCase,
     private val getAddressListUseCase: GetAddressListUseCase,
@@ -67,14 +67,7 @@ class MyProfileViewModel @Inject constructor(
     val postListFlow: Flow<PagingData<PostUiModel>> =
         postType
             .flatMapLatest { type ->
-                Pager(
-                    config = PagingConfig(pageSize = 5),
-                    pagingSourceFactory = { MyPostPagerSource(
-                        getMyPostListUseCase = getMyPostListUseCase,
-                        postType = type.toDomain(),
-                    ) }
-                )
-                    .flow
+                getMyPostListFlowUseCase(type.toDomain())
             }
             .map { pagingData ->
                 pagingData.map(Post::toUiModel)
@@ -183,10 +176,11 @@ class MyProfileViewModel @Inject constructor(
 
     fun togglePostLike(post: PostUiModel) {
         viewModelScope.launch {
-            togglePostLikeUseCase(id = post.id, type = post.type, isLiked = post.isLiked)
-                .onSuccess {
-                    _event.send(MyProfileEvent.TogglePostLike)
-                }
+            togglePostLikeUseCase(
+                id = post.id,
+                type = post.type,
+                isLiked = post.isLiked
+            )
         }
     }
 
@@ -203,9 +197,6 @@ class MyProfileViewModel @Inject constructor(
                 }
                 DropDownMenu.DELETE -> {
                     deletePostUseCase(post.id, post.type)
-                        .onSuccess {
-                            _event.send(MyProfileEvent.DeletePost)
-                        }
                         .onFailure { t ->
                             ExceptionCollector.sendException(t)
                         }

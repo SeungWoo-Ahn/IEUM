@@ -52,7 +52,7 @@ class UserRemoteDataSource @Inject constructor(
         type: String,
         fromDate: String?,
         toDate: String?,
-    ): GetPostListResponse<MyPostDto> =
+    ): List<MyPostDto> =
         ktorClient
             .get("api/v1/users/posts") {
                 parameter("page", page)
@@ -62,6 +62,7 @@ class UserRemoteDataSource @Inject constructor(
                 toDate?.let { parameter("toDate", it) }
             }
             .body<GetPostListResponse<MyPostDto>>()
+            .posts
 
     override suspend fun getMyPost(id: Int, type: String): MyPostDto =
         ktorClient
@@ -72,11 +73,12 @@ class UserRemoteDataSource @Inject constructor(
         page: Int,
         size: Int,
         id: Int,
-    ): GetPostListResponse<OtherPostDto> =
+    ): List<OtherPostDto> =
         ktorClient
             .get("api/v1/users/${id}/posts") {
                 parameter("page", page)
                 parameter("pageSize", size)
             }
             .body<GetPostListResponse<OtherPostDto>>()
+            .posts
 }

@@ -41,7 +41,6 @@ import com.ieum.presentation.model.post.AmountEatenUiModel
 import com.ieum.presentation.model.post.DietUiModel
 import com.ieum.presentation.model.user.CancerDiagnoseUiModel
 import com.ieum.presentation.model.user.CancerStageUiModel
-import com.ieum.presentation.state.CommentBottomSheetEvent
 import com.ieum.presentation.state.CommentBottomSheetState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -330,14 +329,6 @@ fun CommentListSheet(
     val commentPostEnabled by remember { derivedStateOf {
         state.isLoading.not() && state.typedCommentState.validate()
     } }
-
-    LaunchedEffect(Unit) {
-        state.event.collect {
-            when (it) {
-                CommentBottomSheetEvent.RefreshCommentList -> commentList.refresh()
-            }
-        }
-    }
 
     IEUMBottomSheet(
         sheetState = sheetState,

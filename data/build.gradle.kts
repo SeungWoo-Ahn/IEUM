@@ -71,4 +71,10 @@ dependencies {
 
     // timber
     implementation(libs.timber)
+
+    // room
+    implementation(libs.androidx.room)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.paging)
 }

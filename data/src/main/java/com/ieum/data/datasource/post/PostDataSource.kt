@@ -1,8 +1,7 @@
 package com.ieum.data.datasource.post
 
 import com.ieum.data.network.model.post.AllPostDto
-import com.ieum.data.network.model.post.GetCommentListResponse
-import com.ieum.data.network.model.post.GetPostListResponse
+import com.ieum.data.network.model.post.CommentDto
 import com.ieum.data.network.model.post.PostCommentRequestBody
 import com.ieum.data.network.model.post.PostDailyRequestBody
 import com.ieum.data.network.model.post.PostDailyResponse
@@ -16,7 +15,11 @@ interface PostDataSource {
         fileList: List<File>,
     ): PostWellnessResponse
 
-    suspend fun patchWellness(id: Int, body: PostWellnessRequestBody, fileList: List<File>)
+    suspend fun patchWellness(
+        id: Int,
+        body: PostWellnessRequestBody,
+        fileList: List<File>
+    ): PostWellnessResponse
 
     suspend fun deleteWellness(id: Int)
 
@@ -25,7 +28,11 @@ interface PostDataSource {
         fileList: List<File>,
     ): PostDailyResponse
 
-    suspend fun patchDaily(id: Int, body: PostDailyRequestBody, fileList: List<File>)
+    suspend fun patchDaily(
+        id: Int,
+        body: PostDailyRequestBody,
+        fileList: List<File>
+    ): PostDailyResponse
 
     suspend fun deleteDaily(id: Int)
 
@@ -33,7 +40,7 @@ interface PostDataSource {
         page: Int,
         size: Int,
         diagnosis: String?
-    ): GetPostListResponse<AllPostDto>
+    ): List<AllPostDto>
 
     suspend fun likePost(id: Int, type: String)
 
@@ -44,9 +51,9 @@ interface PostDataSource {
         size: Int,
         postId: Int,
         type: String,
-    ): GetCommentListResponse
+    ): List<CommentDto>
 
-    suspend fun postComment(postId: Int, type: String, body: PostCommentRequestBody)
+    suspend fun postComment(postId: Int, type: String, body: PostCommentRequestBody): CommentDto
 
     suspend fun deleteComment(postId: Int, type: String, commentId: Int)
 }

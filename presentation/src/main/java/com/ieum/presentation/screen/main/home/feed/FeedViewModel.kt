@@ -5,14 +5,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.ieum.domain.model.post.Post
 import com.ieum.domain.usecase.post.DeletePostUseCase
-import com.ieum.domain.usecase.post.GetAllPostListUseCase
+import com.ieum.domain.usecase.post.GetAllPostListFlowUseCase
 import com.ieum.domain.usecase.post.TogglePostLikeUseCase
 import com.ieum.presentation.mapper.toDomain
 import com.ieum.presentation.mapper.toUiModel
@@ -35,7 +33,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FeedViewModel @Inject constructor(
-    private val getAllPostListUseCase: GetAllPostListUseCase,
+    private val getAllPostListFlowUseCase: GetAllPostListFlowUseCase,
     private val togglePostLikeUseCase: TogglePostLikeUseCase,
     private val deletePostUseCase: DeletePostUseCase,
     val commentState: CommentState,
@@ -52,14 +50,7 @@ class FeedViewModel @Inject constructor(
     val postListFlow: Flow<PagingData<PostUiModel>> =
         selectedFilter
             .flatMapLatest { filter ->
-                Pager(
-                    config = PagingConfig(pageSize = 5),
-                    pagingSourceFactory = { AllPostPagerSource(
-                        getAllPostListUseCase = getAllPostListUseCase,
-                        diagnosis = filter.toDomain(),
-                    ) }
-                )
-                    .flow
+                getAllPostListFlowUseCase(diagnosis = filter.toDomain())
             }
             .map { pagingData ->
                 pagingData.map(Post::toUiModel)
@@ -80,10 +71,11 @@ class FeedViewModel @Inject constructor(
 
     fun togglePostLike(post: PostUiModel) {
         viewModelScope.launch {
-            togglePostLikeUseCase(id = post.id, type = post.type, isLiked = post.isLiked)
-                .onSuccess {
-                    _event.send(FeedEvent.TogglePostLike)
-                }
+            togglePostLikeUseCase(
+                id = post.id,
+                type = post.type,
+                isLiked = post.isLiked
+            )
         }
     }
 
@@ -110,9 +102,6 @@ class FeedViewModel @Inject constructor(
                 }
                 DropDownMenu.DELETE -> {
                     deletePostUseCase(post.id, post.type)
-                        .onSuccess {
-                            _event.send(FeedEvent.DeletePost)
-                        }
                         .onFailure { t ->
                             ExceptionCollector.sendException(t)
                         }

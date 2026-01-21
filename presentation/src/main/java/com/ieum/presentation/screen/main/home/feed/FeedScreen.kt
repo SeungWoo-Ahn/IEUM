@@ -26,8 +26,6 @@ import com.ieum.presentation.screen.component.DropDownMenu
 import com.ieum.presentation.screen.component.PostListArea
 import com.ieum.presentation.screen.component.WriteFAB
 import com.ieum.presentation.state.CommentBottomSheetState
-import com.ieum.presentation.util.GlobalEvent
-import com.ieum.presentation.util.GlobalEventCollector
 
 @Composable
 fun FeedRoute(
@@ -44,18 +42,8 @@ fun FeedRoute(
     val commentBottomSheetState = viewModel.commentState.bottomSheetState
 
     LaunchedEffect(Unit) {
-        GlobalEventCollector.globalEventFlow.collect {
-            when (it) {
-                GlobalEvent.AddMyPost -> postList.refresh()
-            }
-        }
-    }
-
-    LaunchedEffect(Unit) {
         viewModel.event.collect {
             when (it) {
-                FeedEvent.TogglePostLike -> postList.refresh()
-                FeedEvent.DeletePost -> postList.refresh()
                 FeedEvent.MoveMyProfile -> moveMyProfile()
                 is FeedEvent.MoveOthersProfile -> moveOthersProfile(it.userId)
                 is FeedEvent.MoveEditPost -> when (it.type) {

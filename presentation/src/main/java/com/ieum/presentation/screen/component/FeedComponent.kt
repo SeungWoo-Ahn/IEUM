@@ -35,6 +35,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.itemContentType
+import androidx.paging.compose.itemKey
 import com.ieum.design_system.icon.CommentIcon
 import com.ieum.design_system.icon.HeartIcon
 import com.ieum.design_system.icon.MealIcon
@@ -53,7 +55,6 @@ import com.ieum.design_system.theme.White
 import com.ieum.design_system.theme.screenPadding
 import com.ieum.design_system.util.noRippleClickable
 import com.ieum.domain.model.image.ImageSource
-import com.ieum.domain.model.post.PostType
 import com.ieum.domain.model.post.PostUserInfo
 import com.ieum.presentation.R
 import com.ieum.presentation.model.post.DiagnoseFilterUiModel
@@ -159,13 +160,8 @@ fun PostListArea(
         ) {
             items(
                 count = postList.itemCount,
-                key = {
-                    when (val post = postList[it]) {
-                        is PostUiModel.Wellness -> "${PostType.WELLNESS.key}${post.id}"
-                        is PostUiModel.Daily -> "${PostType.DAILY.key}${post.id}"
-                        null -> it
-                    }
-                }
+                key = postList.itemKey { "${it.type.key}_${it.id}" },
+                contentType = postList.itemContentType { it.type.key }
             ) { index ->
                 postList[index]?.let { post ->
                     PostItem(

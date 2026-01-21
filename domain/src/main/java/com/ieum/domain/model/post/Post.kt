@@ -14,7 +14,6 @@ sealed class Post {
     abstract val isMine: Boolean
 
     abstract val createdAt: Int
-    abstract val updatedAt: Int
 
     data class Wellness(
         override val id: Int,
@@ -29,7 +28,6 @@ sealed class Post {
         override val isLiked: Boolean,
         override val isMine: Boolean,
         override val createdAt: Int,
-        override val updatedAt: Int,
     ) : Post()
 
     data class Daily(
@@ -42,6 +40,5 @@ sealed class Post {
         override val isLiked: Boolean,
         override val isMine: Boolean,
         override val createdAt: Int,
-        override val updatedAt: Int,
     ) : Post()
 }

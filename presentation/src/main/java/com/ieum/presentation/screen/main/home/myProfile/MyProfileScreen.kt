@@ -34,8 +34,6 @@ import com.ieum.presentation.screen.component.PatchResidenceDialog
 import com.ieum.presentation.screen.component.PatchSurgeryDialog
 import com.ieum.presentation.screen.component.PostListArea
 import com.ieum.presentation.state.CommentBottomSheetState
-import com.ieum.presentation.util.GlobalEvent
-import com.ieum.presentation.util.GlobalEventCollector
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
@@ -52,12 +50,22 @@ fun MyProfileRoute(
     val dialogState = viewModel.dialogState
     val commentBottomSheetState = viewModel.commentState.bottomSheetState
 
+    LaunchedEffect(Unit) {
+        viewModel.event.collect {
+            when (it) {
+                is MyProfileEvent.MoveEditPost -> when (it.type) {
+                    PostType.WELLNESS -> moveEditWellness(it.postId)
+                    PostType.DAILY -> moveEditDaily(it.postId)
+                }
+            }
+        }
+    }
+
     MyProfileScreen(
         modifier = modifier,
         currentTab = viewModel.currentTab,
         uiState = viewModel.uiState,
         postTypeFlow = viewModel.postType,
-        event = viewModel.event,
         postListFlow = viewModel.postListFlow,
         onTabClick = viewModel::onTab,
         onPostType = viewModel::onPostType,
@@ -71,12 +79,6 @@ fun MyProfileRoute(
         onMenu = viewModel::onPostMenu,
         onLike = viewModel::togglePostLike,
         onComment = viewModel::showCommentSheet,
-        moveEditPost = { id, type ->
-            when (type) {
-                PostType.WELLNESS -> moveEditWellness(id)
-                PostType.DAILY -> moveEditDaily(id)
-            }
-        },
         moveSetting = moveSetting,
         getMyProfile = viewModel::getMyProfile,
     )
@@ -146,7 +148,6 @@ private fun MyProfileScreen(
     currentTab: MyProfileTab,
     uiState: MyProfileUiState,
     postTypeFlow: StateFlow<PostTypeUiModel>,
-    event: Flow<MyProfileEvent>,
     postListFlow: Flow<PagingData<PostUiModel>>,
     onTabClick: (MyProfileTab) -> Unit,
     onPostType: (PostTypeUiModel) -> Unit,
@@ -160,7 +161,6 @@ private fun MyProfileScreen(
     onMenu: (PostUiModel, DropDownMenu) -> Unit,
     onLike: (PostUiModel) -> Unit,
     onComment: (PostUiModel) -> Unit,
-    moveEditPost: (Int, PostType) -> Unit,
     moveSetting: () -> Unit,
     getMyProfile: () -> Unit,
 ) {
@@ -194,24 +194,6 @@ private fun MyProfileScreen(
             MyProfileTab.POST_LIST -> {
                 val postType by postTypeFlow.collectAsStateWithLifecycle()
                 val postList = postListFlow.collectAsLazyPagingItems()
-
-                LaunchedEffect(Unit) {
-                    GlobalEventCollector.globalEventFlow.collect {
-                        when (it) {
-                            GlobalEvent.AddMyPost -> postList.refresh()
-                        }
-                    }
-                }
-
-                LaunchedEffect(Unit) {
-                    event.collect {
-                        when (it) {
-                            MyProfileEvent.TogglePostLike -> postList.refresh()
-                            MyProfileEvent.DeletePost -> postList.refresh()
-                            is MyProfileEvent.MoveEditPost -> moveEditPost(it.postId, it.type)
-                        }
-                    }
-                }
 
                 Column(
                     modifier = Modifier.fillMaxWidth()

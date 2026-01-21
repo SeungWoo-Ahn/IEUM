@@ -3,6 +3,7 @@ package com.ieum.data.datasource.post
 import com.ieum.data.network.di.IEUMNetwork
 import com.ieum.data.network.di.NetworkSource
 import com.ieum.data.network.model.post.AllPostDto
+import com.ieum.data.network.model.post.CommentDto
 import com.ieum.data.network.model.post.GetCommentListResponse
 import com.ieum.data.network.model.post.GetPostListResponse
 import com.ieum.data.network.model.post.PostCommentRequestBody
@@ -91,14 +92,14 @@ class PostRemoteDataSource @Inject constructor(
         id: Int,
         body: PostWellnessRequestBody,
         fileList: List<File>
-    ) {
+    ): PostWellnessResponse =
         submitFormWithImages(
             httpMethod = HttpMethod.Patch,
             url = "api/v1/posts/wellness/${id}",
             body = body,
             fileList = fileList,
         )
-    }
+            .body<PostWellnessResponse>()
 
     override suspend fun deleteWellness(id: Int) {
         ktorClient.delete("api/v1/posts/wellness/${id}")
@@ -120,14 +121,14 @@ class PostRemoteDataSource @Inject constructor(
         id: Int,
         body: PostDailyRequestBody,
         fileList: List<File>,
-    ) {
+    ): PostDailyResponse =
         submitFormWithImages(
             httpMethod = HttpMethod.Patch,
             url = "api/v1/posts/daily/${id}",
             body = body,
             fileList = fileList,
         )
-    }
+            .body<PostDailyResponse>()
 
     override suspend fun deleteDaily(id: Int) {
         ktorClient.delete("api/v1/posts/daily/${id}")
@@ -137,7 +138,7 @@ class PostRemoteDataSource @Inject constructor(
         page: Int,
         size: Int,
         diagnosis: String?,
-    ): GetPostListResponse<AllPostDto> =
+    ): List<AllPostDto> =
         ktorClient
             .get("api/v1/posts") {
                 parameter("page", page)
@@ -145,6 +146,7 @@ class PostRemoteDataSource @Inject constructor(
                 diagnosis?.let { parameter("diagnosis", it) }
             }
             .body<GetPostListResponse<AllPostDto>>()
+            .posts
 
     override suspend fun likePost(id: Int, type: String) {
         ktorClient.post("api/v1/posts/${type}/${id}/like")
@@ -159,21 +161,22 @@ class PostRemoteDataSource @Inject constructor(
         size: Int,
         postId: Int,
         type: String
-    ): GetCommentListResponse =
+    ): List<CommentDto> =
         ktorClient
             .get("api/v1/posts/${type}/${postId}/comments")
             .body<GetCommentListResponse>()
+            .comments
 
     override suspend fun postComment(
         postId: Int,
         type: String,
         body: PostCommentRequestBody
-    ) {
+    ): CommentDto =
         ktorClient
             .post("api/v1/posts/${type}/${postId}/comments") {
                 setBody(body)
             }
-    }
+            .body<CommentDto>()
 
     override suspend fun deleteComment(
         postId: Int,
