@@ -59,8 +59,8 @@ fun PostDailyRequest.asBody(): PostDailyRequestBody =
     )
 
 fun MyPostDto.toDomain(): Post =
-    when (type) {
-        PostType.WELLNESS.key -> Post.Wellness(
+    when (PostType.fromKey(type)) {
+        PostType.WELLNESS -> Post.Wellness(
             id = id,
             userInfo = null,
             mood = Mood.fromKey(requireNotNull(mood)),
@@ -74,7 +74,7 @@ fun MyPostDto.toDomain(): Post =
             isMine = true,
             createdAt = createdAt,
         )
-        PostType.DAILY.key -> Post.Daily(
+        PostType.DAILY -> Post.Daily(
             id = id,
             userInfo = null,
             title = requireNotNull(title),
@@ -85,7 +85,6 @@ fun MyPostDto.toDomain(): Post =
             isMine = true,
             createdAt = createdAt,
         )
-        else -> throw IllegalArgumentException("Unknown post type: $type")
     }
 
 fun AllPostDto.toEntity(myId: Int): PostEntity =

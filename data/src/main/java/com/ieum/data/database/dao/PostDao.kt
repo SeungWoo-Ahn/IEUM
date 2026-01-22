@@ -31,6 +31,12 @@ interface PostDao {
 
     @Query("""
         SELECT * FROM posts
+        WHERE id = :id AND type = :type AND isMine = 1
+    """)
+    suspend fun getMyPost(id: Int, type: String): PostEntity?
+
+    @Query("""
+        SELECT * FROM posts
         WHERE userId = :userId
         ORDER BY createdAt DESC
     """)
