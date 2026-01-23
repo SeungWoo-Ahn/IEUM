@@ -112,8 +112,8 @@ fun MyPostDto.toEntity(): PostEntity =
     PostEntity(
         id = id,
         type = type,
-        userId = null,
-        userNickname = null,
+        userId = userId,
+        userNickname = userNickname,
         diagnosis = diagnosis,
         mood = mood,
         unusualSymptoms = unusualSymptoms,
@@ -129,12 +129,12 @@ fun MyPostDto.toEntity(): PostEntity =
         createdAt = createdAt
     )
 
-fun OtherPostDto.toEntity(userId: Int): PostEntity =
+fun OtherPostDto.toEntity(): PostEntity =
     PostEntity(
         id = id,
         type = type,
         userId = userId,
-        userNickname = null,
+        userNickname = userNickname,
         diagnosis = diagnosis,
         mood = mood,
         unusualSymptoms = unusualSymptoms,
@@ -154,9 +154,7 @@ fun PostEntity.toDomain(): Post =
     when (PostType.fromKey(type)) {
         PostType.WELLNESS -> Post.Wellness(
             id = id,
-            userInfo = if (userId != null && userNickname != null) {
-                PostUserInfo(userId, userNickname)
-            } else null,
+            userInfo = PostUserInfo(userId, userNickname),
             mood = Mood.fromKey(requireNotNull(mood)),
             unusualSymptoms = unusualSymptoms,
             medicationTaken = requireNotNull(medicationTaken),
@@ -170,9 +168,7 @@ fun PostEntity.toDomain(): Post =
         )
         PostType.DAILY -> Post.Daily(
             id = id,
-            userInfo = if (userId != null && userNickname != null) {
-                PostUserInfo(userId, userNickname)
-            } else null,
+            userInfo = PostUserInfo(userId, userNickname),
             title = requireNotNull(title),
             content = requireNotNull(content),
             imageList = images?.map(ImageSource::Remote),
@@ -187,8 +183,8 @@ fun PostWellnessResponse.toEntity(): PostEntity =
     PostEntity(
         id = id,
         type = type,
-        userId = null,
-        userNickname = null,
+        userId = userId,
+        userNickname = userNickname,
         diagnosis = diagnosis,
         mood = mood,
         unusualSymptoms = unusualSymptoms,
@@ -208,8 +204,8 @@ fun PostDailyResponse.toEntity(): PostEntity =
     PostEntity(
         id = id,
         type = type,
-        userId = null,
-        userNickname = null,
+        userId = userId,
+        userNickname = userNickname,
         diagnosis = null,
         mood = null,
         unusualSymptoms = null,

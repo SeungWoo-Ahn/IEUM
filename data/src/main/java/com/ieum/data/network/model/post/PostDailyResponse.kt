@@ -5,6 +5,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class PostDailyResponse(
     val id: Int,
+    val userId: Int,
+    val userNickname: String,
     val type: String,
     val title: String? = null,
     val content: String,

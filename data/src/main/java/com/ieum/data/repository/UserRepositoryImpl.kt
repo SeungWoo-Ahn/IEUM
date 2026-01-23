@@ -103,7 +103,6 @@ class UserRepositoryImpl @Inject constructor(
             pagingSourceFactory = { postDao.getOthersPostPagingSource(id) },
             remoteMediator = OthersPostMediator(
                 db = db,
-                userId = id,
                 getOthersPostList = { page, size -> userDataSource.getOtherPostList(
                     page = page,
                     size = size,

@@ -5,6 +5,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class PostWellnessResponse(
     val id: Int,
+    val userId: Int,
+    val userNickname: String,
     val type: String,
     val diagnosis: List<String>,
     val mood: Int,

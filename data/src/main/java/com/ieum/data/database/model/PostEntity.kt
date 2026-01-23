@@ -17,8 +17,8 @@ import com.ieum.data.network.model.post.DietDto
 data class PostEntity(
     val id: Int,
     val type: String,
-    val userId: Int? = null,
-    val userNickname: String? = null,
+    val userId: Int,
+    val userNickname: String,
     val diagnosis: List<String>? = null,
     val mood: Int? = null,
     val unusualSymptoms: String? = null,
