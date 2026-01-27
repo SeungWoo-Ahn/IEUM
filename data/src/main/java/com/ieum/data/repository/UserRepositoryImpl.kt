@@ -11,6 +11,7 @@ import com.ieum.data.database.model.PostEntity
 import com.ieum.data.datasource.user.UserDataSource
 import com.ieum.data.mapper.asBody
 import com.ieum.data.mapper.toDomain
+import com.ieum.data.mapper.toEntity
 import com.ieum.data.network.model.post.MyPostDto
 import com.ieum.data.repository.mediator.MyPostMediator
 import com.ieum.data.repository.mediator.OthersPostMediator
@@ -63,9 +64,12 @@ class UserRepositoryImpl @Inject constructor(
             .map(MyPostDto::toDomain)
 
     override suspend fun getMyPost(id: Int, type: PostType): Post =
-        userDataSource
-            .getMyPost(id = id, type = type.key)
-            .toDomain()
+        postDao.getMyPost(id, type.key)?.toDomain() ?: run {
+            userDataSource.getMyPost(id, type.key)
+                .toEntity()
+                .also { postDao.insert(it) }
+                .toDomain()
+        }
 
     @OptIn(ExperimentalPagingApi::class)
     override fun getMyPostListFlow(type: PostType): Flow<PagingData<Post>> =
@@ -99,7 +103,6 @@ class UserRepositoryImpl @Inject constructor(
             pagingSourceFactory = { postDao.getOthersPostPagingSource(id) },
             remoteMediator = OthersPostMediator(
                 db = db,
-                userId = id,
                 getOthersPostList = { page, size -> userDataSource.getOtherPostList(
                     page = page,
                     size = size,

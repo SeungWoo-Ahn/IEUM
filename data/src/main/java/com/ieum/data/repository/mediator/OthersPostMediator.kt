@@ -13,7 +13,6 @@ import com.ieum.data.network.model.post.OtherPostDto
 @OptIn(ExperimentalPagingApi::class)
 class OthersPostMediator(
     private val db: IeumDatabase,
-    private val userId: Int,
     private val getOthersPostList: suspend  (page: Int, size: Int) -> List<OtherPostDto>,
     private val deleteOthersPostList: suspend () -> Unit,
     private val insertAll: suspend (posts: List<PostEntity>) -> Unit,
@@ -39,7 +38,7 @@ class OthersPostMediator(
                 if (loadType == LoadType.REFRESH) {
                     deleteOthersPostList()
                 }
-                insertAll(response.map { it.toEntity(userId) })
+                insertAll(response.map(OtherPostDto::toEntity))
             }
 
             MediatorResult.Success(endOfPaginationReached = response.size < state.config.pageSize)

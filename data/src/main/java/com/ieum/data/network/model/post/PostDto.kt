@@ -4,6 +4,8 @@ import kotlinx.serialization.Serializable
 
 interface BasePostDto {
     val id: Int
+    val userId: Int
+    val userNickname: String
     val type: String
     val images: List<PostImageDto>?
     val isLiked: Boolean
@@ -29,8 +31,8 @@ internal interface DailyDto {
 @Serializable
 data class AllPostDto(
     override val id: Int,
-    val userId: Int,
-    val userNickname: String,
+    override val userId: Int,
+    override val userNickname: String,
     override val type: String,
     override val diagnosis: List<String>? = null,
     override val mood: Int? = null,
@@ -50,6 +52,8 @@ data class AllPostDto(
 @Serializable
 data class MyPostDto(
     override val id: Int,
+    override val userId: Int,
+    override val userNickname: String,
     override val type: String,
     override val diagnosis: List<String>? = null,
     override val mood: Int? = null,
@@ -70,6 +74,8 @@ data class MyPostDto(
 @Serializable
 data class OtherPostDto(
     override val id: Int,
+    override val userId: Int,
+    override val userNickname: String,
     override val type: String,
     override val diagnosis: List<String>? = null,
     override val mood: Int? = null,
