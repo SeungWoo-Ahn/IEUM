@@ -22,6 +22,9 @@ import com.ieum.domain.model.user.OthersProfile
 import com.ieum.domain.model.user.PatchProfileRequest
 import com.ieum.domain.model.user.RegisterRequest
 import com.ieum.domain.repository.UserRepository
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -52,16 +55,34 @@ class UserRepositoryImpl @Inject constructor(
             .getOthersProfile(id)
             .toDomain()
 
-    override suspend fun getMyPostList(
-        page: Int,
-        size: Int,
+    override suspend fun getMyMonthlyPostList(
         type: PostType,
-        fromDate: String?,
-        toDate: String?,
-    ): List<Post> =
-        userDataSource
-            .getMyPostList(page = page, size = size, type = type.key, fromDate = fromDate, toDate = toDate)
-            .map(MyPostDto::toDomain)
+        fromDate: String,
+        toDate: String
+    ): List<Post> = coroutineScope {
+        val firstResponse = userDataSource.getMyPostList(
+            page = 1,
+            size = 100,
+            type = type.key,
+            fromDate = fromDate,
+            toDate = toDate,
+        )
+        val totalPages = firstResponse.pagination.totalPages
+        if (totalPages <= 1) return@coroutineScope firstResponse.posts.map(MyPostDto::toDomain)
+        val deferredPosts = (2..totalPages).map { page ->
+            async {
+                userDataSource.getMyPostList(
+                    page = page,
+                    size = 100,
+                    type = type.key,
+                    fromDate = fromDate,
+                    toDate = toDate,
+                ).posts
+            }
+        }
+        val remainingPosts = deferredPosts.awaitAll().flatten()
+        (firstResponse.posts + remainingPosts).map(MyPostDto::toDomain)
+    }
 
     override suspend fun getMyPost(id: Int, type: PostType): Post =
         postDao.getMyPost(id, type.key)?.toDomain() ?: run {
@@ -85,7 +106,7 @@ class UserRepositoryImpl @Inject constructor(
                         type = type.key,
                         fromDate = null,
                         toDate = null,
-                    )
+                    ).posts
                 },
                 deleteMyPostList = { postDao.deleteMyPostList(type.key) },
                 insertAll = postDao::insertAll

@@ -1,5 +1,6 @@
 package com.ieum.data.datasource.user
 
+import com.ieum.data.network.model.post.GetPostListResponse
 import com.ieum.data.network.model.post.MyPostDto
 import com.ieum.data.network.model.post.OtherPostDto
 import com.ieum.data.network.model.user.MyProfileDto
@@ -22,7 +23,7 @@ interface UserDataSource {
         type: String,
         fromDate: String?,
         toDate: String?,
-    ): List<MyPostDto>
+    ): GetPostListResponse<MyPostDto>
 
     suspend fun getMyPost(id: Int, type: String): MyPostDto
 

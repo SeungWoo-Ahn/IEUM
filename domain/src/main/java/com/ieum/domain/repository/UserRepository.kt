@@ -18,13 +18,7 @@ interface UserRepository {
 
     suspend fun getOthersProfile(id: Int): OthersProfile
 
-    suspend fun getMyPostList(
-        page: Int,
-        size: Int,
-        type: PostType,
-        fromDate: String?,
-        toDate: String?,
-    ): List<Post>
+    suspend fun getMyMonthlyPostList(type: PostType, fromDate: String, toDate: String): List<Post>
 
     suspend fun getMyPost(id: Int, type: PostType): Post
 

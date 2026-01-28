@@ -3,7 +3,7 @@ package com.ieum.presentation.screen.main.home.calendar
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ieum.domain.model.post.Post
-import com.ieum.domain.usecase.user.GetMyWellnessListByMonthUseCase
+import com.ieum.domain.usecase.user.GetMyMonthlyWellnessListUseCase
 import com.ieum.presentation.mapper.toCalendarUiModel
 import com.ieum.presentation.model.calendar.CalendarFilter
 import com.ieum.presentation.model.calendar.CalendarMonth
@@ -20,7 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CalendarViewModel @Inject constructor(
-    private val getMyWellnessListByMonthUseCase: GetMyWellnessListByMonthUseCase,
+    private val getMyMonthlyWellnessListUseCase: GetMyMonthlyWellnessListUseCase,
 ) : ViewModel() {
     val calendarModel = createCalendarModel(Locale.KOREA)
 
@@ -39,7 +39,7 @@ class CalendarViewModel @Inject constructor(
     private fun getMyWellnessListByMonth() {
         viewModelScope.launch {
             val (fromDate, toDate) = uiState.value.displayedMonth.getDateRange()
-            getMyWellnessListByMonthUseCase(fromDate, toDate)
+            getMyMonthlyWellnessListUseCase(fromDate, toDate)
                 .onSuccess { wellnessList ->
                     _uiState.update {
                         it.copy(
