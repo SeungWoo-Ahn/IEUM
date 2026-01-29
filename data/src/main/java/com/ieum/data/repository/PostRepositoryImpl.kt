@@ -198,4 +198,12 @@ class PostRepositoryImpl @Inject constructor(
                 commentDao.deleteById(commentId)
             }
     }
+
+    override suspend fun reportComment(
+        postId: Int,
+        type: PostType,
+        commentId: Int
+    ) {
+        commentDao.deleteById(commentId)
+    }
 }

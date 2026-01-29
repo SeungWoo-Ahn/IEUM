@@ -13,6 +13,7 @@ import com.ieum.domain.model.post.PostType
 import com.ieum.domain.usecase.post.DeleteCommentUseCase
 import com.ieum.domain.usecase.post.GetCommentListFlowUseCase
 import com.ieum.domain.usecase.post.PostCommentUseCase
+import com.ieum.domain.usecase.post.ReportCommentUseCase
 import com.ieum.presentation.mapper.toUiModel
 import com.ieum.presentation.model.post.CommentUiModel
 import com.ieum.presentation.model.post.PostUiModel
@@ -34,6 +35,7 @@ sealed class CommentBottomSheetState {
         private val getCommentListFlowUseCase: GetCommentListFlowUseCase,
         private val postCommentUseCase: PostCommentUseCase,
         private val deleteCommentUseCase: DeleteCommentUseCase,
+        private val reportCommentUseCase: ReportCommentUseCase,
     ) : CommentBottomSheetState() {
         var isLoading by mutableStateOf(false)
             private set
@@ -68,7 +70,7 @@ sealed class CommentBottomSheetState {
 
         fun onMenu(commendId: Int, selectedMenu: DropDownMenu) {
             when (selectedMenu) {
-                DropDownMenu.REPORT -> {}
+                DropDownMenu.REPORT -> reportComment(commendId)
                 DropDownMenu.EDIT -> {}
                 DropDownMenu.DELETE -> deleteComment(commendId)
             }
@@ -87,6 +89,20 @@ sealed class CommentBottomSheetState {
                 isLoading = false
             }
         }
+
+        private fun reportComment(commentId: Int) {
+            scope.launch {
+                isLoading = true
+                reportCommentUseCase(
+                    postId = postId,
+                    type = type,
+                    commentId = commentId
+                ).onFailure { t ->
+                    ExceptionCollector.sendException(t)
+                }
+                isLoading = false
+            }
+        }
     }
 }
 
@@ -94,6 +110,7 @@ class CommentState @Inject constructor(
     private val getCommentListFlowUseCase: GetCommentListFlowUseCase,
     private val postCommentUseCase: PostCommentUseCase,
     private val deleteCommentUseCase: DeleteCommentUseCase,
+    private val reportCommentUseCase: ReportCommentUseCase,
 ) {
     var bottomSheetState by mutableStateOf<CommentBottomSheetState>(CommentBottomSheetState.Idle)
         private set
@@ -110,6 +127,7 @@ class CommentState @Inject constructor(
             getCommentListFlowUseCase = getCommentListFlowUseCase,
             postCommentUseCase = postCommentUseCase,
             deleteCommentUseCase = deleteCommentUseCase,
+            reportCommentUseCase = reportCommentUseCase,
         )
     }
 }

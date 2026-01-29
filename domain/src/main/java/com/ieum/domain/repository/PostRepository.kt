@@ -43,4 +43,6 @@ interface PostRepository {
     suspend fun postComment(request: PostCommentRequest)
 
     suspend fun deleteComment(postId: Int, type: PostType, commentId: Int)
+
+    suspend fun reportComment(postId: Int, type: PostType, commentId: Int)
 }
