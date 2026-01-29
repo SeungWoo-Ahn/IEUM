@@ -15,7 +15,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.engine.android.Android
+import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.HttpResponseValidator
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.ResponseException
@@ -35,6 +35,7 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.flow.first
 import kotlinx.serialization.json.Json
 import okio.IOException
 import timber.log.Timber
@@ -50,10 +51,16 @@ internal object NetworkModule {
     }
 
     private fun createKtorClient(): HttpClient =
-        HttpClient(Android) {
+        HttpClient(OkHttp) {
+            engine {
+                config {
+                    followRedirects(true)
+                }
+            }
             install(HttpTimeout) {
                 connectTimeoutMillis = 5_000
                 requestTimeoutMillis = 5_000
+                socketTimeoutMillis = 5_000
             }
             install(Logging) {
                 logger = object : Logger {
@@ -95,7 +102,7 @@ internal object NetworkModule {
             install(Auth) {
                 bearer {
                     loadTokens {
-                        preferenceRepository.getCachedToken()?.let {
+                        preferenceRepository.tokenFlow.first()?.let {
                             BearerTokens(it.accessToken, it.refreshToken)
                         }
                     }
