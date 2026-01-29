@@ -32,6 +32,8 @@ interface PostRepository {
 
     suspend fun unlikePost(id: Int, type: PostType)
 
+    suspend fun reportPost(id: Int, type: PostType)
+
     fun getCommentListFlow(
         postId: Int,
         type: PostType,

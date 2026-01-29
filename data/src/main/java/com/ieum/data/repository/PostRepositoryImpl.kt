@@ -144,6 +144,10 @@ class PostRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun reportPost(id: Int, type: PostType) {
+        postDao.deleteById(id, type.key)
+    }
+
     @OptIn(ExperimentalPagingApi::class)
     override fun getCommentListFlow(
         postId: Int,

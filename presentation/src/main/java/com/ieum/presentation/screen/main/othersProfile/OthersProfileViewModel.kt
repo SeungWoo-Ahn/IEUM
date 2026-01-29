@@ -11,6 +11,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.ieum.domain.model.post.Post
+import com.ieum.domain.usecase.post.ReportPostUseCase
 import com.ieum.domain.usecase.post.TogglePostLikeUseCase
 import com.ieum.domain.usecase.user.GetOthersPostListFlowUseCase
 import com.ieum.domain.usecase.user.GetOthersProfileUseCase
@@ -33,6 +34,7 @@ import javax.inject.Inject
 class OthersProfileViewModel @Inject constructor(
     private val getOthersProfileUseCase: GetOthersProfileUseCase,
     private val togglePostLikeUseCase: TogglePostLikeUseCase,
+    private val reportPostUseCase: ReportPostUseCase,
     val commentState: CommentState,
     getOthersPostListFlowUseCase: GetOthersPostListFlowUseCase,
     savedStateHandle: SavedStateHandle,
@@ -93,7 +95,12 @@ class OthersProfileViewModel @Inject constructor(
 
     fun onPostMenu(post: PostUiModel, menu: DropDownMenu) {
         if (menu == DropDownMenu.REPORT) {
-            // 신고 로직
+            viewModelScope.launch {
+                reportPostUseCase(post.id, post.type)
+                    .onFailure { t ->
+                        ExceptionCollector.sendException(t)
+                    }
+            }
         }
     }
 }

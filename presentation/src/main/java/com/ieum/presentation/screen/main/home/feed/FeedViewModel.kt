@@ -11,6 +11,7 @@ import androidx.paging.map
 import com.ieum.domain.model.post.Post
 import com.ieum.domain.usecase.post.DeletePostUseCase
 import com.ieum.domain.usecase.post.GetAllPostListFlowUseCase
+import com.ieum.domain.usecase.post.ReportPostUseCase
 import com.ieum.domain.usecase.post.TogglePostLikeUseCase
 import com.ieum.presentation.mapper.toDomain
 import com.ieum.presentation.mapper.toUiModel
@@ -36,6 +37,7 @@ class FeedViewModel @Inject constructor(
     private val getAllPostListFlowUseCase: GetAllPostListFlowUseCase,
     private val togglePostLikeUseCase: TogglePostLikeUseCase,
     private val deletePostUseCase: DeletePostUseCase,
+    private val reportPostUseCase: ReportPostUseCase,
     val commentState: CommentState,
 ) : ViewModel() {
     var uiState by mutableStateOf<FeedUiState>(FeedUiState.Idle)
@@ -96,7 +98,12 @@ class FeedViewModel @Inject constructor(
     fun onPostMenu(post: PostUiModel, menu: DropDownMenu) {
         viewModelScope.launch {
             when (menu) {
-                DropDownMenu.REPORT -> { }
+                DropDownMenu.REPORT -> {
+                    reportPostUseCase(post.id, post.type)
+                        .onFailure { t ->
+                            ExceptionCollector.sendException(t)
+                        }
+                }
                 DropDownMenu.EDIT -> {
                     _event.send(FeedEvent.MoveEditPost(post.id, post.type))
                 }
