@@ -59,8 +59,8 @@ internal object NetworkModule {
             }
             install(HttpTimeout) {
                 connectTimeoutMillis = 5_000
-                requestTimeoutMillis = 5_000
-                socketTimeoutMillis = 5_000
+                requestTimeoutMillis = 10_000
+                socketTimeoutMillis = 10_000
             }
             install(Logging) {
                 logger = object : Logger {

@@ -28,4 +28,6 @@ interface UserDataSource {
     suspend fun getMyPost(id: Int, type: String): MyPostDto
 
     suspend fun getOtherPostList(page: Int, size: Int, id: Int): List<OtherPostDto>
+
+    suspend fun withdraw()
 }

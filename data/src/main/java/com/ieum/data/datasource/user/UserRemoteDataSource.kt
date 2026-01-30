@@ -11,6 +11,7 @@ import com.ieum.data.network.model.user.PatchProfileRequestBody
 import com.ieum.data.network.model.user.RegisterRequestBody
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.patch
@@ -80,4 +81,8 @@ class UserRemoteDataSource @Inject constructor(
             }
             .body<GetPostListResponse<OtherPostDto>>()
             .posts
+
+    override suspend fun withdraw() {
+        ktorClient.delete("api/v1/users/profile")
+    }
 }

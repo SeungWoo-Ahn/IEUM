@@ -137,4 +137,8 @@ class UserRepositoryImpl @Inject constructor(
             .map { pagingData ->
                 pagingData.map(PostEntity::toDomain)
             }
+
+    override suspend fun withdraw() {
+        userDataSource.withdraw()
+    }
 }
