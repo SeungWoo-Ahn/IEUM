@@ -1,6 +1,7 @@
 package com.ieum.presentation.screen.main.setting
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -25,6 +26,7 @@ fun SettingRoute(
     SettingScreen(
         modifier = modifier,
         onLogout = viewModel::onLogout,
+        onWithdraw = viewModel::onWithdraw,
         moveBack = moveBack,
     )
 }
@@ -33,6 +35,7 @@ fun SettingRoute(
 private fun SettingScreen(
     modifier: Modifier,
     onLogout: () -> Unit,
+    onWithdraw: () -> Unit,
     moveBack: () -> Unit,
 ) {
     Column(
@@ -53,10 +56,18 @@ private fun SettingScreen(
                 )
         ) {
             IEUMSpacer(modifier = Modifier.weight(1f))
-            SettingButton(
-                name = stringResource(R.string.logout),
-                onClick = onLogout,
-            )
+            Column(
+                verticalArrangement = Arrangement.spacedBy(14.dp)
+            ) {
+                SettingButton(
+                    name = stringResource(R.string.logout),
+                    onClick = onLogout,
+                )
+                SettingButton(
+                    name = stringResource(R.string.withdraw),
+                    onClick = onWithdraw,
+                )
+            }
         }
     }
 }

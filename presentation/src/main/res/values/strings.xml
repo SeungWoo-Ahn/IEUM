@@ -138,4 +138,5 @@
 
     <string name="setting">설정</string>
     <string name="logout">로그아웃</string>
+    <string name="withdraw">탈퇴하기</string>
 </resources>
