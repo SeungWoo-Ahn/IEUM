@@ -9,6 +9,7 @@ import com.ieum.data.network.model.base.SGISErrorResponse
 import com.ieum.domain.exception.NetworkException
 import com.ieum.domain.exception.SGISException
 import com.ieum.domain.repository.PreferenceRepository
+import com.ieum.domain.util.runCatchingExceptCancel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -108,19 +109,23 @@ internal object NetworkModule {
                     }
                     refreshTokens {
                         oldTokens?.refreshToken?.let {
-                            try {
+                            runCatching {
                                 val requestBody = RefreshTokenRequestBody(it)
-                                val newToken =
-                                    client
-                                        .post("api/v1/auth/refresh") {
-                                            setBody(requestBody)
-                                            markAsRefreshTokenRequest()
-                                        }
-                                        .body<RefreshTokenResponse>()
-                                        .toDomain(it)
-                                preferenceRepository.saveToken(newToken)
-                                BearerTokens(newToken.accessToken, newToken.refreshToken)
-                            } catch (_: Exception) {
+                                client
+                                    .post("api/v1/auth/refresh") {
+                                        setBody(requestBody)
+                                        markAsRefreshTokenRequest()
+                                    }
+                                    .body<RefreshTokenResponse>()
+                                    .toDomain(it)
+                            }.getOrNull()?.let { newToken ->
+                                runCatchingExceptCancel { preferenceRepository.saveToken(newToken) }
+                                BearerTokens(
+                                    accessToken = newToken.accessToken,
+                                    refreshToken = newToken.refreshToken
+                                )
+                            } ?: run {
+                                runCatchingExceptCancel { preferenceRepository.clear() }
                                 client.authProvider<BearerAuthProvider>()?.clearToken()
                                 null
                             }
