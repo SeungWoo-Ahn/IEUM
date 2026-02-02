@@ -1,5 +1,8 @@
 package com.ieum.presentation.screen.main.setting
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ieum.domain.usecase.auth.LogoutUseCase
@@ -14,6 +17,9 @@ class SettingViewModel @Inject constructor(
     private val logoutUseCase: LogoutUseCase,
     private val withdrawUseCase: WithdrawUseCase,
 ) : ViewModel() {
+    var dialogState by mutableStateOf<SettingDialogState>(SettingDialogState.Idle)
+        private set
+
     fun onLogout() {
         viewModelScope.launch {
             logoutUseCase()
@@ -23,12 +29,17 @@ class SettingViewModel @Inject constructor(
         }
     }
 
+    fun dismiss() {
+        dialogState = SettingDialogState.Idle
+    }
+
     fun onWithdraw() {
+        dialogState = SettingDialogState.ShowWithdrawDialog
+    }
+
+    fun withdraw() {
         viewModelScope.launch {
             withdrawUseCase()
-                .onSuccess {
-
-                }
                 .onFailure { t ->
                     ExceptionCollector.sendException(t)
                 }

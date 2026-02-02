@@ -22,6 +22,8 @@ import com.ieum.design_system.theme.Lime100
 import com.ieum.design_system.theme.Lime200
 import com.ieum.design_system.theme.Lime400
 import com.ieum.design_system.theme.Lime500
+import com.ieum.design_system.theme.Red500
+import com.ieum.design_system.theme.Red600
 import com.ieum.design_system.theme.Slate900
 import com.ieum.design_system.theme.Slate950
 import com.ieum.design_system.theme.White
@@ -149,6 +151,31 @@ fun Lime100Button(
         border = BorderStroke(
             width = 1.dp,
             color = Lime200,
+        ),
+        onClick = onClick,
+    )
+}
+
+@Composable
+fun Red500Button(
+    modifier: Modifier = Modifier,
+    text: String,
+    enabled: Boolean,
+    onClick: () -> Unit,
+) {
+    IEUMButton(
+        modifier = modifier.fillMaxWidth(),
+        text = text,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Red500,
+            contentColor = White,
+            disabledContainerColor = Red500,
+            disabledContentColor = White,
+        ),
+        enabled = enabled,
+        border = BorderStroke(
+            width = 1.dp,
+            color = Red600,
         ),
         onClick = onClick,
     )

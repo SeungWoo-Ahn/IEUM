@@ -16,6 +16,7 @@ import com.ieum.design_system.theme.screenPadding
 import com.ieum.design_system.topbar.TopBarForBack
 import com.ieum.presentation.R
 import com.ieum.presentation.screen.component.SettingButton
+import com.ieum.presentation.screen.component.WithdrawDialog
 
 @Composable
 fun SettingRoute(
@@ -29,6 +30,12 @@ fun SettingRoute(
         onWithdraw = viewModel::onWithdraw,
         moveBack = moveBack,
     )
+    if (viewModel.dialogState == SettingDialogState.ShowWithdrawDialog) {
+        WithdrawDialog(
+            onConfirm = viewModel::withdraw,
+            onDismissRequest = viewModel::dismiss
+        )
+    }
 }
 
 @Composable

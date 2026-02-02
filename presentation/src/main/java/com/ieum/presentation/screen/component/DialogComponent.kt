@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
@@ -30,9 +31,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ieum.design_system.button.DarkButton
+import com.ieum.design_system.button.Gray50Button
+import com.ieum.design_system.button.Red500Button
 import com.ieum.design_system.dialog.IEUMDialog
 import com.ieum.design_system.icon.CompleteIcon
 import com.ieum.design_system.icon.IncompleteIcon
+import com.ieum.design_system.icon.InfoCircleRedIcon
 import com.ieum.design_system.icon.LeftIcon
 import com.ieum.design_system.icon.RightIcon
 import com.ieum.design_system.spacer.IEUMSpacer
@@ -419,5 +423,46 @@ fun IEUMDatePickerDialog(
                 todayDateBorderColor = Slate950
             )
         )
+    }
+}
+
+@Composable
+fun WithdrawDialog(
+    onConfirm: () -> Unit,
+    onDismissRequest: () -> Unit,
+) {
+    IEUMDialog(onDismissRequest) {
+        Column(
+            modifier = Modifier
+                .background(color = White)
+                .padding(all = screenPadding)
+                .padding(bottom = 32.dp)
+        ) {
+            InfoCircleRedIcon()
+            IEUMSpacer(size = 12)
+            Text(
+                text = stringResource(R.string.question_withdraw),
+                style = MaterialTheme.typography.headlineMedium,
+            )
+            IEUMSpacer(size = 4)
+            Text(
+                text = stringResource(R.string.description_withdraw),
+                style = MaterialTheme.typography.bodyMedium,
+            )
+            IEUMSpacer(size = 32)
+            Red500Button(
+                modifier = Modifier.height(62.dp),
+                text = stringResource(R.string.withdraw),
+                enabled = true,
+                onClick = onConfirm,
+            )
+            IEUMSpacer(size = 12)
+            Gray50Button(
+                modifier = Modifier.height(62.dp),
+                text = stringResource(R.string.cancel),
+                enabled = true,
+                onClick = onDismissRequest
+            )
+        }
     }
 }
