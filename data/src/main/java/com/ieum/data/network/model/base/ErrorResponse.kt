@@ -7,4 +7,5 @@ data class ErrorResponse(
     val error: String,
     val message: String,
     val timestamp: Int,
+    val details: List<ErrorDetail>? = null,
 )

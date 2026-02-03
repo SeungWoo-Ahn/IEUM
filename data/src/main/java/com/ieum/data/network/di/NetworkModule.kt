@@ -94,7 +94,9 @@ internal object NetworkModule {
                         is IOException -> throw NetworkException.ConnectionException()
                         is ResponseException -> {
                             val errorResponse = cause.response.body<ErrorResponse>()
-                            throw NetworkException.ResponseException(errorResponse.message)
+                            val message = errorResponse.details?.firstOrNull()?.message
+                                ?: errorResponse.message
+                            throw NetworkException.ResponseException(message)
                         }
                         else -> throw NetworkException.UnknownException(cause)
                     }
