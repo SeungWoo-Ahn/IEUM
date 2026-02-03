@@ -16,6 +16,7 @@ import com.ieum.design_system.theme.screenPadding
 import com.ieum.design_system.topbar.TopBarForBack
 import com.ieum.presentation.R
 import com.ieum.presentation.screen.component.SettingButton
+import com.ieum.presentation.screen.component.SettingPrivacyButton
 import com.ieum.presentation.screen.component.WithdrawDialog
 
 @Composable
@@ -62,6 +63,7 @@ private fun SettingScreen(
                     vertical = 40.dp
                 )
         ) {
+            SettingPrivacyButton()
             IEUMSpacer(modifier = Modifier.weight(1f))
             Column(
                 verticalArrangement = Arrangement.spacedBy(14.dp)

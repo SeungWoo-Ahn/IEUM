@@ -140,7 +140,10 @@
     <string name="logout">로그아웃</string>
     <string name="withdraw">탈퇴하기</string>
     <string name="cancel">취소하기</string>
+    <string name="privacy_policy">개인정보처리방침</string>
 
     <string name="question_withdraw">정말 탈퇴하시겠어요?</string>
     <string name="description_withdraw">모든 게시물과 댓글이 함께 삭제됩니다.</string>
+
+    <string name="privacy_policy_url">https://southern-dash-bc7.notion.site/2f7a0853c74280b7b6a1d7a0172cbdac?pvs=74</string>
 </resources>

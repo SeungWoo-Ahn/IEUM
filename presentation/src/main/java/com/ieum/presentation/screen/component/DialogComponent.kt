@@ -454,7 +454,10 @@ fun WithdrawDialog(
                 modifier = Modifier.height(62.dp),
                 text = stringResource(R.string.withdraw),
                 enabled = true,
-                onClick = onConfirm,
+                onClick = {
+                    onConfirm()
+                    onDismissRequest()
+                },
             )
             IEUMSpacer(size = 12)
             Gray50Button(
