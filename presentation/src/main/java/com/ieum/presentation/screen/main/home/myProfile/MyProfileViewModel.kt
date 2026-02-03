@@ -81,6 +81,7 @@ class MyProfileViewModel @Inject constructor(
     }
 
     fun getMyProfile() {
+        uiState = MyProfileUiState.Loading
         viewModelScope.launch {
             getMyProfileUseCase()
                 .onSuccess {

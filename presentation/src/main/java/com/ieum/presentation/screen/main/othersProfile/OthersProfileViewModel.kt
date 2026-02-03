@@ -24,6 +24,7 @@ import com.ieum.presentation.util.CustomException
 import com.ieum.presentation.util.ExceptionCollector
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -69,6 +70,7 @@ class OthersProfileViewModel @Inject constructor(
                 }
                 .onFailure {
                     ExceptionCollector.sendException(CustomException("데이터 로드에 실패했습니다"))
+                    delay(500L)
                     _event.send(OtherProfileEvent.MoveBack)
                 }
         }
