@@ -21,6 +21,7 @@ import com.ieum.presentation.model.user.CancerDiagnoseUiModel
 import com.ieum.presentation.model.user.SexUiModel
 import com.ieum.presentation.model.user.UserTypeUiModel
 import com.ieum.presentation.screen.component.CancerStageSheet
+import com.ieum.presentation.screen.component.RegisterPolicySheet
 import com.ieum.presentation.screen.component.RegisterSelectAddress
 import com.ieum.presentation.screen.component.RegisterSelectAgeGroup
 import com.ieum.presentation.screen.component.RegisterSelectDiagnose
@@ -41,6 +42,7 @@ fun RegisterRoute(
     viewModel: RegisterViewModel = hiltViewModel(),
 ) {
     val uiState = viewModel.uiState
+    val sheetState = viewModel.sheetState
     val buttonEnabled by remember { derivedStateOf { viewModel.nextEnabled() } }
 
     LaunchedEffect(Unit) {
@@ -69,12 +71,20 @@ fun RegisterRoute(
         onPrevStep = viewModel::onPrevStep,
         onNextStep = viewModel::onNextStep,
     )
-    if (uiState is RegisterUiState.ShowCancerStageSheet) {
+    if (sheetState is RegisterSheetState.ShowCancerStageSheet) {
         CancerStageSheet(
             scope = scope,
-            data = uiState.data,
-            callback = uiState.callback,
-            onDismissRequest = viewModel::resetUiState,
+            data = sheetState.data,
+            callback = sheetState.callback,
+            onDismissRequest = viewModel::dismiss,
+        )
+    }
+    if (sheetState is RegisterSheetState.ShowPolicySheet) {
+        RegisterPolicySheet(
+            scope = scope,
+            buttonEnabled = uiState != RegisterUiState.Loading,
+            onRegister = viewModel::register,
+            onDismissRequest = viewModel::dismiss
         )
     }
     BackHandler(onBack = viewModel::onPrevStep)
