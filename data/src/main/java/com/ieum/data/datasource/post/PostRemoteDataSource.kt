@@ -5,7 +5,9 @@ import com.ieum.data.network.di.NetworkSource
 import com.ieum.data.network.model.post.AllPostDto
 import com.ieum.data.network.model.post.CommentDto
 import com.ieum.data.network.model.post.GetCommentListResponse
+import com.ieum.data.network.model.post.GetMonthlyWellnessListResponse
 import com.ieum.data.network.model.post.GetPostListResponse
+import com.ieum.data.network.model.post.MonthlyWellnessDto
 import com.ieum.data.network.model.post.PostCommentRequestBody
 import com.ieum.data.network.model.post.PostDailyRequestBody
 import com.ieum.data.network.model.post.PostDailyResponse
@@ -146,6 +148,18 @@ class PostRemoteDataSource @Inject constructor(
                 diagnosis?.let { parameter("diagnosis", it) }
             }
             .body<GetPostListResponse<AllPostDto>>()
+            .posts
+
+    override suspend fun getMonthlyWellnessList(
+        year: Int,
+        month: Int
+    ): List<MonthlyWellnessDto> =
+        ktorClient
+            .get("api/v1/posts/wellness/monthly") {
+                parameter("year", year)
+                parameter("month", month)
+            }
+            .body<GetMonthlyWellnessListResponse>()
             .posts
 
     override suspend fun likePost(id: Int, type: String) {
