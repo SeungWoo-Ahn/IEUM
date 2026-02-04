@@ -28,6 +28,10 @@ internal interface DailyDto {
     val content: String?
 }
 
+internal interface SharePostDto {
+    val shared: Boolean
+}
+
 @Serializable
 data class AllPostDto(
     override val id: Int,
@@ -64,12 +68,12 @@ data class MyPostDto(
     override val title: String? = null,
     override val content: String? = null,
     override val images: List<PostImageDto>? = null,
-    val shared: Boolean,
+    override val shared: Boolean,
     override val isLiked: Boolean,
     override val likesCount: Int,
     override val createdAt: Int,
     override val updatedAt: Int,
-) : BasePostDto, WellnessDto, DailyDto
+) : BasePostDto, WellnessDto, DailyDto, SharePostDto
 
 @Serializable
 data class OtherPostDto(

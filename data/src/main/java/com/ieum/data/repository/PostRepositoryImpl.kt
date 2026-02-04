@@ -14,6 +14,7 @@ import com.ieum.data.datasource.post.PostDataSource
 import com.ieum.data.mapper.asBody
 import com.ieum.data.mapper.toDomain
 import com.ieum.data.mapper.toEntity
+import com.ieum.data.network.model.post.MonthlyWellnessDto
 import com.ieum.data.repository.mediator.AllPostMediator
 import com.ieum.data.repository.mediator.CommentMediator
 import com.ieum.domain.model.image.ImageSource
@@ -123,6 +124,14 @@ class PostRepositoryImpl @Inject constructor(
             .map { pagingData ->
                 pagingData.map(PostEntity::toDomain)
             }
+
+    override suspend fun getMonthlyWellnessList(
+        year: Int,
+        month: Int
+    ): List<Post.Wellness> =
+        postDataSource
+            .getMonthlyWellnessList(year = year, month = month)
+            .map(MonthlyWellnessDto::toDomain)
 
     override suspend fun likePost(id: Int, type: PostType) {
         postDao.likePost(id, type.key)

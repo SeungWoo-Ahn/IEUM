@@ -14,9 +14,10 @@ data class MonthlyWellnessDto(
     override val medicationTaken: Boolean,
     override val diet: DietDto? = null,
     override val memo: String? = null,
+    override val shared: Boolean,
     override val isLiked: Boolean,
     override val likesCount: Int,
     override val createdAt: Int,
     override val updatedAt: Int,
     override val diagnosis: List<String>,
-) : BasePostDto, WellnessDto
+) : BasePostDto, WellnessDto, SharePostDto
