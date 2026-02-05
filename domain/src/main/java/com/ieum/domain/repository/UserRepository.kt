@@ -17,9 +17,6 @@ interface UserRepository {
     suspend fun patchMyProfile(request: PatchProfileRequest): MyProfile
 
     suspend fun getOthersProfile(id: Int): OthersProfile
-
-    suspend fun getMyMonthlyPostList(type: PostType, fromDate: String, toDate: String): List<Post>
-
     suspend fun getMyPost(id: Int, type: PostType): Post
 
     fun getMyPostListFlow(type: PostType): Flow<PagingData<Post>>

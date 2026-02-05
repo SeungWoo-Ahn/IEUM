@@ -59,35 +59,6 @@ fun PostDailyRequest.asBody(): PostDailyRequestBody =
         shared = shared,
     )
 
-fun MyPostDto.toDomain(): Post =
-    when (PostType.fromKey(type)) {
-        PostType.WELLNESS -> Post.Wellness(
-            id = id,
-            userInfo = null,
-            mood = Mood.fromKey(requireNotNull(mood)),
-            unusualSymptoms = unusualSymptoms,
-            medicationTaken = requireNotNull(medicationTaken),
-            diet = diet?.toDomain(),
-            memo = memo,
-            imageList = images?.map(PostImageDto::toDomain),
-            shared = shared,
-            isLiked = isLiked,
-            isMine = true,
-            createdAt = createdAt,
-        )
-        PostType.DAILY -> Post.Daily(
-            id = id,
-            userInfo = null,
-            title = requireNotNull(title),
-            content = requireNotNull(content),
-            imageList = images?.map(PostImageDto::toDomain),
-            shared = shared,
-            isLiked = isLiked,
-            isMine = true,
-            createdAt = createdAt,
-        )
-    }
-
 fun AllPostDto.toEntity(myId: Int): PostEntity =
     PostEntity(
         id = id,

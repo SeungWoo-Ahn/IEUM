@@ -12,7 +12,6 @@ import com.ieum.data.datasource.user.UserDataSource
 import com.ieum.data.mapper.asBody
 import com.ieum.data.mapper.toDomain
 import com.ieum.data.mapper.toEntity
-import com.ieum.data.network.model.post.MyPostDto
 import com.ieum.data.repository.mediator.MyPostMediator
 import com.ieum.data.repository.mediator.OthersPostMediator
 import com.ieum.domain.model.post.Post
@@ -22,9 +21,6 @@ import com.ieum.domain.model.user.OthersProfile
 import com.ieum.domain.model.user.PatchProfileRequest
 import com.ieum.domain.model.user.RegisterRequest
 import com.ieum.domain.repository.UserRepository
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -54,35 +50,6 @@ class UserRepositoryImpl @Inject constructor(
         userDataSource
             .getOthersProfile(id)
             .toDomain()
-
-    override suspend fun getMyMonthlyPostList(
-        type: PostType,
-        fromDate: String,
-        toDate: String
-    ): List<Post> = coroutineScope {
-        val firstResponse = userDataSource.getMyPostList(
-            page = 1,
-            size = 100,
-            type = type.key,
-            fromDate = fromDate,
-            toDate = toDate,
-        )
-        val totalPages = firstResponse.pagination.totalPages
-        if (totalPages <= 1) return@coroutineScope firstResponse.posts.map(MyPostDto::toDomain)
-        val deferredPosts = (2..totalPages).map { page ->
-            async {
-                userDataSource.getMyPostList(
-                    page = page,
-                    size = 100,
-                    type = type.key,
-                    fromDate = fromDate,
-                    toDate = toDate,
-                ).posts
-            }
-        }
-        val remainingPosts = deferredPosts.awaitAll().flatten()
-        (firstResponse.posts + remainingPosts).map(MyPostDto::toDomain)
-    }
 
     override suspend fun getMyPost(id: Int, type: PostType): Post =
         postDao.getMyPost(id, type.key)?.toDomain() ?: run {
