@@ -8,6 +8,7 @@ import com.ieum.domain.model.post.Mood
 import com.ieum.domain.model.post.Post
 import com.ieum.domain.model.post.PostType
 import com.ieum.domain.model.post.PostWellnessRequest
+import com.ieum.domain.model.post.ReportType
 import com.ieum.domain.model.user.Diagnosis
 import com.ieum.presentation.model.post.AmountEatenUiModel
 import com.ieum.presentation.model.post.CommentUiModel
@@ -17,6 +18,7 @@ import com.ieum.presentation.model.post.MoodUiModel
 import com.ieum.presentation.model.post.PostTypeUiModel
 import com.ieum.presentation.model.post.PostUiModel
 import com.ieum.presentation.model.post.PostWellnessUiModel
+import com.ieum.presentation.model.post.ReportTypeUiModel
 
 fun Mood.toUiModel(): MoodUiModel =
     when (this) {
@@ -135,3 +137,13 @@ fun Comment.toUiModel(): CommentUiModel =
         content = content,
         isMine = isMine
     )
+
+fun ReportTypeUiModel.toDomain(): ReportType =
+    when (this) {
+        ReportTypeUiModel.ABUSE -> ReportType.ABUSE
+        ReportTypeUiModel.VIOLENCE -> ReportType.VIOLENCE
+        ReportTypeUiModel.SEXUAL -> ReportType.SEXUAL
+        ReportTypeUiModel.FRAUD -> ReportType.FRAUD
+        ReportTypeUiModel.ADVERTISEMENT -> ReportType.ADVERTISEMENT
+        ReportTypeUiModel.UNTRUTH -> ReportType.UNTRUTH
+    }

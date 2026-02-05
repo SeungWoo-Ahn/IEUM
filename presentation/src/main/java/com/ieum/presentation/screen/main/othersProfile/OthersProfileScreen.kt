@@ -18,16 +18,21 @@ import com.ieum.presentation.screen.component.DropDownMenu
 import com.ieum.presentation.screen.component.OthersProfileSection
 import com.ieum.presentation.screen.component.OthersProfileTabArea
 import com.ieum.presentation.screen.component.PostListArea
+import com.ieum.presentation.screen.component.ReportSheet
 import com.ieum.presentation.state.CommentBottomSheetState
+import com.ieum.presentation.state.ReportPostBottomSheetState
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun OthersProfileRoute(
     modifier: Modifier = Modifier,
+    scope: CoroutineScope,
     onBack: () -> Unit,
     viewModel: OthersProfileViewModel = hiltViewModel(),
 ) {
     val commentBottomSheetState = viewModel.commentState.bottomSheetState
+    val reportPostBottomSheetState = viewModel.reportPostState.bottomSheetState
 
     LaunchedEffect(Unit) {
         viewModel.event.collect {
@@ -53,6 +58,14 @@ fun OthersProfileRoute(
         CommentListSheet(
             state = commentBottomSheetState,
             onDismissRequest = viewModel.commentState::dismiss
+        )
+    }
+    if (reportPostBottomSheetState is ReportPostBottomSheetState.Show) {
+        ReportSheet(
+            scope = scope,
+            reportEnabled = reportPostBottomSheetState.isLoading.not(),
+            onReport = reportPostBottomSheetState::onReport,
+            onDismissRequest = viewModel.reportPostState::dismiss
         )
     }
 }

@@ -11,7 +11,6 @@ import androidx.paging.map
 import com.ieum.domain.model.post.Post
 import com.ieum.domain.usecase.post.DeletePostUseCase
 import com.ieum.domain.usecase.post.GetAllPostListFlowUseCase
-import com.ieum.domain.usecase.post.ReportPostUseCase
 import com.ieum.domain.usecase.post.TogglePostLikeUseCase
 import com.ieum.presentation.mapper.toDomain
 import com.ieum.presentation.mapper.toUiModel
@@ -19,6 +18,7 @@ import com.ieum.presentation.model.post.DiagnoseFilterUiModel
 import com.ieum.presentation.model.post.PostUiModel
 import com.ieum.presentation.screen.component.DropDownMenu
 import com.ieum.presentation.state.CommentState
+import com.ieum.presentation.state.ReportPostState
 import com.ieum.presentation.util.ExceptionCollector
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -37,8 +37,8 @@ class FeedViewModel @Inject constructor(
     private val getAllPostListFlowUseCase: GetAllPostListFlowUseCase,
     private val togglePostLikeUseCase: TogglePostLikeUseCase,
     private val deletePostUseCase: DeletePostUseCase,
-    private val reportPostUseCase: ReportPostUseCase,
     val commentState: CommentState,
+    val reportPostState: ReportPostState,
 ) : ViewModel() {
     var uiState by mutableStateOf<FeedUiState>(FeedUiState.Idle)
         private set
@@ -99,10 +99,7 @@ class FeedViewModel @Inject constructor(
         viewModelScope.launch {
             when (menu) {
                 DropDownMenu.REPORT -> {
-                    reportPostUseCase(post.id, post.type)
-                        .onFailure { t ->
-                            ExceptionCollector.sendException(t)
-                        }
+                    reportPostState.showSheet(post = post, scope = viewModelScope)
                 }
                 DropDownMenu.EDIT -> {
                     _event.send(FeedEvent.MoveEditPost(post.id, post.type))

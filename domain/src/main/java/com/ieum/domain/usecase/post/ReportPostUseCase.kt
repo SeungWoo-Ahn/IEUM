@@ -1,13 +1,15 @@
 package com.ieum.domain.usecase.post
 
 import com.ieum.domain.model.post.PostType
+import com.ieum.domain.model.post.ReportType
 import com.ieum.domain.repository.PostRepository
 import javax.inject.Inject
 
 class ReportPostUseCase @Inject constructor(
     private val postRepository: PostRepository,
 ) {
-    suspend operator fun invoke(id: Int, type: PostType): Result<Unit> = runCatching {
-        postRepository.reportPost(id, type)
-    }
+    suspend operator fun invoke(id: Int, type: PostType, reportType: ReportType): Result<Unit> =
+        runCatching {
+            postRepository.reportPost(id, type)
+        }
 }

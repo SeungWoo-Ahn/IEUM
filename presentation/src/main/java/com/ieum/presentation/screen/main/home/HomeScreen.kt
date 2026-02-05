@@ -51,6 +51,7 @@ private fun HomeScreen(
     ) {
         when (selectedBottomNavigationItem) {
             BottomNavigationItem.Feed -> FeedRoute(
+                scope = scope,
                 movePostWellness = movePostWellness,
                 movePostDaily = movePostDaily,
                 moveOthersProfile = moveOthersProfile,
