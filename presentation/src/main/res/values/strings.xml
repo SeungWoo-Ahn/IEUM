@@ -149,4 +149,11 @@
     <string name="description_withdraw">모든 게시물과 댓글이 함께 삭제됩니다.</string>
 
     <string name="privacy_policy_url">https://southern-dash-bc7.notion.site/2f7a0853c74280b7b6a1d7a0172cbdac?pvs=74</string>
+
+    <string name="description_abuse">욕설 또는 비하</string>
+    <string name="description_violence">폭력 또는 혐오</string>
+    <string name="description_sexual">음란물 또는 성적 행위</string>
+    <string name="description_fraud">사기 또는 사칭</string>
+    <string name="description_advertisement">상업적 광고 및 판매</string>
+    <string name="description_untruth">거짓 정보</string>
 </resources>
