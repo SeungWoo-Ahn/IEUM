@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastForEach
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ieum.design_system.bottomsheet.IEUMBottomSheet
 import com.ieum.design_system.button.DarkButton
@@ -47,6 +48,7 @@ import com.ieum.design_system.util.noRippleClickable
 import com.ieum.presentation.R
 import com.ieum.presentation.model.post.AmountEatenUiModel
 import com.ieum.presentation.model.post.DietUiModel
+import com.ieum.presentation.model.post.ReportTypeUiModel
 import com.ieum.presentation.model.user.CancerDiagnoseUiModel
 import com.ieum.presentation.model.user.CancerStageUiModel
 import com.ieum.presentation.state.CommentBottomSheetState
@@ -445,6 +447,60 @@ fun RegisterPolicySheet(
                         }
                 }
             )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ReportSheet(
+    modifier: Modifier = Modifier,
+    scope: CoroutineScope,
+    reportEnabled: Boolean,
+    onReport: (ReportTypeUiModel) -> Unit,
+    onDismissRequest: () -> Unit,
+) {
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+
+    IEUMBottomSheet(
+        sheetState = sheetState,
+        onDismissRequest = onDismissRequest,
+    ) {
+        Column(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(all = 20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(30.dp)
+        ) {
+            Text(
+                text = stringResource(R.string.report),
+                style = MaterialTheme.typography.titleSmall,
+            )
+            Column {
+                ReportTypeUiModel.entries.fastForEach { type ->
+                    Text(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(
+                                horizontal = 10.dp,
+                                vertical = 16.dp
+                            )
+                            .noRippleClickable(enabled = reportEnabled) {
+                                scope
+                                    .launch {
+                                        onReport(type)
+                                        sheetState.hide()
+                                    }
+                                    .invokeOnCompletion {
+                                        onDismissRequest()
+                                    }
+                            },
+                        text = stringResource(type.displayName),
+                        style = MaterialTheme.typography.bodyMedium,
+                    )
+                }
+            }
         }
     }
 }
