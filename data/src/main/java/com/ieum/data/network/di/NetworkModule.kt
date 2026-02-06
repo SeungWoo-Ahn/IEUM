@@ -9,13 +9,14 @@ import com.ieum.data.network.model.base.SGISErrorResponse
 import com.ieum.domain.exception.NetworkException
 import com.ieum.domain.exception.SGISException
 import com.ieum.domain.repository.PreferenceRepository
+import com.ieum.domain.util.runCatchingExceptCancel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.engine.android.Android
+import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.HttpResponseValidator
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.ResponseException
@@ -35,6 +36,7 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.flow.first
 import kotlinx.serialization.json.Json
 import okio.IOException
 import timber.log.Timber
@@ -50,10 +52,16 @@ internal object NetworkModule {
     }
 
     private fun createKtorClient(): HttpClient =
-        HttpClient(Android) {
+        HttpClient(OkHttp) {
+            engine {
+                config {
+                    followRedirects(true)
+                }
+            }
             install(HttpTimeout) {
                 connectTimeoutMillis = 5_000
-                requestTimeoutMillis = 5_000
+                requestTimeoutMillis = 10_000
+                socketTimeoutMillis = 10_000
             }
             install(Logging) {
                 logger = object : Logger {
@@ -86,7 +94,9 @@ internal object NetworkModule {
                         is IOException -> throw NetworkException.ConnectionException()
                         is ResponseException -> {
                             val errorResponse = cause.response.body<ErrorResponse>()
-                            throw NetworkException.ResponseException(errorResponse.message)
+                            val message = errorResponse.details?.firstOrNull()?.message
+                                ?: errorResponse.message
+                            throw NetworkException.ResponseException(message)
                         }
                         else -> throw NetworkException.UnknownException(cause)
                     }
@@ -95,25 +105,29 @@ internal object NetworkModule {
             install(Auth) {
                 bearer {
                     loadTokens {
-                        preferenceRepository.getCachedToken()?.let {
+                        preferenceRepository.tokenFlow.first()?.let {
                             BearerTokens(it.accessToken, it.refreshToken)
                         }
                     }
                     refreshTokens {
                         oldTokens?.refreshToken?.let {
-                            try {
+                            runCatching {
                                 val requestBody = RefreshTokenRequestBody(it)
-                                val newToken =
-                                    client
-                                        .post("api/v1/auth/refresh") {
-                                            setBody(requestBody)
-                                            markAsRefreshTokenRequest()
-                                        }
-                                        .body<RefreshTokenResponse>()
-                                        .toDomain(it)
-                                preferenceRepository.saveToken(newToken)
-                                BearerTokens(newToken.accessToken, newToken.refreshToken)
-                            } catch (_: Exception) {
+                                client
+                                    .post("api/v1/auth/refresh") {
+                                        setBody(requestBody)
+                                        markAsRefreshTokenRequest()
+                                    }
+                                    .body<RefreshTokenResponse>()
+                                    .toDomain(it)
+                            }.getOrNull()?.let { newToken ->
+                                runCatchingExceptCancel { preferenceRepository.saveToken(newToken) }
+                                BearerTokens(
+                                    accessToken = newToken.accessToken,
+                                    refreshToken = newToken.refreshToken
+                                )
+                            } ?: run {
+                                runCatchingExceptCancel { preferenceRepository.clear() }
                                 client.authProvider<BearerAuthProvider>()?.clearToken()
                                 null
                             }

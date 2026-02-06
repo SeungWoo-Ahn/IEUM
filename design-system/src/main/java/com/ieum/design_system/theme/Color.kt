@@ -35,3 +35,4 @@ val Slate950 = Color(0xFF020618)
 
 val Red100 = Color(0xFFFFE2E2)
 val Red500 = Color(0xFFFB2C36)
+val Red600 = Color(0xFFE7000B)

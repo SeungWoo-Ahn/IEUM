@@ -19,10 +19,12 @@ import com.ieum.presentation.model.post.PostUiModel
 import com.ieum.presentation.navigation.MainScreen
 import com.ieum.presentation.screen.component.DropDownMenu
 import com.ieum.presentation.state.CommentState
+import com.ieum.presentation.state.ReportPostState
 import com.ieum.presentation.util.CustomException
 import com.ieum.presentation.util.ExceptionCollector
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -34,6 +36,7 @@ class OthersProfileViewModel @Inject constructor(
     private val getOthersProfileUseCase: GetOthersProfileUseCase,
     private val togglePostLikeUseCase: TogglePostLikeUseCase,
     val commentState: CommentState,
+    val reportPostState: ReportPostState,
     getOthersPostListFlowUseCase: GetOthersPostListFlowUseCase,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
@@ -67,6 +70,7 @@ class OthersProfileViewModel @Inject constructor(
                 }
                 .onFailure {
                     ExceptionCollector.sendException(CustomException("데이터 로드에 실패했습니다"))
+                    delay(500L)
                     _event.send(OtherProfileEvent.MoveBack)
                 }
         }
@@ -93,7 +97,9 @@ class OthersProfileViewModel @Inject constructor(
 
     fun onPostMenu(post: PostUiModel, menu: DropDownMenu) {
         if (menu == DropDownMenu.REPORT) {
-            // 신고 로직
+            viewModelScope.launch {
+                reportPostState.showSheet(post = post, scope = viewModelScope)
+            }
         }
     }
 }

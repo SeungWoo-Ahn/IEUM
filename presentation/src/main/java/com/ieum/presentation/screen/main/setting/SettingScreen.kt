@@ -1,6 +1,7 @@
 package com.ieum.presentation.screen.main.setting
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -15,6 +16,8 @@ import com.ieum.design_system.theme.screenPadding
 import com.ieum.design_system.topbar.TopBarForBack
 import com.ieum.presentation.R
 import com.ieum.presentation.screen.component.SettingButton
+import com.ieum.presentation.screen.component.SettingPrivacyButton
+import com.ieum.presentation.screen.component.WithdrawDialog
 
 @Composable
 fun SettingRoute(
@@ -25,14 +28,22 @@ fun SettingRoute(
     SettingScreen(
         modifier = modifier,
         onLogout = viewModel::onLogout,
+        onWithdraw = viewModel::onWithdraw,
         moveBack = moveBack,
     )
+    if (viewModel.dialogState == SettingDialogState.ShowWithdrawDialog) {
+        WithdrawDialog(
+            onConfirm = viewModel::withdraw,
+            onDismissRequest = viewModel::dismiss
+        )
+    }
 }
 
 @Composable
 private fun SettingScreen(
     modifier: Modifier,
     onLogout: () -> Unit,
+    onWithdraw: () -> Unit,
     moveBack: () -> Unit,
 ) {
     Column(
@@ -52,11 +63,20 @@ private fun SettingScreen(
                     vertical = 40.dp
                 )
         ) {
+            SettingPrivacyButton()
             IEUMSpacer(modifier = Modifier.weight(1f))
-            SettingButton(
-                name = stringResource(R.string.logout),
-                onClick = onLogout,
-            )
+            Column(
+                verticalArrangement = Arrangement.spacedBy(14.dp)
+            ) {
+                SettingButton(
+                    name = stringResource(R.string.logout),
+                    onClick = onLogout,
+                )
+                SettingButton(
+                    name = stringResource(R.string.withdraw),
+                    onClick = onWithdraw,
+                )
+            }
         }
     }
 }

@@ -2,6 +2,7 @@ package com.ieum.data.datasource.post
 
 import com.ieum.data.network.model.post.AllPostDto
 import com.ieum.data.network.model.post.CommentDto
+import com.ieum.data.network.model.post.MonthlyWellnessDto
 import com.ieum.data.network.model.post.PostCommentRequestBody
 import com.ieum.data.network.model.post.PostDailyRequestBody
 import com.ieum.data.network.model.post.PostDailyResponse
@@ -41,6 +42,11 @@ interface PostDataSource {
         size: Int,
         diagnosis: String?
     ): List<AllPostDto>
+
+    suspend fun getMonthlyWellnessList(
+        year: Int,
+        month: Int,
+    ): List<MonthlyWellnessDto>
 
     suspend fun likePost(id: Int, type: String)
 

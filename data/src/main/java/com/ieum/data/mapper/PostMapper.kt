@@ -5,6 +5,7 @@ import com.ieum.data.database.model.PostEntity
 import com.ieum.data.network.model.post.AllPostDto
 import com.ieum.data.network.model.post.CommentDto
 import com.ieum.data.network.model.post.DietDto
+import com.ieum.data.network.model.post.MonthlyWellnessDto
 import com.ieum.data.network.model.post.MyPostDto
 import com.ieum.data.network.model.post.OtherPostDto
 import com.ieum.data.network.model.post.PostCommentRequestBody
@@ -57,35 +58,6 @@ fun PostDailyRequest.asBody(): PostDailyRequestBody =
         content = content,
         shared = shared,
     )
-
-fun MyPostDto.toDomain(): Post =
-    when (PostType.fromKey(type)) {
-        PostType.WELLNESS -> Post.Wellness(
-            id = id,
-            userInfo = null,
-            mood = Mood.fromKey(requireNotNull(mood)),
-            unusualSymptoms = unusualSymptoms,
-            medicationTaken = requireNotNull(medicationTaken),
-            diet = diet?.toDomain(),
-            memo = memo,
-            imageList = images?.map(PostImageDto::toDomain),
-            shared = shared,
-            isLiked = isLiked,
-            isMine = true,
-            createdAt = createdAt,
-        )
-        PostType.DAILY -> Post.Daily(
-            id = id,
-            userInfo = null,
-            title = requireNotNull(title),
-            content = requireNotNull(content),
-            imageList = images?.map(PostImageDto::toDomain),
-            shared = shared,
-            isLiked = isLiked,
-            isMine = true,
-            createdAt = createdAt,
-        )
-    }
 
 fun AllPostDto.toEntity(myId: Int): PostEntity =
     PostEntity(
@@ -217,6 +189,22 @@ fun PostDailyResponse.toEntity(): PostEntity =
         images = images?.map(PostImageDto::url),
         shared = shared,
         isLiked = false,
+        isMine = true,
+        createdAt = createdAt
+    )
+
+fun MonthlyWellnessDto.toDomain(): Post.Wellness =
+    Post.Wellness(
+        id = id,
+        userInfo = PostUserInfo(id = userId, nickname = userNickname),
+        mood = Mood.fromKey(mood),
+        unusualSymptoms = unusualSymptoms,
+        medicationTaken = medicationTaken,
+        diet = diet?.toDomain(),
+        memo = memo,
+        imageList = images?.map(PostImageDto::toDomain),
+        shared = shared,
+        isLiked = isLiked,
         isMine = true,
         createdAt = createdAt
     )

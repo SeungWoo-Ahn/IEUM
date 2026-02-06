@@ -14,7 +14,6 @@ import com.ieum.domain.usecase.address.GetAddressListUseCase
 import com.ieum.domain.usecase.post.DeletePostUseCase
 import com.ieum.domain.usecase.post.TogglePostLikeUseCase
 import com.ieum.domain.usecase.user.GetMyPostListFlowUseCase
-import com.ieum.domain.usecase.user.GetMyPostListUseCase
 import com.ieum.domain.usecase.user.GetMyProfileUseCase
 import com.ieum.domain.usecase.user.PatchMyProfileUseCase
 import com.ieum.presentation.mapper.toDomain
@@ -42,7 +41,6 @@ import javax.inject.Inject
 class MyProfileViewModel @Inject constructor(
     private val getMyProfileUseCase: GetMyProfileUseCase,
     private val getMyPostListFlowUseCase: GetMyPostListFlowUseCase,
-    private val getMyPostListUseCase: GetMyPostListUseCase,
     private val patchMyProfileUseCase: PatchMyProfileUseCase,
     private val getAddressListUseCase: GetAddressListUseCase,
     private val togglePostLikeUseCase: TogglePostLikeUseCase,
@@ -83,6 +81,7 @@ class MyProfileViewModel @Inject constructor(
     }
 
     fun getMyProfile() {
+        uiState = MyProfileUiState.Loading
         viewModelScope.launch {
             getMyProfileUseCase()
                 .onSuccess {

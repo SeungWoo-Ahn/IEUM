@@ -46,6 +46,16 @@ fun InfoCircleIcon() {
 }
 
 @Composable
+fun InfoCircleRedIcon() {
+    Icon(
+        modifier = Modifier.size(32.dp),
+        painter = painterResource(R.drawable.ic_info_circle_red),
+        tint = Color.Unspecified,
+        contentDescription = "ic-info-circle-red",
+    )
+}
+
+@Composable
 fun CheckCircleIcon() {
     Icon(
         modifier = Modifier.size(88.dp),

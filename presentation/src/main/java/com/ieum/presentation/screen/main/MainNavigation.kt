@@ -39,6 +39,7 @@ fun NavGraphBuilder.nestedMainGraph(appState: IEUMAppState) {
         }
         composable<MainScreen.OthersProfile> {
             OthersProfileRoute(
+                scope = appState.coroutineScope,
                 onBack = navController::popBackStack,
             )
         }

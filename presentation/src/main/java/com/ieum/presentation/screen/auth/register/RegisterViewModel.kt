@@ -33,6 +33,9 @@ class RegisterViewModel @Inject constructor(
     var uiState by mutableStateOf<RegisterUiState>(RegisterUiState.Idle)
         private set
 
+    var sheetState by mutableStateOf<RegisterSheetState>(RegisterSheetState.Idle)
+        private set
+
     private val _event = Channel<RegisterEvent>()
     val event: Flow<RegisterEvent> = _event.receiveAsFlow()
 
@@ -67,7 +70,7 @@ class RegisterViewModel @Inject constructor(
 
     fun onNextStep() {
         if (currentStage == RegisterStage.entries.last()) {
-            register()
+            showPrivacySheet()
         } else {
             val nextIdx = RegisterStage.entries.indexOf(currentStage) + 1
             currentStage = RegisterStage.entries[nextIdx]
@@ -82,20 +85,24 @@ class RegisterViewModel @Inject constructor(
             RegisterStage.SelectAgeGroup -> ageGroupState.validate()
             RegisterStage.SelectResidence -> residenceState.validate()
             RegisterStage.SelectHospital -> hospitalState.validate()
-            RegisterStage.TypeInterest -> interestState.validate() && uiState != RegisterUiState.Loading
+            RegisterStage.TypeInterest -> interestState.validate()
         }
 
     fun showCancerStageSheet(cancerDiagnose: CancerDiagnoseUiModel) {
-        uiState = RegisterUiState.ShowCancerStageSheet(data = cancerDiagnose) {
+        sheetState = RegisterSheetState.ShowCancerStageSheet(data = cancerDiagnose) {
             diagnoseState.cancerDiagnoseState.onDiagnose(cancerDiagnose.copy(stage = it))
         }
     }
 
-    fun resetUiState() {
-        uiState = RegisterUiState.Idle
+    private fun showPrivacySheet() {
+        sheetState = RegisterSheetState.ShowPolicySheet
     }
 
-    private fun register() {
+    fun dismiss() {
+        sheetState = RegisterSheetState.Idle
+    }
+
+    fun register() {
         viewModelScope.launch {
             uiState = RegisterUiState.Loading
             val registerRequest = RegisterRequest(

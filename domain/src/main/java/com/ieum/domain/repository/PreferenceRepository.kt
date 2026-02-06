@@ -6,8 +6,6 @@ import kotlinx.coroutines.flow.Flow
 interface PreferenceRepository {
     val tokenFlow: Flow<Token?>
 
-    fun getCachedToken(): Token?
-
     suspend fun saveToken(token: Token)
 
     fun setPendingToken(token: Token)

@@ -18,6 +18,7 @@ import com.ieum.presentation.model.post.DiagnoseFilterUiModel
 import com.ieum.presentation.model.post.PostUiModel
 import com.ieum.presentation.screen.component.DropDownMenu
 import com.ieum.presentation.state.CommentState
+import com.ieum.presentation.state.ReportPostState
 import com.ieum.presentation.util.ExceptionCollector
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -37,6 +38,7 @@ class FeedViewModel @Inject constructor(
     private val togglePostLikeUseCase: TogglePostLikeUseCase,
     private val deletePostUseCase: DeletePostUseCase,
     val commentState: CommentState,
+    val reportPostState: ReportPostState,
 ) : ViewModel() {
     var uiState by mutableStateOf<FeedUiState>(FeedUiState.Idle)
         private set
@@ -96,7 +98,9 @@ class FeedViewModel @Inject constructor(
     fun onPostMenu(post: PostUiModel, menu: DropDownMenu) {
         viewModelScope.launch {
             when (menu) {
-                DropDownMenu.REPORT -> { }
+                DropDownMenu.REPORT -> {
+                    reportPostState.showSheet(post = post, scope = viewModelScope)
+                }
                 DropDownMenu.EDIT -> {
                     _event.send(FeedEvent.MoveEditPost(post.id, post.type))
                 }

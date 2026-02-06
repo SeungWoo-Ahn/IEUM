@@ -14,6 +14,7 @@ import com.ieum.data.datasource.post.PostDataSource
 import com.ieum.data.mapper.asBody
 import com.ieum.data.mapper.toDomain
 import com.ieum.data.mapper.toEntity
+import com.ieum.data.network.model.post.MonthlyWellnessDto
 import com.ieum.data.repository.mediator.AllPostMediator
 import com.ieum.data.repository.mediator.CommentMediator
 import com.ieum.domain.model.image.ImageSource
@@ -124,6 +125,14 @@ class PostRepositoryImpl @Inject constructor(
                 pagingData.map(PostEntity::toDomain)
             }
 
+    override suspend fun getMonthlyWellnessList(
+        year: Int,
+        month: Int
+    ): List<Post.Wellness> =
+        postDataSource
+            .getMonthlyWellnessList(year = year, month = month)
+            .map(MonthlyWellnessDto::toDomain)
+
     override suspend fun likePost(id: Int, type: PostType) {
         postDao.likePost(id, type.key)
         try {
@@ -142,6 +151,10 @@ class PostRepositoryImpl @Inject constructor(
             postDao.likePost(id, type.key)
             throw e
         }
+    }
+
+    override suspend fun reportPost(id: Int, type: PostType) {
+        postDao.deleteById(id, type.key)
     }
 
     @OptIn(ExperimentalPagingApi::class)
@@ -193,5 +206,13 @@ class PostRepositoryImpl @Inject constructor(
             .also {
                 commentDao.deleteById(commentId)
             }
+    }
+
+    override suspend fun reportComment(
+        postId: Int,
+        type: PostType,
+        commentId: Int
+    ) {
+        commentDao.deleteById(commentId)
     }
 }

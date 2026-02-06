@@ -12,7 +12,6 @@ import com.ieum.data.datasource.user.UserDataSource
 import com.ieum.data.mapper.asBody
 import com.ieum.data.mapper.toDomain
 import com.ieum.data.mapper.toEntity
-import com.ieum.data.network.model.post.MyPostDto
 import com.ieum.data.repository.mediator.MyPostMediator
 import com.ieum.data.repository.mediator.OthersPostMediator
 import com.ieum.domain.model.post.Post
@@ -52,17 +51,6 @@ class UserRepositoryImpl @Inject constructor(
             .getOthersProfile(id)
             .toDomain()
 
-    override suspend fun getMyPostList(
-        page: Int,
-        size: Int,
-        type: PostType,
-        fromDate: String?,
-        toDate: String?,
-    ): List<Post> =
-        userDataSource
-            .getMyPostList(page = page, size = size, type = type.key, fromDate = fromDate, toDate = toDate)
-            .map(MyPostDto::toDomain)
-
     override suspend fun getMyPost(id: Int, type: PostType): Post =
         postDao.getMyPost(id, type.key)?.toDomain() ?: run {
             userDataSource.getMyPost(id, type.key)
@@ -85,7 +73,7 @@ class UserRepositoryImpl @Inject constructor(
                         type = type.key,
                         fromDate = null,
                         toDate = null,
-                    )
+                    ).posts
                 },
                 deleteMyPostList = { postDao.deleteMyPostList(type.key) },
                 insertAll = postDao::insertAll
@@ -116,4 +104,8 @@ class UserRepositoryImpl @Inject constructor(
             .map { pagingData ->
                 pagingData.map(PostEntity::toDomain)
             }
+
+    override suspend fun withdraw() {
+        userDataSource.withdraw()
+    }
 }

@@ -28,9 +28,13 @@ interface PostRepository {
         getMyId: suspend () -> Result<Int>
     ): Flow<PagingData<Post>>
 
+    suspend fun getMonthlyWellnessList(year: Int, month: Int): List<Post.Wellness>
+
     suspend fun likePost(id: Int, type: PostType)
 
     suspend fun unlikePost(id: Int, type: PostType)
+
+    suspend fun reportPost(id: Int, type: PostType)
 
     fun getCommentListFlow(
         postId: Int,
@@ -41,4 +45,6 @@ interface PostRepository {
     suspend fun postComment(request: PostCommentRequest)
 
     suspend fun deleteComment(postId: Int, type: PostType, commentId: Int)
+
+    suspend fun reportComment(postId: Int, type: PostType, commentId: Int)
 }
