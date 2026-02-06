@@ -331,6 +331,7 @@ fun CancerStageSheet(
 @Composable
 fun CommentListSheet(
     modifier: Modifier = Modifier,
+    scope: CoroutineScope,
     state: CommentBottomSheetState.Show,
     onDismissRequest: () -> Unit,
 ) {
@@ -339,6 +340,7 @@ fun CommentListSheet(
     val commentPostEnabled by remember { derivedStateOf {
         state.isLoading.not() && state.typedCommentState.validate()
     } }
+    val innerSheetState = state.innerSheetState
 
     IEUMBottomSheet(
         sheetState = sheetState,
@@ -371,6 +373,17 @@ fun CommentListSheet(
                 )
             }
         }
+    }
+    if (innerSheetState is CommentBottomSheetState.Show.CommentInnerSheetState.ShowReportSheet) {
+        ReportSheet(
+            scope = scope,
+            reportEnabled = state.isLoading.not(),
+            onReport = { state.reportComment(
+                commentId = innerSheetState.commendId,
+                reportType = it
+            ) },
+            onDismissRequest = state::dismiss
+        )
     }
 }
 

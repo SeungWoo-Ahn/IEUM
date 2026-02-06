@@ -56,6 +56,7 @@ fun OthersProfileRoute(
 
     if (commentBottomSheetState is CommentBottomSheetState.Show) {
         CommentListSheet(
+            scope = scope,
             state = commentBottomSheetState,
             onDismissRequest = viewModel.commentState::dismiss
         )

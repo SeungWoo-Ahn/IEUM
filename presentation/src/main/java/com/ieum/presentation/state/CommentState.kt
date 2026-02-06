@@ -14,9 +14,11 @@ import com.ieum.domain.usecase.post.DeleteCommentUseCase
 import com.ieum.domain.usecase.post.GetCommentListFlowUseCase
 import com.ieum.domain.usecase.post.PostCommentUseCase
 import com.ieum.domain.usecase.post.ReportCommentUseCase
+import com.ieum.presentation.mapper.toDomain
 import com.ieum.presentation.mapper.toUiModel
 import com.ieum.presentation.model.post.CommentUiModel
 import com.ieum.presentation.model.post.PostUiModel
+import com.ieum.presentation.model.post.ReportTypeUiModel
 import com.ieum.presentation.screen.component.DropDownMenu
 import com.ieum.presentation.util.ExceptionCollector
 import kotlinx.coroutines.CoroutineScope
@@ -37,7 +39,16 @@ sealed class CommentBottomSheetState {
         private val deleteCommentUseCase: DeleteCommentUseCase,
         private val reportCommentUseCase: ReportCommentUseCase,
     ) : CommentBottomSheetState() {
+        sealed class CommentInnerSheetState {
+            data object Idle : CommentInnerSheetState()
+
+            data class ShowReportSheet(val commendId: Int) : CommentInnerSheetState()
+        }
+
         var isLoading by mutableStateOf(false)
+            private set
+
+        var innerSheetState by mutableStateOf<CommentInnerSheetState>(CommentInnerSheetState.Idle)
             private set
 
         val typedCommentState = MaxLengthTextFieldState(maxLength = 500)
@@ -70,7 +81,9 @@ sealed class CommentBottomSheetState {
 
         fun onMenu(commendId: Int, selectedMenu: DropDownMenu) {
             when (selectedMenu) {
-                DropDownMenu.REPORT -> reportComment(commendId)
+                DropDownMenu.REPORT -> {
+                    innerSheetState = CommentInnerSheetState.ShowReportSheet(commendId)
+                }
                 DropDownMenu.EDIT -> {}
                 DropDownMenu.DELETE -> deleteComment(commendId)
             }
@@ -90,13 +103,18 @@ sealed class CommentBottomSheetState {
             }
         }
 
-        private fun reportComment(commentId: Int) {
+        fun dismiss() {
+            innerSheetState = CommentInnerSheetState.Idle
+        }
+
+        fun reportComment(commentId: Int, reportType: ReportTypeUiModel) {
             scope.launch {
                 isLoading = true
                 reportCommentUseCase(
                     postId = postId,
                     type = type,
-                    commentId = commentId
+                    commentId = commentId,
+                    reportType = reportType.toDomain()
                 ).onFailure { t ->
                     ExceptionCollector.sendException(t)
                 }
