@@ -27,6 +27,8 @@ import io.ktor.http.ContentType
 import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpMethod
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import java.io.File
 import javax.inject.Inject
@@ -49,7 +51,7 @@ class PostRemoteDataSource @Inject constructor(
         url: String,
         body: T,
         fileList: List<File>,
-    ): HttpResponse =
+    ): HttpResponse = withContext(Dispatchers.IO) {
         ktorClient
             .submitFormWithBinaryData(
                 url = url,
@@ -77,6 +79,7 @@ class PostRemoteDataSource @Inject constructor(
             ) {
                 method = httpMethod
             }
+    }
 
     override suspend fun postWellness(
         body: PostWellnessRequestBody,
