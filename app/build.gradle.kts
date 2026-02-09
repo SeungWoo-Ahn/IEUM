@@ -63,4 +63,7 @@ dependencies {
 
     // coil
     implementation(libs.coil)
+
+    // ktor for warm-up
+    implementation(libs.ktor.core)
 }

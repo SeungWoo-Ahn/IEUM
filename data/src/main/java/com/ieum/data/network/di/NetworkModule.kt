@@ -63,13 +63,15 @@ internal object NetworkModule {
                 requestTimeoutMillis = 10_000
                 socketTimeoutMillis = 10_000
             }
-            install(Logging) {
-                logger = object : Logger {
-                    override fun log(message: String) {
-                        Timber.i(message)
+            if (BuildConfig.DEBUG) {
+                install(Logging) {
+                    logger = object : Logger {
+                        override fun log(message: String) {
+                            Timber.tag("KTOR").i(message)
+                        }
                     }
+                    level = LogLevel.BODY
                 }
-                level = LogLevel.BODY
             }
             install(ContentNegotiation) {
                 json(networkJson)

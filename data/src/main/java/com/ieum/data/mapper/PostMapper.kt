@@ -216,7 +216,7 @@ fun CommentDto.toEntity(myId: Int? = null): CommentEntity =
         nickname = nickname,
         content = content,
         createdAt = createdAt,
-        isMine = myId?.let { it == userId } ?: false
+        isMine = myId?.let { it == userId } ?: true
     )
 
 fun CommentEntity.toDomain(): Comment =
