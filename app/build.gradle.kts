@@ -5,6 +5,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.google.gms)
+    alias(libs.plugins.google.firebase.crashlytics)
 }
 
 android {
@@ -66,4 +68,8 @@ dependencies {
 
     // ktor for warm-up
     implementation(libs.ktor.core)
+
+    // firebase
+    implementation(platform(libs.google.firebase.bom))
+    implementation(libs.bundles.firebase.common)
 }
