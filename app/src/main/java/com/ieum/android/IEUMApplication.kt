@@ -26,9 +26,9 @@ class IEUMApplication : Application(), SingletonImageLoader.Factory {
     override fun onCreate() {
         super.onCreate()
         setStrictMode()
+        warmUpKtorClient()
         initKakaoSdk()
         setTimber()
-        warmUpKtorClient()
     }
 
     override fun newImageLoader(context: PlatformContext): ImageLoader =
@@ -58,23 +58,6 @@ class IEUMApplication : Application(), SingletonImageLoader.Factory {
         }
     }
 
-    private fun initKakaoSdk() {
-        val originPolicy = StrictMode.allowThreadDiskReads()
-        try {
-            KakaoSdk.init(this, BuildConfig.KAKAO_NATIVE_KEY)
-        } finally {
-            StrictMode.setThreadPolicy(originPolicy)
-        }
-    }
-
-    private fun setTimber() {
-        if (BuildConfig.DEBUG) {
-            Timber.plant(Timber.DebugTree())
-        } else {
-            // TODO: Firebase Crashlytics
-        }
-    }
-
     private fun warmUpKtorClient() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -82,6 +65,20 @@ class IEUMApplication : Application(), SingletonImageLoader.Factory {
             } catch (e: Exception) {
                 Timber.e(e, "Failed to warm up Ktor client")
             }
+        }
+    }
+
+    private fun initKakaoSdk() {
+        val originPolicy = StrictMode.allowThreadDiskReads()
+        KakaoSdk.init(this, BuildConfig.KAKAO_NATIVE_KEY)
+        StrictMode.setThreadPolicy(originPolicy)
+    }
+
+    private fun setTimber() {
+        if (BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
+        } else {
+            // TODO: Firebase Crashlytics
         }
     }
 }
