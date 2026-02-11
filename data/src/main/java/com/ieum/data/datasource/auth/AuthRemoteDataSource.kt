@@ -6,6 +6,7 @@ import com.ieum.data.network.model.auth.OAuthRequestBody
 import com.ieum.data.network.model.auth.OAuthResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import javax.inject.Inject
@@ -22,4 +23,8 @@ class AuthRemoteDataSource @Inject constructor(
                 setBody(requestBody)
             }
             .body<OAuthResponse>()
+
+    override suspend fun ping() {
+        ktorClient.get("ping")
+    }
 }

@@ -5,4 +5,6 @@ import com.ieum.data.network.model.auth.OAuthResponse
 
 interface AuthDataSource {
     suspend fun login(provider: String, requestBody: OAuthRequestBody): OAuthResponse
+
+    suspend fun ping()
 }

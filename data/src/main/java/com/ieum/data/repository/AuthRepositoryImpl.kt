@@ -20,4 +20,8 @@ class AuthRepositoryImpl @Inject constructor(
                 requestBody = OAuthRequestBody(request.accessToken)
             )
             .toDomain()
+
+    override suspend fun healthCheck() {
+        authDataSource.ping()
+    }
 }
