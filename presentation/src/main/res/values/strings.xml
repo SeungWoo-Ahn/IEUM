@@ -2,6 +2,7 @@
 <resources>
     <string name="catch_phrase">암을 함께 겪는 이들의 하루,\n서로의 이야기가\n서로의 힘이 됩니다.</string>
     <string name="login_with_kakao">카카오톡으로 계속하기</string>
+    <string name="login_with_google">구글로 계속하기</string>
 
     <string name="guide_select_user_type">당신의\n현재 상황을 알려주세요</string>
     <string name="guide_select_sex">당신의 성별을\n알려주세요</string>

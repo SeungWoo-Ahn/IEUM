@@ -1,8 +1,10 @@
 package com.ieum.presentation.screen.auth.login
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -13,12 +15,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.ieum.design_system.button.DarkButton
 import com.ieum.design_system.icon.IEUMIcon
 import com.ieum.design_system.image.LoginBackGroundImage
 import com.ieum.design_system.spacer.IEUMSpacer
 import com.ieum.design_system.theme.screenPadding
 import com.ieum.presentation.R
+import com.ieum.presentation.screen.component.GoogleLoginButton
+import com.ieum.presentation.screen.component.KakaoLoginButton
 
 @Composable
 fun LoginRoute(
@@ -50,6 +53,7 @@ private fun LoginScreen(
     onLogin: (LoginStrategy) -> Unit,
 ) {
     val context = LocalContext.current
+
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -72,11 +76,19 @@ private fun LoginScreen(
                 style = MaterialTheme.typography.headlineLarge,
             )
             IEUMSpacer(modifier = Modifier.weight(1f))
-            DarkButton(
-                text = stringResource(R.string.login_with_kakao),
-                enabled = buttonEnabled,
-                onClick = { onLogin(LoginStrategy.KaKao(context)) }
-            )
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                KakaoLoginButton(
+                    enabled = buttonEnabled,
+                    onClick = { onLogin(LoginStrategy.KaKao(context)) }
+                )
+                GoogleLoginButton(
+                    enabled = buttonEnabled,
+                    onClick = { onLogin(LoginStrategy.Google(context)) }
+                )
+            }
         }
     }
 }

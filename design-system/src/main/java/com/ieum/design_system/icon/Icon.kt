@@ -485,3 +485,23 @@ fun LockIcon() {
         contentDescription = "ic-lock",
     )
 }
+
+@Composable
+fun KakaoIcon(modifier: Modifier) {
+    Icon(
+        modifier = modifier.size(40.dp),
+        painter = painterResource(R.drawable.ic_kakao),
+        tint = Color.Unspecified,
+        contentDescription = "ic-kakao",
+    )
+}
+
+@Composable
+fun GoogleIcon(modifier: Modifier) {
+    Icon(
+        modifier = modifier.size(40.dp),
+        painter = painterResource(R.drawable.ic_google),
+        tint = Color.Unspecified,
+        contentDescription = "ic-google",
+    )
+}
