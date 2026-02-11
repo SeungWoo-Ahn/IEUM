@@ -78,7 +78,7 @@ class IEUMApplication : Application(), SingletonImageLoader.Factory {
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         } else {
-            // TODO: Firebase Crashlytics
+            Timber.plant(TimberCrashlyticsTree())
         }
     }
 }

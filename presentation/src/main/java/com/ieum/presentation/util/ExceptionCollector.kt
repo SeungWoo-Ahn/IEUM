@@ -5,6 +5,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
+import timber.log.Timber
 
 class CustomException(override val message: String) : RuntimeException(message)
 
@@ -29,5 +30,6 @@ object ExceptionCollector {
 
     suspend fun sendException(t: Throwable) {
         exceptionChannel.send(t)
+        Timber.e(t)
     }
 }
