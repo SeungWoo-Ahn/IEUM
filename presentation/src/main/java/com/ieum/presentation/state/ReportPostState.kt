@@ -9,6 +9,7 @@ import com.ieum.presentation.mapper.toDomain
 import com.ieum.presentation.model.post.PostUiModel
 import com.ieum.presentation.model.post.ReportTypeUiModel
 import com.ieum.presentation.util.ExceptionCollector
+import com.ieum.presentation.util.MessageCollector
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -32,7 +33,9 @@ sealed class ReportPostBottomSheetState {
                     id = postId,
                     type = type,
                     reportType = reportType.toDomain()
-                ).onFailure { t ->
+                ).onSuccess {
+                    MessageCollector.sendMessage("신고가 접수됐어요")
+                }.onFailure { t ->
                     ExceptionCollector.sendException(t)
                 }
                 isLoading = false

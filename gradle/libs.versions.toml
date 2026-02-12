@@ -28,6 +28,11 @@ timber = "5.0.1"
 coil = "3.3.0"
 splashscreen = "1.2.0"
 room = "2.8.4"
+credentials = "1.6.0-rc01"
+googleid = "1.2.0"
+google-gms = "4.4.4"
+firebase-bom = "34.9.0"
+firebase-crashlytics = "3.0.6"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -55,6 +60,9 @@ androidx-room-paging = { group = "androidx.room", name = "room-paging", version.
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
 hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigation" }
+androidx-credentials = { group = "androidx.credentials", name = "credentials", version.ref = "credentials" }
+androidx-credentials-play-service = { group = "androidx.credentials", name = "credentials-play-services-auth", version.ref = "credentials" }
+identity-googleid = { group = "com.google.android.libraries.identity.googleid", name = "googleid", version.ref = "googleid" }
 javax-inject = { group = "javax.inject", name = "javax.inject", version.ref = "javaxInjext" }
 ktor-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
 ktor-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.ref = "ktor" }
@@ -71,6 +79,9 @@ timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "tim
 coil = { group = "io.coil-kt.coil3", name = "coil", version.ref = "coil" }
 coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
 coil-network = { group = "io.coil-kt.coil3", name = "coil-network-ktor3", version.ref = "coil" }
+google-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
+google-firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
+google-firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
 
 [bundles]
 ktor = [
@@ -89,6 +100,15 @@ coil = [
     "coil-compose",
     "coil-network",
 ]
+google-oauth = [
+    "androidx-credentials",
+    "androidx-credentials-play-service",
+    "identity-googleid",
+]
+firebase-common = [
+    "google-firebase-crashlytics",
+    "google-firebase-analytics",
+]
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -100,4 +120,6 @@ jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrai
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 protobuf = { id = "com.google.protobuf", version.ref = "protobufPlugin" }
+google-gms = { id = "com.google.gms.google-services", version.ref = "google-gms" }
+google-firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics" }
 

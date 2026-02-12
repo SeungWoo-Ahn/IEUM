@@ -34,7 +34,7 @@ class LoginViewModel @Inject constructor(
                     login(oAuthRequest)
                 }
                 .onFailure {
-                    ExceptionCollector.sendException(CustomException("카카오 인증에 실패했습니다"))
+                    ExceptionCollector.sendException(CustomException("${strategy.provider.key} 인증에 실패했습니다"))
                 }
             uiState = LoginUiState.Idle
         }

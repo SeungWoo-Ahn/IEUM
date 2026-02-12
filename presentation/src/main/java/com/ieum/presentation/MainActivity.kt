@@ -10,11 +10,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.flowWithLifecycle
 import com.ieum.design_system.theme.IEUMTheme
 import com.ieum.presentation.screen.IEUMApp
 import com.ieum.presentation.screen.rememberIEUMAppState
 import com.ieum.presentation.util.ExceptionCollector
+import com.ieum.presentation.util.MessageCollector
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.merge
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -37,9 +40,14 @@ class MainActivity : ComponentActivity() {
                 val appState = rememberIEUMAppState()
 
                 LaunchedEffect(Unit) {
-                    ExceptionCollector.exceptionMessageFlow.collect {
-                        showToast(it)
-                    }
+                    merge(
+                        ExceptionCollector.exceptionMessageFlow,
+                        MessageCollector.messageFlow,
+                    )
+                        .flowWithLifecycle(lifecycle)
+                        .collect {
+                            showToast(it)
+                        }
                 }
 
                 IEUMApp(

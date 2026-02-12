@@ -36,7 +36,9 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import okio.IOException
 import timber.log.Timber
@@ -63,13 +65,15 @@ internal object NetworkModule {
                 requestTimeoutMillis = 10_000
                 socketTimeoutMillis = 10_000
             }
-            install(Logging) {
-                logger = object : Logger {
-                    override fun log(message: String) {
-                        Timber.i(message)
+            if (BuildConfig.DEBUG) {
+                install(Logging) {
+                    logger = object : Logger {
+                        override fun log(message: String) {
+                            Timber.tag("KTOR").i(message)
+                        }
                     }
+                    level = LogLevel.BODY
                 }
-                level = LogLevel.BODY
             }
             install(ContentNegotiation) {
                 json(networkJson)
@@ -105,8 +109,10 @@ internal object NetworkModule {
             install(Auth) {
                 bearer {
                     loadTokens {
-                        preferenceRepository.tokenFlow.first()?.let {
-                            BearerTokens(it.accessToken, it.refreshToken)
+                        withContext(Dispatchers.IO) {
+                            preferenceRepository.tokenFlow.first()?.let {
+                                BearerTokens(it.accessToken, it.refreshToken)
+                            }
                         }
                     }
                     refreshTokens {

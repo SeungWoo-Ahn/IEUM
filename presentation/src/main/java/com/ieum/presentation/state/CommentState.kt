@@ -21,6 +21,7 @@ import com.ieum.presentation.model.post.PostUiModel
 import com.ieum.presentation.model.post.ReportTypeUiModel
 import com.ieum.presentation.screen.component.DropDownMenu
 import com.ieum.presentation.util.ExceptionCollector
+import com.ieum.presentation.util.MessageCollector
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -115,7 +116,9 @@ sealed class CommentBottomSheetState {
                     type = type,
                     commentId = commentId,
                     reportType = reportType.toDomain()
-                ).onFailure { t ->
+                ).onSuccess {
+                    MessageCollector.sendMessage("신고가 접수됐어요")
+                }.onFailure { t ->
                     ExceptionCollector.sendException(t)
                 }
                 isLoading = false

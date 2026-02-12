@@ -3,7 +3,8 @@ package com.ieum.domain.model.auth
 import com.ieum.domain.model.base.KeyAble
 
 enum class OAuthProvider(override val key: String) : KeyAble<String> {
-    KAKAO("kakao");
+    KAKAO("kakao"),
+    GOOGLE("google");
 
     companion object {
         private val map = entries.associateBy(OAuthProvider::key)

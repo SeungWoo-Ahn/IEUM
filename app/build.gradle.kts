@@ -5,6 +5,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.google.gms)
+    alias(libs.plugins.google.firebase.crashlytics)
 }
 
 android {
@@ -16,7 +18,7 @@ android {
         minSdk = 24
         targetSdk = 35
         versionCode = 1
-        versionName = "1.0"
+        versionName = "1.0.0"
 
         val properties = Properties().apply {
             load(project.rootProject.file("local.properties").inputStream())
@@ -63,4 +65,11 @@ dependencies {
 
     // coil
     implementation(libs.coil)
+
+    // ktor for warm-up
+    implementation(libs.ktor.core)
+
+    // firebase
+    implementation(platform(libs.google.firebase.bom))
+    implementation(libs.bundles.firebase.common)
 }
