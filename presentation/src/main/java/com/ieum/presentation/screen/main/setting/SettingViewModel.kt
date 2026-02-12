@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.ieum.domain.usecase.auth.LogoutUseCase
 import com.ieum.domain.usecase.user.WithdrawUseCase
 import com.ieum.presentation.util.ExceptionCollector
+import com.ieum.presentation.util.MessageCollector
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -23,6 +24,9 @@ class SettingViewModel @Inject constructor(
     fun onLogout() {
         viewModelScope.launch {
             logoutUseCase()
+                .onSuccess {
+                    MessageCollector.sendMessage("로그아웃 했어요")
+                }
                 .onFailure { t ->
                     ExceptionCollector.sendException(t)
                 }
@@ -40,6 +44,9 @@ class SettingViewModel @Inject constructor(
     fun withdraw() {
         viewModelScope.launch {
             withdrawUseCase()
+                .onSuccess {
+                    MessageCollector.sendMessage("이용해주셔서 감사합니다")
+                }
                 .onFailure { t ->
                     ExceptionCollector.sendException(t)
                 }
