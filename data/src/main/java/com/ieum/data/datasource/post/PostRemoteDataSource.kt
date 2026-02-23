@@ -13,6 +13,7 @@ import com.ieum.data.network.model.post.PostDailyRequestBody
 import com.ieum.data.network.model.post.PostDailyResponse
 import com.ieum.data.network.model.post.PostWellnessRequestBody
 import com.ieum.data.network.model.post.PostWellnessResponse
+import com.ieum.data.network.model.post.ReportRequestBody
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.delete
@@ -173,6 +174,16 @@ class PostRemoteDataSource @Inject constructor(
         ktorClient.delete("api/v1/posts/${type}/${id}/like")
     }
 
+    override suspend fun reportPost(
+        id: Int,
+        type: String,
+        body: ReportRequestBody
+    ) {
+        ktorClient.post("api/v1/posts/${type}/${id}/report") {
+            setBody(body)
+        }
+    }
+
     override suspend fun getCommentList(
         page: Int,
         size: Int,
@@ -201,5 +212,16 @@ class PostRemoteDataSource @Inject constructor(
         commentId: Int
     ) {
         ktorClient.delete("api/v1/posts/${type}/${postId}/comments/${commentId}")
+    }
+
+    override suspend fun reportComment(
+        postId: Int,
+        type: String,
+        commentId: Int,
+        body: ReportRequestBody
+    ) {
+        ktorClient.post("api/v1/posts/${type}/${postId}/comments/${commentId}/report") {
+            setBody(body)
+        }
     }
 }
