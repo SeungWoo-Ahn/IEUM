@@ -7,6 +7,7 @@ import com.ieum.domain.model.post.PostCommentRequest
 import com.ieum.domain.model.post.PostDailyRequest
 import com.ieum.domain.model.post.PostType
 import com.ieum.domain.model.post.PostWellnessRequest
+import com.ieum.domain.model.post.ReportType
 import com.ieum.domain.model.user.Diagnosis
 import kotlinx.coroutines.flow.Flow
 
@@ -34,7 +35,7 @@ interface PostRepository {
 
     suspend fun unlikePost(id: Int, type: PostType)
 
-    suspend fun reportPost(id: Int, type: PostType)
+    suspend fun reportPost(id: Int, type: PostType, reportType: ReportType)
 
     fun getCommentListFlow(
         postId: Int,
@@ -46,5 +47,5 @@ interface PostRepository {
 
     suspend fun deleteComment(postId: Int, type: PostType, commentId: Int)
 
-    suspend fun reportComment(postId: Int, type: PostType, commentId: Int)
+    suspend fun reportComment(postId: Int, type: PostType, commentId: Int, reportType: ReportType)
 }

@@ -19,6 +19,7 @@ class ReportCommentUseCase @Inject constructor(
                 postId = postId,
                 type = type,
                 commentId = commentId,
+                reportType = reportType,
             )
         }
 }

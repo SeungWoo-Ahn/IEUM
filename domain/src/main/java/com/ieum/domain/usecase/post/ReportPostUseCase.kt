@@ -10,6 +10,10 @@ class ReportPostUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(id: Int, type: PostType, reportType: ReportType): Result<Unit> =
         runCatching {
-            postRepository.reportPost(id, type)
+            postRepository.reportPost(
+                id = id,
+                type = type,
+                reportType = reportType,
+            )
         }
 }
