@@ -15,6 +15,7 @@ import com.ieum.data.mapper.asBody
 import com.ieum.data.mapper.toDomain
 import com.ieum.data.mapper.toEntity
 import com.ieum.data.network.model.post.MonthlyWellnessDto
+import com.ieum.data.network.model.post.ReportRequestBody
 import com.ieum.data.repository.mediator.AllPostMediator
 import com.ieum.data.repository.mediator.CommentMediator
 import com.ieum.domain.model.image.ImageSource
@@ -24,6 +25,7 @@ import com.ieum.domain.model.post.PostCommentRequest
 import com.ieum.domain.model.post.PostDailyRequest
 import com.ieum.domain.model.post.PostType
 import com.ieum.domain.model.post.PostWellnessRequest
+import com.ieum.domain.model.post.ReportType
 import com.ieum.domain.model.user.Diagnosis
 import com.ieum.domain.repository.PostRepository
 import kotlinx.coroutines.flow.Flow
@@ -153,8 +155,14 @@ class PostRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun reportPost(id: Int, type: PostType) {
-        postDao.deleteById(id, type.key)
+    override suspend fun reportPost(id: Int, type: PostType, reportType: ReportType) {
+        postDataSource.reportPost(
+            id = id,
+            type = type.key,
+            body = ReportRequestBody(reason = reportType.key)
+        ).also {
+            postDao.deleteById(id, type.key)
+        }
     }
 
     @OptIn(ExperimentalPagingApi::class)
@@ -211,8 +219,14 @@ class PostRepositoryImpl @Inject constructor(
     override suspend fun reportComment(
         postId: Int,
         type: PostType,
-        commentId: Int
+        commentId: Int,
+        reportType: ReportType,
     ) {
-        commentDao.deleteById(commentId)
+        postDataSource.reportComment(
+            postId = postId,
+            type = type.key,
+            commentId = commentId,
+            body = ReportRequestBody(reason = reportType.key)
+        )
     }
 }

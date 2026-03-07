@@ -8,6 +8,7 @@ import com.ieum.data.network.model.post.PostDailyRequestBody
 import com.ieum.data.network.model.post.PostDailyResponse
 import com.ieum.data.network.model.post.PostWellnessRequestBody
 import com.ieum.data.network.model.post.PostWellnessResponse
+import com.ieum.data.network.model.post.ReportRequestBody
 import java.io.File
 
 interface PostDataSource {
@@ -52,6 +53,8 @@ interface PostDataSource {
 
     suspend fun unlikePost(id: Int, type: String)
 
+    suspend fun reportPost(id: Int, type: String, body: ReportRequestBody)
+
     suspend fun getCommentList(
         page: Int,
         size: Int,
@@ -62,4 +65,6 @@ interface PostDataSource {
     suspend fun postComment(postId: Int, type: String, body: PostCommentRequestBody): CommentDto
 
     suspend fun deleteComment(postId: Int, type: String, commentId: Int)
+
+    suspend fun reportComment(postId: Int, type: String, commentId: Int, body: ReportRequestBody)
 }
