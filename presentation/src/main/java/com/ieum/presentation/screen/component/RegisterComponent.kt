@@ -6,19 +6,27 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ieum.design_system.button.Gray50Button
 import com.ieum.design_system.button.Lime100Button
 import com.ieum.design_system.button.Lime400Button
+import com.ieum.design_system.checkbox.IEUMCheckBox
+import com.ieum.design_system.icon.RightIcon
 import com.ieum.design_system.selector.ISingleSelectorState
 import com.ieum.design_system.spacer.IEUMSpacer
 import com.ieum.design_system.textfield.IMaxLengthTextFieldState
 import com.ieum.design_system.textfield.MaxLengthTextField
+import com.ieum.design_system.theme.Gray500
 import com.ieum.design_system.theme.screenPadding
+import com.ieum.design_system.util.noRippleClickable
 import com.ieum.presentation.R
 import com.ieum.presentation.model.user.AgeGroupUiModel
 import com.ieum.presentation.model.user.CancerDiagnoseUiModel
@@ -238,5 +246,42 @@ fun RegisterTypeInterest(
             nextEnabled = buttonEnabled,
             onNext = onButtonClick,
         )
+    }
+}
+
+@Composable
+fun RegisterPolicyCheckbox(
+    modifier: Modifier = Modifier,
+    checked: Boolean,
+    content: String,
+    url: String,
+    toggleChecked: () -> Unit,
+) {
+    val uriHandler = LocalUriHandler.current
+
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Row(
+            modifier = Modifier
+                .weight(1f)
+                .noRippleClickable(onClick = toggleChecked),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            IEUMCheckBox(
+                checked = checked,
+                onCheckedChange = { toggleChecked() }
+            )
+            Text(
+                text = content,
+                style = MaterialTheme.typography.labelMedium,
+            )
+        }
+        IconButton(onClick = { uriHandler.openUri(url) }) {
+            RightIcon(color = Gray500)
+        }
     }
 }

@@ -51,7 +51,7 @@
     <string name="cycle">차수</string>
     <string name="confirm">확인</string>
 
-    <string name="guide_register_policy">회원가입을 위해 서비스 정책에 동의해주세요</string>
+    <string name="guide_register_policy">회원가입을 위해\n서비스 정책에 동의해주세요</string>
     <string name="register_with_confirm">동의하고 가입하기</string>
 
     <string name="register_done">회원가입이 완료되었어요!</string>
@@ -145,11 +145,13 @@
     <string name="withdraw">탈퇴하기</string>
     <string name="cancel">취소하기</string>
     <string name="privacy_policy">개인정보처리방침</string>
+    <string name="child_policy">12세 이상이며 아동안전정책을 준수합니다</string>
 
     <string name="question_withdraw">정말 탈퇴하시겠어요?</string>
     <string name="description_withdraw">모든 게시물과 댓글이 함께 삭제됩니다.</string>
 
     <string name="privacy_policy_url">https://southern-dash-bc7.notion.site/2f7a0853c74280b7b6a1d7a0172cbdac?pvs=74</string>
+    <string name="child_policy_url">https://southern-dash-bc7.notion.site/CSAE-32aa0853c74280c98a1cefdbe9afa77a</string>
 
     <string name="description_abuse">욕설 또는 비하</string>
     <string name="description_violence">폭력 또는 혐오</string>
