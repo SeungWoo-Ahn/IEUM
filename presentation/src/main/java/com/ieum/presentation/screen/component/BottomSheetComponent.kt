@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
@@ -26,7 +25,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
@@ -34,13 +32,10 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.ieum.design_system.bottomsheet.IEUMBottomSheet
 import com.ieum.design_system.button.DarkButton
 import com.ieum.design_system.button.Lime400Button
-import com.ieum.design_system.checkbox.IEUMCheckBox
-import com.ieum.design_system.icon.RightIcon
 import com.ieum.design_system.selector.SingleSelectorState
 import com.ieum.design_system.spacer.IEUMSpacer
 import com.ieum.design_system.textfield.MultiLineTextField
 import com.ieum.design_system.textfield.TextFieldState
-import com.ieum.design_system.theme.Gray500
 import com.ieum.design_system.theme.Lime500
 import com.ieum.design_system.theme.Slate200
 import com.ieum.design_system.theme.screenPadding
@@ -397,19 +392,13 @@ fun RegisterPolicySheet(
     onDismissRequest: () -> Unit,
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    var policyConfirmed by remember { mutableStateOf(false) }
-
-    fun togglePolicyConfirmed() {
-        policyConfirmed = policyConfirmed.not()
-    }
+    var privacyPolicyConfirmed by remember { mutableStateOf(false) }
+    var childPolicyConfirmed by remember { mutableStateOf(false) }
 
     IEUMBottomSheet(
         sheetState = sheetState,
         onDismissRequest = onDismissRequest
     ) {
-        val uriHandler = LocalUriHandler.current
-        val url = stringResource(R.string.privacy_policy_url)
-
         Column(
             modifier = modifier
                 .fillMaxWidth()
@@ -420,38 +409,26 @@ fun RegisterPolicySheet(
                 text = stringResource(R.string.guide_register_policy),
                 style = MaterialTheme.typography.bodyMedium,
             )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Row(
-                    modifier = Modifier
-                        .weight(1f)
-                        .noRippleClickable(onClick = ::togglePolicyConfirmed),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    IEUMCheckBox(
-                        checked = policyConfirmed,
-                        onCheckedChange = { togglePolicyConfirmed() }
-                    )
-                    Text(
-                        text = stringResource(R.string.privacy_policy),
-                        style = MaterialTheme.typography.labelMedium,
-                    )
-                }
-                IconButton(onClick = { uriHandler.openUri(url) }) {
-                    RightIcon(color = Gray500)
-                }
-            }
+            RegisterPolicyCheckbox(
+                checked = privacyPolicyConfirmed,
+                content = stringResource(R.string.privacy_policy),
+                url = stringResource(R.string.privacy_policy_url),
+                toggleChecked = { privacyPolicyConfirmed = privacyPolicyConfirmed.not() }
+            )
+            RegisterPolicyCheckbox(
+                checked = childPolicyConfirmed,
+                content = stringResource(R.string.child_policy),
+                url = stringResource(R.string.child_policy_url),
+                toggleChecked = { childPolicyConfirmed = childPolicyConfirmed.not() }
+            )
             Lime400Button(
                 text = stringResource(R.string.register_with_confirm),
                 enabled = buttonEnabled,
                 onClick = {
                     scope
                         .launch {
-                            policyConfirmed = true
+                            privacyPolicyConfirmed = true
+                            childPolicyConfirmed = true
                             onRegister()
                             sheetState.hide()
                         }
